@@ -25,4 +25,5 @@
 	<div class="framer-1llbnyo luongson-main-layout" data-framer-name="Main Split Layout">
 		<div class="framer-10rzk9d luongson-sidebar-spacer" data-framer-name="Sidebar Spacer"></div>
 		<div class="framer-1rvbi9f luongson-main-content" data-framer-name="Right Content">
+			<?php get_template_part( 'template-parts/luongson/banner-header' ); ?>
 			<main id="main" class="luongson-page-main">

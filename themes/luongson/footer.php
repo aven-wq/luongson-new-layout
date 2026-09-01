@@ -10,6 +10,8 @@
 			<?php get_template_part( 'template-parts/luongson/footer' ); ?>
 		</div>
 	</div>
+
+	<?php get_template_part( 'template-parts/luongson/catfish' ); ?>
 </div>
 
 <div id="overlay"></div>

@@ -242,9 +242,28 @@
     boot();
   }
 
+  function bindCatfishClose() {
+    var closeCatfishBtn = document.querySelector('.framer-hsrn5s, [aria-label="Đóng quảng cáo"]');
+    if (!closeCatfishBtn) return;
+
+    closeCatfishBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var banner = closeCatfishBtn.closest('.luongson-catfish, .framer-9hgzo');
+      if (!banner) return;
+
+      banner.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+      banner.style.transform = 'translateY(100%)';
+      banner.style.opacity = '0';
+      setTimeout(function () {
+        banner.style.display = 'none';
+      }, 300);
+    });
+  }
+
   function onReady() {
     setActiveNavLinks();
     bindMobileMenu();
+    bindCatfishClose();
     initFooterSponsorTicker();
 
     document.addEventListener('keydown', function (e) {
