@@ -1,0 +1,271 @@
+.luongson-admin-page {
+	max-width: 960px;
+}
+
+.luongson-admin-page > .description {
+	margin: 0 0 1.5rem;
+	color: #646970;
+	font-size: 14px;
+}
+
+.luongson-settings-stack {
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+	margin-bottom: 1.5rem;
+}
+
+.luongson-settings-block {
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+	overflow: hidden;
+}
+
+.luongson-settings-block__head {
+	padding: 1.25rem 1.5rem;
+	border-bottom: 1px solid #f0f0f1;
+	background: linear-gradient(180deg, #fafafa 0%, #fff 100%);
+}
+
+.luongson-settings-block__head h2 {
+	margin: 0 0 0.35rem;
+	padding: 0;
+	font-size: 1.05rem;
+	font-weight: 600;
+	color: #1d2327;
+}
+
+.luongson-settings-block__head p {
+	margin: 0;
+	color: #646970;
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+.luongson-shortcode-copy {
+	margin-top: 1rem;
+	padding-top: 1rem;
+	border-top: 1px solid #ececec;
+}
+
+.luongson-shortcode-copy__label {
+	display: block;
+	margin-bottom: 0.4rem;
+	font-size: 12px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.02em;
+	color: #646970;
+}
+
+.luongson-shortcode-copy__field {
+	display: flex;
+	align-items: stretch;
+	gap: 0.5rem;
+	max-width: 520px;
+}
+
+.luongson-shortcode-input {
+	flex: 1;
+	min-width: 0;
+	font-family: Consolas, Monaco, monospace;
+	font-size: 13px;
+	background: #f6f7f7;
+	border-color: #c3c4c7;
+}
+
+.luongson-shortcode-copy__hint {
+	margin: 0.45rem 0 0;
+}
+
+.luongson-shortcode-copy__hint code {
+	font-size: 12px;
+}
+
+.luongson-settings-block__body {
+	padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.luongson-settings-block--soon .luongson-settings-block__body {
+	padding-top: 1rem;
+}
+
+.luongson-settings-block--soon .luongson-soon-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 0.35rem 0.65rem;
+	border-radius: 999px;
+	background: #f0f6fc;
+	color: #2271b1;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.luongson-sponsor-items {
+	display: flex;
+	flex-direction: column;
+	gap: 0.85rem;
+}
+
+.luongson-sponsor-empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.35rem;
+	padding: 2rem 1rem;
+	border: 1px dashed #c3c4c7;
+	border-radius: 8px;
+	background: #fbfbfc;
+	color: #646970;
+	text-align: center;
+}
+
+.luongson-sponsor-empty strong {
+	color: #1d2327;
+}
+
+.luongson-sponsor-row {
+	border: 1px solid #e2e4e7;
+	border-radius: 8px;
+	background: #fcfcfd;
+	padding: 1rem 1.1rem;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.luongson-sponsor-row:hover {
+	border-color: #c3c4c7;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.luongson-sponsor-row__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 1rem;
+	padding-bottom: 0.85rem;
+	border-bottom: 1px solid #ececec;
+}
+
+.luongson-sponsor-row__title {
+	display: flex;
+	align-items: center;
+	gap: 0.55rem;
+}
+
+.luongson-sponsor-row__badge {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: #2271b1;
+	flex-shrink: 0;
+}
+
+.luongson-sponsor-row__fields {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem 1.25rem;
+}
+
+.luongson-sponsor-field--image {
+	grid-column: 1 / -1;
+}
+
+.luongson-sponsor-field label {
+	display: block;
+	font-weight: 600;
+	margin-bottom: 0.4rem;
+	color: #1d2327;
+	font-size: 13px;
+}
+
+.luongson-image-picker {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: 1rem;
+}
+
+.luongson-image-preview {
+	width: 160px;
+	height: 72px;
+	border: 1px dashed #c3c4c7;
+	border-radius: 6px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	background: #fff;
+}
+
+.luongson-image-preview img {
+	max-width: 100%;
+	max-height: 100%;
+	object-fit: contain;
+}
+
+.luongson-image-actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.luongson-sponsor-field input[type="url"],
+.luongson-sponsor-field input[type="text"] {
+	width: 100%;
+	max-width: 100%;
+}
+
+.luongson-sponsor-toolbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-top: 1rem;
+	padding-top: 1rem;
+	border-top: 1px solid #f0f0f1;
+}
+
+.luongson-sponsor-toolbar .description {
+	margin: 0;
+}
+
+.luongson-admin-page .submit {
+	margin-top: 0;
+	padding-top: 0;
+	border-top: 0;
+}
+
+.luongson-footer-content-fields {
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+}
+
+.luongson-footer-content-field label {
+	display: block;
+	margin-bottom: 0.45rem;
+	font-weight: 600;
+	color: #1d2327;
+	font-size: 13px;
+}
+
+.luongson-footer-content-field .wp-editor-wrap {
+	max-width: 100%;
+}
+
+@media (max-width: 782px) {
+	.luongson-sponsor-row__fields {
+		grid-template-columns: 1fr;
+	}
+
+	.luongson-sponsor-toolbar {
+		flex-direction: column;
+		align-items: stretch;
+	}
+}

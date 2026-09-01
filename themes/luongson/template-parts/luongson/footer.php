@@ -7,7 +7,11 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$logo_url = luongson_asset_url( 'images/8suNKBFdLKs23ISzr0C36SqrXFU_8543fca5.png?width=600&height=142' );
+$logo           = luongson_get_site_logo();
+$logo_url       = $logo ? $logo['url'] : '';
+$logo_w         = $logo ? $logo['width'] : 600;
+$logo_h         = $logo ? $logo['height'] : 142;
+$footer_content = luongson_get_footer_content();
 ?>
 <div class="framer-i8gs3c-container luongson-footer">
 	<div class="framer-MvKn2 framer-bk5noi framer-v-bk5noi ls-s166" data-framer-name="Variant 1">
@@ -15,16 +19,25 @@ $logo_url = luongson_asset_url( 'images/8suNKBFdLKs23ISzr0C36SqrXFU_8543fca5.png
 			<div class="framer-1edc2lu ls-s6" data-framer-name="Menu LS">
 				<div class="framer-15go9be ls-s6" data-framer-name="Logo">
 					<div class="ls-s4" data-framer-background-image-wrapper="true">
-						<img class="ls-s5" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" decoding="auto" height="142" width="600" loading="lazy" src="<?php echo esc_url( $logo_url ); ?>" />
+						<?php if ( $logo_url ) : ?>
+						<img class="ls-s5" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" decoding="auto" height="<?php echo esc_attr( $logo_h ); ?>" width="<?php echo esc_attr( $logo_w ); ?>" loading="lazy" src="<?php echo esc_url( $logo_url ); ?>" />
+						<?php endif; ?>
 					</div>
 				</div>
 			</div>
 			<div class="framer-tbtyc1 ls-s6" data-framer-name="Giới thiệu">
 				<div class="framer-elwd3r ls-s167" data-framer-component-type="RichTextContainer" data-framer-name="Tiêu đề Footer">
-					<h2 class="framer-text ls-s168" dir="auto">LƯƠNG SƠN TV — XEM BÓNG ĐÁ TRỰC TIẾP MIỄN PHÍ</h2>
+					<h2 class="framer-text ls-s168" dir="auto"><?php echo esc_html( $footer_content['intro_title'] ); ?></h2>
 				</div>
-				<div class="framer-mnehk6 ls-s169" data-framer-component-type="RichTextContainer" data-framer-name="Mô tả">
-					<p class="framer-text ls-s170" dir="auto">Lương Sơn TV mang đến trải nghiệm xem bóng đá trực tiếp miễn phí với lịch thi đấu, tỷ số và thông tin trận đấu được cập nhật liên tục. Chúng tôi ưu tiên tốc độ, sự thuận tiện và khả năng theo dõi các giải đấu nổi bật trên nhiều thiết bị.</p>
+				<div class="framer-mnehk6 ls-s169 luongson-footer-rich-text luongson-footer-rich-text--intro" data-framer-component-type="RichTextContainer" data-framer-name="Mô tả">
+					<?php
+					echo wp_kses_post(
+						luongson_format_footer_rich_text(
+							$footer_content['intro_description'],
+							'ls-s170'
+						)
+					);
+					?>
 				</div>
 			</div>
 			<div class="framer-1f6jmnw ls-s171 luongson-footer-sponsors" data-border="true" data-framer-name="Nhà tài trợ">
@@ -33,13 +46,7 @@ $logo_url = luongson_asset_url( 'images/8suNKBFdLKs23ISzr0C36SqrXFU_8543fca5.png
 				</div>
 				<div class="framer-35hpbh ls-s174" data-framer-name="Logo Nhà tài trợ" draggable="false">
 					<ul class="ls-s175">
-						<?php
-						/**
-						 * Filter sponsor logos HTML for footer ticker.
-						 * Default: empty — add markup via child theme or plugin.
-						 */
-						echo apply_filters( 'luongson_footer_sponsor_items', '' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-						?>
+						<?php echo luongson_get_sponsor_ticker_items_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					</ul>
 				</div>
 			</div>
@@ -53,9 +60,16 @@ $logo_url = luongson_asset_url( 'images/8suNKBFdLKs23ISzr0C36SqrXFU_8543fca5.png
 							<h3 class="framer-text ls-s178" dir="auto">ĐỊA CHỈ LIÊN HỆ</h3>
 						</div>
 					</div>
-					<div class="framer-1cry8qw ls-s179" data-framer-component-type="RichTextContainer">
-						<p class="framer-text ls-s180" dir="auto">Lương Sơn TV — Trung tâm nội dung thể thao trực tuyến. Liên hệ hỗ trợ và hợp tác qua các kênh chính thức được công bố trên website.</p>
-						<p class="framer-text ls-s181" dir="auto">Địa chỉ: Số 99 Nguyễn Chánh, Hà Nội</p>
+					<div class="framer-1cry8qw ls-s179 luongson-footer-rich-text luongson-footer-rich-text--info" data-framer-component-type="RichTextContainer">
+						<?php
+						echo wp_kses_post(
+							luongson_format_footer_rich_text(
+								$footer_content['contact_content'],
+								'ls-s180',
+								array( 'ls-s180', 'ls-s181' )
+							)
+						);
+						?>
 					</div>
 				</div>
 				<div class="framer-1w9dy4s ls-s6 luongson-footer-disclaimer" data-framer-name="Miễn trừ trách nhiệm">
@@ -68,8 +82,15 @@ $logo_url = luongson_asset_url( 'images/8suNKBFdLKs23ISzr0C36SqrXFU_8543fca5.png
 							<h3 class="framer-text ls-s178" dir="auto">MIỄN TRỪ TRÁCH NHIỆM</h3>
 						</div>
 					</div>
-					<div class="framer-1fyyc0t ls-s182" data-framer-component-type="RichTextContainer">
-						<p class="framer-text ls-s180" dir="auto">Lương Sơn TV không sở hữu bản quyền các nội dung phát sóng từ bên thứ ba. Website chỉ tổng hợp và cung cấp thông tin tham khảo; người dùng tự chịu trách nhiệm khi truy cập các liên kết bên ngoài và cần tuân thủ quy định pháp luật tại nơi cư trú.</p>
+					<div class="framer-1fyyc0t ls-s182 luongson-footer-rich-text luongson-footer-rich-text--info" data-framer-component-type="RichTextContainer">
+						<?php
+						echo wp_kses_post(
+							luongson_format_footer_rich_text(
+								$footer_content['disclaimer_content'],
+								'ls-s180'
+							)
+						);
+						?>
 					</div>
 				</div>
 			</div>

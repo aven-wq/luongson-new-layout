@@ -23,6 +23,42 @@ function luongson_asset_url( $path = '' ) {
 }
 
 /**
+ * Site logo from Flatsome Customizer (Header → Logo & Site Identity).
+ *
+ * @return array{url: string, width: int, height: int}|null
+ */
+function luongson_get_site_logo() {
+	$site_logo_id = function_exists( 'flatsome_option' ) ? flatsome_option( 'site_logo' ) : get_theme_mod( 'site_logo' );
+
+	if ( empty( $site_logo_id ) ) {
+		return null;
+	}
+
+	$width  = (int) get_theme_mod( 'logo_width', 200 );
+	$height = (int) get_theme_mod( 'header_height', 90 );
+
+	if ( ! is_numeric( $site_logo_id ) ) {
+		return array(
+			'url'    => $site_logo_id,
+			'width'  => $width,
+			'height' => $height,
+		);
+	}
+
+	$site_logo = wp_get_attachment_image_src( (int) $site_logo_id, 'large' );
+
+	if ( ! $site_logo ) {
+		return null;
+	}
+
+	return array(
+		'url'    => $site_logo[0],
+		'width'  => (int) $site_logo[1],
+		'height' => (int) $site_logo[2],
+	);
+}
+
+/**
  * Navigation items mirrored from the design sidebar.
  *
  * @return array<int, array<string, string>>
@@ -116,6 +152,63 @@ function luongson_is_nav_active( $url ) {
 	$target_path  = trailingslashit( wp_parse_url( $url, PHP_URL_PATH ) ?: '/' );
 
 	return $current_path === $target_path;
+}
+
+/**
+ * Add Framer typography classes to footer rich text paragraphs.
+ *
+ * @param string   $html              Sanitized HTML from the editor.
+ * @param string   $default_class     Default ls-s* class for paragraphs.
+ * @param string[] $paragraph_classes Optional per-paragraph class overrides.
+ * @return string
+ */
+function luongson_format_footer_rich_text( $html, $default_class, $paragraph_classes = array() ) {
+	$html = trim( (string) $html );
+
+	if ( '' === $html ) {
+		return '';
+	}
+
+	if ( ! preg_match( '/<p[\s>]/i', $html ) ) {
+		$html = wpautop( $html );
+	}
+
+	$index = 0;
+
+	$formatted = preg_replace_callback(
+		'/<p(\s[^>]*)?>/i',
+		static function ( $matches ) use ( &$index, $default_class, $paragraph_classes ) {
+			$class = $paragraph_classes[ $index ] ?? $default_class;
+			++$index;
+
+			$attrs = $matches[1] ?? '';
+
+			if ( preg_match( '/\sclass=(["\'])([^"\']*)\1/i', $attrs, $class_match ) ) {
+				$merged = trim( $class_match[2] . ' framer-text ' . $class );
+				$attrs  = preg_replace(
+					'/\sclass=(["\'])([^"\']*)\1/i',
+					' class="' . esc_attr( $merged ) . '"',
+					$attrs,
+					1
+				);
+			} else {
+				$attrs .= ' class="framer-text ' . esc_attr( $class ) . '"';
+			}
+
+			if ( ! preg_match( '/\sdir=/i', $attrs ) ) {
+				$attrs .= ' dir="auto"';
+			}
+
+			return '<p' . $attrs . '>';
+		},
+		$html
+	);
+
+	if ( ! preg_match( '/<p[\s>]/i', $formatted ) ) {
+		return '<p class="framer-text ' . esc_attr( $default_class ) . '" dir="auto">' . $formatted . '</p>';
+	}
+
+	return $formatted;
 }
 
 /**
