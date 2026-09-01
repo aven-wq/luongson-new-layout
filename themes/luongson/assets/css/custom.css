@@ -14,3 +14,11 @@
 #luongson-site-root .luongson-seo-block ol.framer-text > li.framer-text {
     display: block !important;
 }
+
+.ads-right-sidebar img {
+    border-radius: 8px;
+}
+
+#main, #wrapper {
+    background: transparent !important;
+}

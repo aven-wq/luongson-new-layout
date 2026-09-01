@@ -1,6 +1,7 @@
 <?php
 /**
- * Front page template — respects the page template chosen in admin.
+ * Template Name: Ads Right Sidebar
+ * Description: Layout nội dung trái + ads sidebar phải. Nội dung nhập từ WordPress editor.
  *
  * @package LuongSon
  */

@@ -8,6 +8,7 @@
 defined( 'ABSPATH' ) || exit;
 
 require_once get_stylesheet_directory() . '/inc/template-tags.php';
+require_once get_stylesheet_directory() . '/inc/ads-right-sidebar-template.php';
 require_once get_stylesheet_directory() . '/inc/shortcodes.php';
 require_once get_stylesheet_directory() . '/admin/class-luongson-footer-settings.php';
 require_once get_stylesheet_directory() . '/admin/class-luongson-promo-settings.php';

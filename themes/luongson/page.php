@@ -1,21 +1,15 @@
 <?php
 /**
- * Page template — single page inside LuongSon layout shell.
+ * Page template — respects the page template chosen in admin.
  *
  * @package LuongSon
  */
 
 get_header();
-?>
 
-<div class="luongson-wp-content">
-	<?php
-	while ( have_posts() ) {
-		the_post();
-		the_content();
-	}
-	?>
-</div>
+while ( have_posts() ) {
+	the_post();
+	luongson_render_page_layout();
+}
 
-<?php
 get_footer();
