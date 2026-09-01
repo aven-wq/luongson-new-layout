@@ -119,3 +119,91 @@ function luongson_shortcode_sponsor_ticker( $atts ) {
 	);
 }
 add_shortcode( 'luongson_sponsor_ticker', 'luongson_shortcode_sponsor_ticker' );
+
+/**
+ * Resolve breadcrumb current-page label.
+ *
+ * @param string $label Optional override from shortcode attribute.
+ * @return string
+ */
+function luongson_get_breadcrumb_label( $label = '' ) {
+	$label = trim( (string) $label );
+
+	if ( '' !== $label ) {
+		return $label;
+	}
+
+	if ( is_singular() ) {
+		$title = get_the_title();
+
+		if ( '' !== $title ) {
+			return $title;
+		}
+	}
+
+	return '';
+}
+
+/**
+ * Render breadcrumb block from the Framer tin.html design.
+ *
+ * @param array<string, string> $args {
+ *     Optional. Rendering options.
+ *
+ *     @type string $label      Current page label. Defaults to singular title.
+ *     @type string $home_label Home link text.
+ *     @type string $home_url   Home link URL.
+ * }
+ * @return string
+ */
+function luongson_render_breadcrumb( $args = array() ) {
+	$args = wp_parse_args(
+		$args,
+		array(
+			'label'      => '',
+			'home_label' => __( 'Trang chủ', 'luongson' ),
+			'home_url'   => home_url( '/' ),
+		)
+	);
+
+	$args['label'] = luongson_get_breadcrumb_label( $args['label'] );
+
+	if ( '' === $args['label'] ) {
+		return '';
+	}
+
+	ob_start();
+	get_template_part(
+		'template-parts/luongson/breadcrumb',
+		null,
+		$args
+	);
+
+	return (string) ob_get_clean();
+}
+
+/**
+ * Shortcode: [luongson_breadcrumb]
+ *
+ * Attributes:
+ * - label="..."      Current page label (default: current post/page title).
+ * - home_label="..." Home link text (default: Trang chủ).
+ * - home_url="..."   Home link URL (default: site home).
+ *
+ * @param array<string, string>|string $atts Shortcode attributes.
+ * @return string
+ */
+function luongson_shortcode_breadcrumb( $atts ) {
+	$atts = shortcode_atts(
+		array(
+			'label'      => '',
+			'home_label' => __( 'Trang chủ', 'luongson' ),
+			'home_url'   => home_url( '/' ),
+		),
+		$atts,
+		'luongson_breadcrumb'
+	);
+
+	return luongson_render_breadcrumb( $atts );
+}
+add_shortcode( 'luongson_breadcrumb', 'luongson_shortcode_breadcrumb' );

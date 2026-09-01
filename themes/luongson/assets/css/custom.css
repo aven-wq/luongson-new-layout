@@ -22,3 +22,35 @@
 #main, #wrapper {
     background: transparent !important;
 }
+
+.luongson-notice {
+    width: 100% !important;
+}
+
+.luongson-notice .gwd_notification {
+    --border-bottom-width: 1px;
+    --border-color: #0f30521f;
+    --border-left-width: 1px;
+    --border-right-width: 1px;
+    --border-style: solid;
+    --border-top-width: 1px;
+    background-color: rgb(255, 255, 255) !important;
+    border-radius: 20px !important;
+    flex-flow: row !important;
+    flex: 0 0 auto !important;
+    place-content: center flex-start !important;
+    align-items: center !important;
+    gap: 20px !important;
+    max-width: 100% !important;
+    height: 32px !important;
+    padding: 0px 10px !important;
+    display: flex !important;
+    position: relative !important;
+    box-sizing: border-box !important;
+    border: 1px solid #fff;
+    margin-bottom: 0;
+}
+
+.luongson-notice .notification-banner-close {
+    background-color: white;
+}
