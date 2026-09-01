@@ -4209,7 +4209,7 @@ navigationcontainer [data-framer-component-type="NavigationContainer"] > *,
   gap: 10px;
   width: 100%;
   height: min-content;
-  padding: 10px 10px 0px;
+  padding-top: 10px;
   display: flex;
   position: relative;
   overflow: visible;

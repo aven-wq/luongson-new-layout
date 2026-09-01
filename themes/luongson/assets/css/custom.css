@@ -54,3 +54,18 @@
 .luongson-notice .notification-banner-close {
     background-color: white;
 }
+
+.image-hover-scale-up,
+.framer-1xsjli6,
+.framer-czae09,
+.framer-1ui2lv9 {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.image-hover-scale-up:hover,
+.framer-1xsjli6:hover,
+.framer-czae09:hover,
+.framer-1ui2lv9:hover {
+    opacity: 1;
+    transform: scale(1.03);
+}

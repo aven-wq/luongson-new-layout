@@ -18,7 +18,7 @@ $catfish_right_id = luongson_get_promo_image_id( 'catfish_right' );
 	<div class="framer-1ofl1o3 hidden-gimj73 hidden-f1vof3"></div>
 	<div class="framer-9pns00">
 		<?php if ( $catfish_left_id ) : ?>
-		<div class="framer-195wq2k hidden-f1vof3">
+		<div class="framer-195wq2k hidden-f1vof3 image-hover-scale-up">
 			<div class="ssr-variant">
 				<div class="framer-1aahoaj" data-framer-name="Color Map">
 					<div class="ls-s4" data-framer-background-image-wrapper="true">
@@ -41,7 +41,7 @@ $catfish_right_id = luongson_get_promo_image_id( 'catfish_right' );
 		<?php endif; ?>
 
 		<?php if ( $catfish_right_id ) : ?>
-		<div class="framer-1dbij14">
+		<div class="framer-1dbij14 image-hover-scale-up">
 			<div class="ssr-variant">
 				<div class="framer-90iulr ls-s20" data-framer-name="Image">
 					<div class="ls-s4" data-framer-background-image-wrapper="true">
