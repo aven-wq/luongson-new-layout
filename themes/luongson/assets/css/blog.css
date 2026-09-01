@@ -7240,7 +7240,7 @@ html body {
 
 /* 4. Extracted Component Declarations Specific to Tin tức */
 .ls-blog-s85 {
-  min-height: 100vh !important;
+  min-height: auto !important;
   width: auto !important;
 }
 

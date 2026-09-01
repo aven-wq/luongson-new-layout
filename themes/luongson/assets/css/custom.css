@@ -69,3 +69,29 @@
     opacity: 1;
     transform: scale(1.03);
 }
+
+.block-khuyen-mai img {
+    border-radius: 8px;
+}
+
+.block-khuyen-mai {
+    margin-bottom: 10px;
+}
+
+.row-collapse-space-10 .col:first-child {
+    padding-right: 5px !important;
+}
+
+.row-collapse-space-10 .col:last-child {
+    padding-left: 5px !important;
+}
+
+@media (max-width: 768px) {
+    .row-collapse-space-10 .col:first-child {
+        padding-right: 0 !important;
+    }
+
+    .row-collapse-space-10 .col:last-child {
+        padding-left: 0 !important;
+    }
+}
