@@ -1,0 +1,891 @@
+/* ==========================================================================
+   Responsive Media Queries for LuongSon TV (Single DOM Tree Refactored)
+   Breakpoints:
+   - 1440px+: Desktop Widescreen
+   - 1280px - 1439.98px: Desktop Standard
+   - 1024px - 1279.98px: Laptop / Large Tablet
+   - 760px - 1023.98px: Tablet (768px)
+   - < 760px: Mobile Phone (390px, 414px, 375px, 320px)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Global Layout Base
+   -------------------------------------------------------------------------- */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+[data-framer-root],
+.framer-wh6HR,
+.framer-Q1644,
+.framer-XQc5U,
+.framer-8a8w1,
+.framer-8tCxy {
+  width: 100%;
+  max-width: 100%;
+  height: min-content !important;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* Ensure natural DOM order inside main content and grids */
+.luongson-main-content > *,
+.framer-1rvbi9f > *,
+.framer-s04t0k > *,
+.framer-s4krgb > *,
+.framer-1jmvb32 > *,
+.framer-1puidlg > *,
+.framer-ehw9qi > *,
+.framer-1sh135 > *,
+.framer-1uj92d2 > *,
+.framer-1ths2n4 > *,
+.framer-1f6jmnw > *,
+.framer-1d371g8 > * {
+  order: 0 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Desktop (>= 1024px)
+   -------------------------------------------------------------------------- */
+@media (min-width: 1024px) {
+  /* Hide Mobile Header on desktop */
+  .luongson-mobile-header,
+  .framer-1thqph1-container {
+    display: none !important;
+  }
+
+  /* Fixed Left Sidebar */
+  .luongson-sidebar-left,
+  .framer-ea4vkm-container {
+    display: block !important;
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 200px !important;
+    height: 100vh !important;
+    z-index: 100;
+  }
+
+  .luongson-sidebar-spacer,
+  .framer-10rzk9d,
+  .framer-y02k6b {
+    display: block !important;
+    width: 210px !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Main Split Layout Row */
+  .luongson-main-layout,
+  .framer-1llbnyo,
+  .framer-1dempm2,
+  .framer-143whr8,
+  .framer-3f0u22,
+  .framer-180kqtn,
+  .framer-cecgc8 {
+    display: flex !important;
+    flex-direction: row !important;
+    width: 100% !important;
+    height: min-content !important;
+    min-height: 100vh;
+  }
+
+  .luongson-main-content,
+  .framer-1rvbi9f,
+  .framer-s4krgb,
+  .framer-1jmvb32,
+  .framer-1puidlg,
+  .framer-ehw9qi {
+    flex: 1 0 0px !important;
+    max-width: 1500px !important;
+    width: 1px !important;
+    min-width: 0 !important;
+    height: min-content !important;
+    padding: 0 10px !important;
+  }
+
+  /* Ambassador & SEO Section Row */
+  .luongson-ambassador-seo-section,
+  .framer-1y11z59 {
+    display: flex !important;
+    flex-flow: row !important;
+    width: 100% !important;
+    gap: 20px !important;
+    padding: 0 10px !important;
+    box-sizing: border-box !important;
+  }
+
+  .luongson-ambassador-block,
+  .framer-1th9ham {
+    flex: 1 1 0px !important;
+    width: 1px !important;
+    min-width: 0 !important;
+    height: 530px !important;
+    position: relative !important;
+  }
+
+  .luongson-seo-block,
+  .framer-1p0eiqb {
+    flex: 2.4 1 0px !important;
+    width: 1px !important;
+    min-width: 0 !important;
+    height: 530px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Widescreen (>= 1440px)
+   -------------------------------------------------------------------------- */
+@media (min-width: 1440px) {
+  .luongson-live-grid,
+  .framer-1ths2n4 {
+    grid-template-columns: repeat(3, minmax(50px, 1fr)) !important;
+    gap: 12px 10px !important;
+  }
+
+  /* Index Top Section Split */
+  .framer-1talbf0 {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .framer-zyvcv2 {
+    flex: 1 0 0px !important;
+    min-width: 0 !important;
+    width: 1px !important;
+  }
+
+  .framer-1ui58fi {
+    flex: 0 0 280px !important;
+    width: 280px !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Middle Ads Banner on 1440 (3 columns span) */
+  .framer-hdbb3f {
+    grid-column: span 3 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 20px !important;
+    width: 100% !important;
+  }
+
+  .framer-hdbb3f .framer-18wiaf1,
+  .framer-hdbb3f .framer-1t6ncki {
+    flex: 1 1 0px !important;
+    width: 1px !important;
+    min-width: 0 !important;
+    display: flex !important;
+  }
+
+  /* Schedule Page Split */
+  .framer-pq2wbf {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .framer-opq2ca {
+    flex: 1 0 0px !important;
+    min-width: 0 !important;
+    width: 1px !important;
+  }
+
+  .framer-fy5zt4 {
+    flex: 0 0 280px !important;
+    width: 280px !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Subpages Row with Side Ads */
+  .framer-e1cfbd,
+  .framer-iggz1v,
+  .framer-1vlk7t7 {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .framer-1wszhgc,
+  .framer-1um4fyq,
+  .framer-14equ15,
+  .framer-13a8l32 {
+    flex: 1 0 0px !important;
+    min-width: 0 !important;
+    width: 1px !important;
+  }
+
+  .framer-1374ghc,
+  .framer-1v93uph,
+  .framer-1a42u9u {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 120px !important;
+    gap: 8px !important;
+    flex: 0 0 auto !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Desktop Standard (1280px - 1439.98px)
+   -------------------------------------------------------------------------- */
+@media (min-width: 1280px) and (max-width: 1439.98px) {
+  .luongson-live-grid,
+  .framer-1ths2n4 {
+    grid-template-columns: repeat(2, minmax(50px, 1fr)) !important;
+    gap: 12px 10px !important;
+  }
+
+  /* Index Top Section Split */
+  .framer-1talbf0 {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .framer-zyvcv2 {
+    flex: 1 0 0px !important;
+    min-width: 0 !important;
+    width: 1px !important;
+  }
+
+  .framer-1ui58fi {
+    flex: 0 0 280px !important;
+    width: 280px !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Middle Ads Banner on 1280 (2 columns span) */
+  .framer-hdbb3f {
+    grid-column: span 2 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .framer-hdbb3f .framer-18wiaf1,
+  .framer-hdbb3f .framer-1t6ncki {
+    flex: 1 1 0px !important;
+    width: 1px !important;
+    min-width: 0 !important;
+    display: flex !important;
+  }
+
+  /* Schedule Page Split */
+  .framer-pq2wbf {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .framer-opq2ca {
+    flex: 1 0 0px !important;
+    min-width: 0 !important;
+    width: 1px !important;
+  }
+
+  .framer-fy5zt4 {
+    flex: 0 0 280px !important;
+    width: 280px !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Subpages Row with Side Ads */
+  .framer-e1cfbd,
+  .framer-iggz1v,
+  .framer-1vlk7t7 {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .framer-1wszhgc,
+  .framer-1um4fyq,
+  .framer-14equ15,
+  .framer-13a8l32 {
+    flex: 1 0 0px !important;
+    min-width: 0 !important;
+    width: 1px !important;
+  }
+
+  .framer-1374ghc,
+  .framer-1v93uph,
+  .framer-1a42u9u {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 120px !important;
+    gap: 8px !important;
+    flex: 0 0 auto !important;
+  }
+
+  .luongson-ambassador-block,
+  .framer-1th9ham,
+  .luongson-seo-block,
+  .framer-1p0eiqb {
+    height: 480px !important;
+  }
+
+  .luongson-seo-block,
+  .framer-1p0eiqb {
+    flex: 2.4 1 0px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Tablet & Laptop (1024px - 1279.98px)
+   -------------------------------------------------------------------------- */
+@media (min-width: 1024px) and (max-width: 1279.98px) {
+  .luongson-live-grid,
+  .framer-1ths2n4 {
+    grid-template-columns: repeat(2, minmax(50px, 1fr)) !important;
+    gap: 12px 10px !important;
+  }
+
+  /* Hide right AI box on 1024 */
+  .framer-1ui58fi {
+    display: none !important;
+  }
+
+  .framer-zyvcv2 {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 1 auto !important;
+  }
+
+  /* Middle Ads Banner on 1024 (2 columns span) */
+  .framer-hdbb3f {
+    grid-column: span 2 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .framer-hdbb3f .framer-18wiaf1,
+  .framer-hdbb3f .framer-1t6ncki {
+    flex: 1 1 0px !important;
+    width: 1px !important;
+    min-width: 0 !important;
+    display: flex !important;
+  }
+
+  /* Hide right sidebar on lichthidau on 1024 */
+  .framer-fy5zt4 {
+    display: none !important;
+  }
+
+  .framer-opq2ca {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 1 auto !important;
+  }
+
+  /* Hide side ads on subpages on 1024 (sidebar takes 200px) */
+  .framer-1374ghc,
+  .framer-1v93uph,
+  .framer-1a42u9u {
+    display: none !important;
+  }
+
+  .framer-1wszhgc,
+  .framer-1um4fyq,
+  .framer-14equ15,
+  .framer-13a8l32 {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 1 auto !important;
+  }
+
+  .luongson-ambassador-block,
+  .framer-1th9ham,
+  .luongson-seo-block,
+  .framer-1p0eiqb {
+    height: 400px !important;
+  }
+
+  .luongson-seo-block,
+  .framer-1p0eiqb {
+    flex: 2.4 1 0px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Tablet & Mobile (< 1024px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023.98px) {
+  /* Mobile Sticky Header */
+  .luongson-mobile-header,
+  .framer-1thqph1-container {
+    display: flex !important;
+    width: 100% !important;
+    height: 40px !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important;
+    background: linear-gradient(270deg, rgb(5, 0, 105) 0%, rgb(8, 0, 166) 100%) !important;
+    order: 1 !important;
+    margin: 0 !important;
+  }
+
+  .framer-GRble.framer-tcv7bq {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 40px !important;
+    padding: 0 10px !important;
+    display: flex !important;
+    flex-flow: row !important;
+    place-content: center space-between !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+    background: transparent !important;
+  }
+
+  .framer-GRble .framer-1byd5n2 {
+    width: 130px !important;
+    height: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    order: 0 !important;
+  }
+
+  .framer-GRble .framer-2zreyi {
+    display: flex !important;
+    flex-flow: row !important;
+    align-items: center !important;
+    gap: 12px !important;
+    width: auto !important;
+    height: auto !important;
+    order: 3 !important;
+  }
+
+  .framer-GRble .framer-q2hsys {
+    width: 24px !important;
+    height: 24px !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    order: 1 !important;
+  }
+
+  .framer-GRble .framer-1uixw6l {
+    display: flex !important;
+    flex-flow: row !important;
+    align-items: center !important;
+    gap: 6px !important;
+    cursor: pointer !important;
+    order: 0 !important;
+  }
+
+  /* Root container reset */
+  .framer-wh6HR.framer-djfypk,
+  .framer-wh6HR,
+  .framer-Q1644,
+  .framer-XQc5U,
+  .framer-8a8w1,
+  .framer-8tCxy {
+    width: 100% !important;
+    max-width: 100vw !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Main Split Layout */
+  .luongson-main-layout,
+  .framer-1llbnyo,
+  .framer-1dempm2,
+  .framer-143whr8,
+  .framer-3f0u22,
+  .framer-180kqtn,
+  .framer-cecgc8 {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: min-content !important;
+    min-height: 100vh;
+    flex-direction: column !important;
+    padding: 0 !important;
+    order: 2 !important;
+  }
+
+  /* Hide Desktop Sidebar */
+  .luongson-sidebar-left,
+  .framer-ea4vkm-container,
+  .luongson-sidebar-spacer,
+  .framer-10rzk9d,
+  .framer-y02k6b {
+    display: none !important;
+  }
+
+  .luongson-main-content,
+  .framer-1rvbi9f,
+  .framer-s04t0k,
+  .framer-s4krgb,
+  .framer-1jmvb32,
+  .framer-1puidlg,
+  .framer-ehw9qi {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+    padding: 0 4px !important;
+    overflow: visible !important;
+  }
+
+  /* Hide Right Sidebars on top and schedule */
+  .framer-1ui58fi,
+  .framer-fy5zt4 {
+    display: none !important;
+  }
+
+  .framer-1talbf0,
+  .framer-pq2wbf {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-direction: column !important;
+    padding: 0 !important;
+    gap: 8px !important;
+  }
+
+  .framer-zyvcv2,
+  .framer-opq2ca,
+  .framer-1f6jmnw,
+  .framer-1d371g8 {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+
+  .framer-vb8tzz,
+  .framer-17ntzdd {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Tablet (760px - 1023.98px)
+   -------------------------------------------------------------------------- */
+@media (min-width: 760px) and (max-width: 1023.98px) {
+  /* Ticker in mobile header */
+  .framer-GRble .framer-jqxjug {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    max-width: calc(100% - 320px) !important;
+    order: 1 !important;
+  }
+
+  .luongson-live-grid,
+  .framer-1ths2n4 {
+    grid-template-columns: repeat(2, minmax(50px, 1fr)) !important;
+    gap: 12px 10px !important;
+  }
+
+  .framer-1sh135,
+  .framer-1uj92d2 {
+    grid-template-columns: repeat(2, minmax(50px, 1fr)) !important;
+    gap: 12px 10px !important;
+  }
+
+  /* Middle Ads Banner on 768 (2 columns span) */
+  .framer-hdbb3f {
+    grid-column: span 2 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .framer-hdbb3f .framer-18wiaf1,
+  .framer-hdbb3f .framer-1t6ncki {
+    flex: 1 1 0px !important;
+    width: 1px !important;
+    min-width: 0 !important;
+    display: flex !important;
+  }
+
+  /* Subpages Row with Ads column on 768px */
+  .framer-e1cfbd,
+  .framer-iggz1v,
+  .framer-1vlk7t7 {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .framer-1wszhgc,
+  .framer-1um4fyq,
+  .framer-14equ15,
+  .framer-13a8l32 {
+    flex: 1 1 0px !important;
+    min-width: 0 !important;
+    width: 1px !important;
+  }
+
+  .framer-1374ghc,
+  .framer-1v93uph,
+  .framer-1a42u9u {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 120px !important;
+    flex: 0 0 auto !important;
+  }
+
+  /* Ambassador & SEO Section Row on Tablet */
+  .luongson-ambassador-seo-section,
+  .framer-1y11z59 {
+    display: flex !important;
+    flex-flow: row !important;
+    width: 100% !important;
+    gap: 20px !important;
+    padding: 0 10px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Hide page marquee ticker on tablet (768px) */
+  .luongson-marquee-ticker,
+  .framer-1ecegz2 {
+    display: none !important;
+  }
+
+  /* Show header ticker on tablet */
+  .framer-GRble .framer-jqxjug {
+    display: flex !important;
+  }
+
+  .luongson-ambassador-block,
+  .framer-1th9ham {
+    flex: 1 1 0px !important;
+    width: 1px !important;
+    min-width: 0 !important;
+    height: 420px !important;
+    position: relative !important;
+  }
+
+  .luongson-seo-block,
+  .framer-1p0eiqb {
+    flex: 2.4 1 0px !important;
+    width: 1px !important;
+    min-width: 0 !important;
+    height: 420px !important;
+    padding: 20px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Mobile Phone (< 760px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 759.98px) {
+  /* Hide header search/ticker in mobile header on phone */
+  .framer-GRble .framer-jqxjug, .luongson-featured-odds-panel {
+    display: none !important;
+  }
+
+  /* Show page marquee ticker on phone */
+  .luongson-marquee-ticker,
+  .framer-1ecegz2 {
+    display: flex !important;
+    width: 100% !important;
+  }
+
+  /* Hide right ads on subpages on phone */
+  .framer-1374ghc,
+  .framer-1v93uph,
+  .framer-1a42u9u {
+    display: none !important;
+  }
+
+  .framer-e1cfbd,
+  .framer-iggz1v,
+  .framer-1vlk7t7 {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+
+  .framer-1wszhgc,
+  .framer-1um4fyq,
+  .framer-14equ15,
+  .framer-13a8l32 {
+    width: 100% !important;
+    flex: 1 1 auto !important;
+  }
+
+  /* 1-column match grid */
+  .luongson-live-grid,
+  .framer-1ths2n4 {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .framer-1sh135,
+  .framer-1uj92d2 {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* Middle Ads Banner on 390 (1 column vertical stack) */
+  .framer-hdbb3f {
+    grid-column: span 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .framer-hdbb3f .framer-18wiaf1,
+  .framer-hdbb3f .framer-1t6ncki {
+    width: 100% !important;
+    flex: 0 0 auto !important;
+    display: flex !important;
+  }
+
+  /* Top Bookmakers row on phone */
+  .framer-1odxofi {
+    width: 100% !important;
+    height: min-content !important;
+  }
+
+  .framer-1lnj4y4-container {
+    width: 100% !important;
+    height: auto !important;
+    flex: 1 1 auto !important;
+  }
+
+  /* Top Banner Header Stack */
+  .luongson-banner-header,
+  .framer-1snn28d,
+  .framer-1dj0g44,
+  .framer-1pkrh2f,
+  .framer-t8lps0 {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-direction: column !important;
+    height: auto !important;
+    padding: 0 4px !important;
+    gap: 4px !important;
+  }
+
+  .framer-1xsjli6,
+  .framer-czae09,
+  .framer-10n921i,
+  .framer-12i72d9,
+  .framer-1y25785 {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 auto !important;
+  }
+
+  /* Commentators List Vertical Stack */
+  .luongson-commentators-list,
+  .framer-3bgk2l {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    width: 100% !important;
+  }
+
+  .luongson-commentators-list .framer-5zry8q,
+  .framer-3bgk2l .framer-5zry8q {
+    display: flex !important;
+    flex-flow: column !important;
+    width: 100% !important;
+    gap: 10px !important;
+  }
+
+  .luongson-commentators-list .framer-5zry8q > *,
+  .framer-3bgk2l .framer-5zry8q > * {
+    width: 100% !important;
+    height: 80px !important;
+    flex: 0 0 auto !important;
+  }
+
+  /* Ambassador & SEO Section Vertical Stack */
+  .luongson-ambassador-seo-section,
+  .framer-1y11z59 {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    width: 100% !important;
+    gap: 20px !important;
+    padding: 0 4px !important;
+  }
+
+  .luongson-ambassador-block,
+  .framer-1th9ham {
+    flex-flow: column !important;
+    flex: 0 0 auto !important;
+    place-content: center !important;
+    align-items: center !important;
+    gap: 0px !important;
+    width: 100% !important;
+    height: min-content !important;
+    padding: 0px !important;
+    display: flex !important;
+    position: relative !important;
+    background-color: rgb(242, 242, 242) !important;
+    border-radius: 16px !important;
+  }
+
+  .luongson-ambassador-block .framer-s44gus,
+  .framer-1th9ham .framer-s44gus,
+  .framer-s44gus {
+    height: min-content !important;
+    width: 100% !important;
+    padding: 20px 20px 0 20px !important;
+    box-sizing: border-box !important;
+    left: unset !important;
+    top: unset !important;
+    position: relative !important;
+  }
+
+  .framer-1y0t7xv {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    width: 100% !important;
+  }
+
+  .luongson-ambassador-block .framer-y3mx44,
+  .framer-1th9ham .framer-y3mx44,
+  .framer-y3mx44 {
+    bottom: unset !important;
+    left: unset !important;
+    position: relative !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    aspect-ratio: 1.00765 / 1 !important;
+    height: auto !important;
+    display: block !important;
+  }
+
+  .luongson-seo-block,
+  .framer-1p0eiqb {
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    height: 420px !important;
+    padding: 20px !important;
+  }
+  
+  .luongson-footer .framer-MvKn2.framer-bk5noi {
+    padding: 44px 20px 100px;
+  }
+}
+

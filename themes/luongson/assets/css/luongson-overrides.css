@@ -1,0 +1,307 @@
+/**
+ * LuongSon — WordPress / Flatsome overrides on top of html theme CSS.
+ * Critical layout rules scoped to #luongson-site-root for predictable UI.
+ */
+
+/* --------------------------------------------------------------------------
+   Root shell
+   -------------------------------------------------------------------------- */
+#luongson-site-root.framer-wh6HR,
+#luongson-site-root.framer-wh6HR.framer-djfypk {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Framer sets all component types absolute — breaks nav/footer/banner text */
+#luongson-site-root [data-framer-component-type="RichTextContainer"] {
+  position: relative !important;
+}
+
+/* --------------------------------------------------------------------------
+   Desktop (>= 1024px)
+   -------------------------------------------------------------------------- */
+@media (min-width: 1024px) {
+  #luongson-site-root.framer-wh6HR {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    min-height: 100vh !important;
+    background: rgb(222, 222, 222) !important;
+  }
+
+  #luongson-site-root .luongson-sidebar-left,
+  #luongson-site-root .framer-ea4vkm-container {
+    display: block !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 200px !important;
+    height: 100vh !important;
+    z-index: 100 !important;
+    overflow: hidden !important;
+  }
+
+  #luongson-site-root .framer-QbuP0.framer-1ei7e2m {
+    width: 200px !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
+    max-height: 100vh !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  #luongson-site-root .framer-1omzemv {
+    overflow: hidden !important;
+  }
+
+  #luongson-site-root .luongson-mobile-header,
+  #luongson-site-root .framer-1thqph1-container {
+    display: none !important;
+  }
+
+  #luongson-site-root .luongson-main-layout,
+  #luongson-site-root .framer-1llbnyo {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    flex: 1 1 auto !important;
+    padding: 0 10px 0 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  #luongson-site-root .luongson-sidebar-spacer,
+  #luongson-site-root .framer-10rzk9d {
+    display: block !important;
+    flex: 0 0 210px !important;
+    width: 210px !important;
+    min-width: 210px !important;
+    height: 1px !important;
+    pointer-events: none !important;
+  }
+
+  #luongson-site-root .luongson-main-content,
+  #luongson-site-root .framer-1rvbi9f {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: 1500px !important;
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow: visible !important;
+    background: rgb(222, 222, 222) !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Tablet & Mobile (< 1024px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023.98px) {
+  #luongson-site-root .luongson-sidebar-left,
+  #luongson-site-root .framer-ea4vkm-container,
+  #luongson-site-root .luongson-sidebar-spacer,
+  #luongson-site-root .framer-10rzk9d {
+    display: none !important;
+  }
+
+  #luongson-site-root .luongson-mobile-header,
+  #luongson-site-root .framer-1thqph1-container {
+    display: flex !important;
+    width: 100% !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important;
+  }
+
+  #luongson-site-root .luongson-main-layout,
+  #luongson-site-root .framer-1llbnyo {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 0 !important;
+  }
+
+  #luongson-site-root .luongson-main-content,
+  #luongson-site-root .framer-1rvbi9f {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 1 auto !important;
+    padding: 0 4px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Sidebar navigation
+   -------------------------------------------------------------------------- */
+#luongson-site-root .luongson-sidebar-nav {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+  width: 100% !important;
+}
+
+#luongson-site-root .luongson-sidebar-nav a {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  padding: 10px 12px !important;
+  text-decoration: none !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  box-sizing: border-box !important;
+}
+
+#luongson-site-root .luongson-sidebar-nav a[data-framer-page-link-current="true"],
+#luongson-site-root .luongson-sidebar-nav a.is-active {
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+
+#luongson-site-root .luongson-sidebar-nav .ls-s8 {
+  flex: 0 0 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+#luongson-site-root .luongson-sidebar-nav .ls-s9,
+#luongson-site-root .luongson-sidebar-nav [data-framer-component-type="RichTextContainer"] {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  width: auto !important;
+}
+
+#luongson-site-root .luongson-sidebar-nav .framer-text,
+#luongson-site-root .luongson-sidebar-nav .ls-s10 {
+  font-family: "Momo Trust Sans", sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  white-space: nowrap !important;
+  margin: 0 !important;
+}
+
+/* Logo */
+#luongson-site-root .luongson-sidebar-left .framer-pr73oa,
+#luongson-site-root .luongson-sidebar-left .framer-1hocoz {
+  position: relative !important;
+  aspect-ratio: 4.2243 / 1 !important;
+  width: 100% !important;
+  min-height: 40px !important;
+}
+
+#luongson-site-root .luongson-sidebar-left .framer-1supw53,
+#luongson-site-root .luongson-sidebar-left .framer-1byd5n2 {
+  position: relative !important;
+  width: 100% !important;
+  min-height: 54px !important;
+}
+
+/* Banner */
+#luongson-site-root .luongson-sidebar-banner,
+#luongson-site-root .framer-174nt9o {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  gap: 4px !important;
+  width: 100% !important;
+  min-height: 80px !important;
+  padding: 12px !important;
+  box-sizing: border-box !important;
+  background-color: rgb(255, 223, 41) !important;
+  border-radius: 16px !important;
+}
+
+/* --------------------------------------------------------------------------
+   Main content / Flatsome reset
+   -------------------------------------------------------------------------- */
+#luongson-site-root .luongson-page-main {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+#luongson-site-root .luongson-page-main #content,
+#luongson-site-root .luongson-page-main .blog-wrapper,
+#luongson-site-root .luongson-page-main .page-wrapper,
+#luongson-site-root .luongson-wp-content {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  box-sizing: border-box !important;
+}
+
+body.luongson-theme .luongson-page-main .row,
+body.luongson-theme .luongson-page-main .col {
+  max-width: 100% !important;
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+#luongson-site-root .luongson-footer,
+#luongson-site-root .luongson-footer .framer-MvKn2.framer-bk5noi {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  margin-top: auto !important;
+}
+
+#luongson-site-root .luongson-footer-sponsors ul {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 28px !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  will-change: transform !important;
+}
+
+/* --------------------------------------------------------------------------
+   WordPress admin bar
+   -------------------------------------------------------------------------- */
+body.admin-bar #luongson-site-root .luongson-sidebar-left,
+body.admin-bar #luongson-site-root .framer-ea4vkm-container {
+  top: 32px !important;
+  height: calc(100vh - 32px) !important;
+}
+
+body.admin-bar #luongson-site-root .framer-QbuP0.framer-1ei7e2m {
+  height: calc(100vh - 32px) !important;
+  min-height: calc(100vh - 32px) !important;
+  max-height: calc(100vh - 32px) !important;
+}
+
+@media screen and (max-width: 782px) {
+  body.admin-bar #luongson-site-root .luongson-sidebar-left,
+  body.admin-bar #luongson-site-root .framer-ea4vkm-container {
+    top: 46px !important;
+    height: calc(100vh - 46px) !important;
+  }
+
+  body.admin-bar #luongson-site-root .framer-QbuP0.framer-1ei7e2m {
+    height: calc(100vh - 46px) !important;
+    min-height: calc(100vh - 46px) !important;
+    max-height: calc(100vh - 46px) !important;
+  }
+
+  body.admin-bar #luongson-site-root .luongson-mobile-header {
+    top: 46px !important;
+  }
+}
+
+/* Hide Flatsome duplicate shell */
+body.luongson-theme > #wrapper:not(#luongson-site-root) {
+  display: none !important;
+}
