@@ -1,0 +1,319 @@
+/* Animations and Transitions for LuongSon TV */
+
+/* Live Match Pulse Indicator */
+@keyframes livePulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(1.18);
+  }
+}
+
+/* Apply pulse to red live status badges */
+[data-framer-name*="Hiệp"],
+[data-framer-name*="Live"],
+.framer-1a43oeb,
+.framer-1x5y761 {
+  will-change: transform, opacity;
+}
+
+/* Commentator Cards Hover & Transitions */
+.luongson-commentator-card,
+.framer-24z3t0 {
+  transition:
+    transform 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+.luongson-commentator-card:hover,
+.framer-24z3t0:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* Commentator Avatars Zoom Effect on Hover */
+.luongson-commentator-avatar img,
+.framer-hgq8kk img {
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.luongson-commentator-card:hover .luongson-commentator-avatar img,
+.luongson-commentator-card:hover .framer-hgq8kk img,
+.framer-24z3t0:hover .framer-hgq8kk img {
+  transform: scale(1.08);
+}
+
+/* Follow Buttons Hover & Active States */
+.luongson-commentator-follow-btn,
+.framer-1tp7z3x {
+  transition:
+    transform 0.18s ease,
+    background-color 0.18s ease,
+    box-shadow 0.18s ease;
+  cursor: pointer;
+}
+
+.luongson-commentator-follow-btn:hover,
+.framer-1tp7z3x:hover {
+  transform: scale(1.06);
+  background-color: #f5f5f5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+.luongson-commentator-follow-btn:active,
+.framer-1tp7z3x:active {
+  transform: scale(0.94);
+}
+
+/* Follow button clicked animation */
+@keyframes heartBeat {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.2);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  75% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.luongson-commentator-follow-btn.followed,
+.framer-1tp7z3x.followed {
+  background-color: #ffe8ee;
+  color: #ff1e56;
+  animation: heartBeat 0.45s ease-in-out;
+}
+
+/* Match Cards Hover Effects */
+[data-framer-name="Live Match Thumbnail"],
+.framer-1a3owxk,
+.framer-1wem2lt,
+.framer-10258gq,
+.framer-1m8s061 {
+  transition:
+    transform 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+[data-framer-name="Live Match Thumbnail"]:hover,
+.framer-1a3owxk:hover,
+.framer-1wem2lt:hover,
+.framer-10258gq:hover,
+.framer-1m8s061:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Betting Action Buttons Hover */
+[data-framer-name*="Cược"],
+.framer-1fn7d0o,
+.framer-1e9z9o8,
+.framer-13xuhp9,
+.framer-14n3k6c,
+.framer-1c4pzc4,
+.framer-1e8r8pt,
+.framer-1h3xllt,
+.framer-1r14nln,
+.framer-8056f9,
+.framer-wvvr1q,
+.framer-ajbrz,
+.framer-hb1fco,
+.framer-13g52xi,
+.framer-15xdxsd {
+  transition:
+    transform 0.18s ease,
+    filter 0.18s ease;
+  cursor: pointer;
+}
+
+[data-framer-name*="Cược"]:hover,
+.framer-1fn7d0o:hover,
+.framer-1e9z9o8:hover,
+.framer-13xuhp9:hover,
+.framer-14n3k6c:hover,
+.framer-1c4pzc4:hover,
+.framer-1e8r8pt:hover,
+.framer-1h3xllt:hover,
+.framer-1r14nln:hover,
+.framer-8056f9:hover,
+.framer-wvvr1q:hover,
+.framer-ajbrz:hover,
+.framer-hb1fco:hover,
+.framer-13g52xi:hover,
+.framer-15xdxsd:hover {
+  filter: brightness(1.12);
+  transform: scale(1.03);
+}
+
+/* Sidebar Menu Item Hover */
+.framer-1k7j5o,
+.framer-8a58u7,
+.framer-1768b5m,
+.framer-116h8ha,
+.framer-11n1iyp,
+.framer-1h6d92r,
+.framer-18r8m7l,
+.framer-1u73hsv,
+.framer-12i4q0t {
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.framer-1k7j5o:hover,
+.framer-8a58u7:hover,
+.framer-1768b5m:hover,
+.framer-116h8ha:hover,
+.framer-11n1iyp:hover,
+.framer-1h6d92r:hover,
+.framer-18r8m7l:hover,
+.framer-1u73hsv:hover,
+.framer-12i4q0t:hover {
+  transform: translateX(3px);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Floating Bottom Banner Controls */
+.framer-hsrn5s {
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.framer-hsrn5s:hover {
+  transform: scale(1.18);
+  background-color: #ffffff;
+}
+
+/* Ticker & Slider Common Core Styles */
+.luongson-marquee-ticker,
+.luongson-featured-ads-ticker,
+.luongson-top-bookmakers,
+.luongson-footer-sponsors,
+.luongson-commentators-list,
+.framer-1ecegz2,
+.framer-16stqci,
+.framer-gvq6hs,
+.framer-1p0iri9,
+.framer-197sjsc,
+.framer-cfqyq6,
+.framer-1lnj4y4-container,
+.framer-ioysu6-container,
+.framer-srbwl7-container,
+.framer-yy5utx-container,
+.framer-1f6jmnw,
+.framer-3bgk2l {
+  overflow: hidden !important;
+  position: relative !important;
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* Universal Ticker Tracks */
+.luongson-marquee-ticker ul,
+.luongson-featured-ads-ticker ul,
+.luongson-top-bookmakers ul,
+.luongson-footer-sponsors ul,
+.framer-qw50ff ul,
+.framer-zogsad ul,
+.framer-cfqyq6 ul,
+.framer-czcwzc ul,
+.framer-35hpbh ul,
+.ls-s24,
+.ls-s34,
+.ls-s76,
+.ls-s175,
+.ls-blog-s13,
+.ls-blog-s36,
+.ls-blog-s96,
+.ls-blog-s115,
+.ls-ltd-s6,
+.ls-ltd-s31,
+.ls-ut-s13 {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 4px 0 !important;
+  width: max-content !important;
+  max-width: none !important;
+  gap: 12px !important;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.luongson-marquee-ticker ul:active,
+.luongson-featured-ads-ticker ul:active,
+.luongson-top-bookmakers ul:active,
+.luongson-footer-sponsors ul:active {
+  cursor: grabbing;
+}
+
+/* Ticker Items */
+.luongson-marquee-ticker .ticker-item,
+.luongson-marquee-ticker .clone-item,
+.luongson-featured-ads-ticker .ticker-item,
+.luongson-featured-ads-ticker .clone-item,
+.luongson-top-bookmakers .ticker-item,
+.luongson-top-bookmakers .clone-item,
+.luongson-footer-sponsors .ticker-item,
+.luongson-footer-sponsors .clone-item {
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+}
+
+/* Commentators List Track */
+.luongson-commentators-list .framer-5zry8q,
+.framer-3bgk2l .framer-5zry8q {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 4px 0 !important;
+  width: max-content !important;
+  max-width: none !important;
+  gap: 10px !important;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.luongson-commentators-list .framer-5zry8q:active,
+.framer-3bgk2l .framer-5zry8q:active {
+  cursor: grabbing;
+}
+
+.luongson-commentator-card {
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Match Card Vertical Slideshow Axis-Y */
+.framer-slideshow-axis-y .ls-s105,
+.framer-slideshow-axis-y .ls-ltd-s85,
+.framer-slideshow-axis-y ul {
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+

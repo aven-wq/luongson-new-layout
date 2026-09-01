@@ -1,0 +1,24 @@
+# Ignore everything by default
+*
+
+# Allow git metadata and docs
+!.gitignore
+!README.md
+!SPEED.md
+
+# Only track plugins and themes
+!plugins/
+!plugins/**
+!themes/
+!themes/**
+
+# Never commit All-in-One WP Migration backups (can exceed GitHub 100MB limit)
+plugins/all-in-one-wp-migration/storage/**
+!plugins/all-in-one-wp-migration/storage/index.html
+!plugins/all-in-one-wp-migration/storage/index.php
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+*.log
+themes/twentytwenty*
