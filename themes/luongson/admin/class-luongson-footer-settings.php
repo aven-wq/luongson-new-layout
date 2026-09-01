@@ -266,24 +266,36 @@ class LuongSon_Footer_Settings {
 				}
 			}
 
-			function openMediaFrame($row) {
+			function setImageField($field, attachment) {
+				var previewUrl = attachment.sizes && attachment.sizes.thumbnail
+					? attachment.sizes.thumbnail.url
+					: attachment.url;
+
+				$field.find('.luongson-image-id').val(attachment.id);
+				$field.find('.luongson-image-url').val(attachment.url);
+				$field.find('.luongson-image-preview img').attr('src', previewUrl);
+				$field.find('.luongson-image-preview').show();
+				$field.find('.luongson-remove-image').show();
+			}
+
+			function clearImageField($field) {
+				$field.find('.luongson-image-id').val('');
+				$field.find('.luongson-image-url').val('');
+				$field.find('.luongson-image-preview img').attr('src', '');
+				$field.find('.luongson-image-preview').hide();
+				$field.find('.luongson-remove-image').hide();
+			}
+
+			function openMediaFrame($field, title) {
 				var frame = wp.media({
-					title: <?php echo wp_json_encode( __( 'Chọn logo nhà tài trợ', 'luongson' ) ); ?>,
+					title: title || <?php echo wp_json_encode( __( 'Chọn ảnh', 'luongson' ) ); ?>,
 					button: { text: <?php echo wp_json_encode( __( 'Chọn ảnh', 'luongson' ) ); ?> },
 					multiple: false
 				});
 
 				frame.on('select', function () {
 					var attachment = frame.state().get('selection').first().toJSON();
-					var previewUrl = attachment.sizes && attachment.sizes.thumbnail
-						? attachment.sizes.thumbnail.url
-						: attachment.url;
-
-					$row.find('.luongson-image-id').val(attachment.id);
-					$row.find('.luongson-image-url').val(attachment.url);
-					$row.find('.luongson-image-preview img').attr('src', previewUrl);
-					$row.find('.luongson-image-preview').show();
-					$row.find('.luongson-remove-image').show();
+					setImageField($field, attachment);
 				});
 
 				frame.open();
@@ -310,13 +322,7 @@ class LuongSon_Footer_Settings {
 
 				$(document).on('click', '.luongson-remove-image', function (event) {
 					event.preventDefault();
-
-					var $row = $(this).closest('.luongson-sponsor-row');
-					$row.find('.luongson-image-id').val('');
-					$row.find('.luongson-image-url').val('');
-					$row.find('.luongson-image-preview img').attr('src', '');
-					$row.find('.luongson-image-preview').hide();
-					$(this).hide();
+					clearImageField($(this).closest('.luongson-sponsor-row'));
 				});
 
 				$(document).on('click', '.luongson-copy-shortcode', function (event) {
@@ -536,6 +542,121 @@ class LuongSon_Footer_Settings {
 		</div>
 		<?php
 	}
+}
+
+/**
+ * Promo image field keys.
+ *
+ * @return array<int, string>
+ */
+function luongson_get_promo_image_keys() {
+	return array(
+		'banner_left',
+		'banner_mid',
+		'banner_right',
+		'catfish_left',
+		'catfish_right',
+	);
+}
+
+/**
+ * Admin labels for promo image fields.
+ *
+ * @return array<string, string>
+ */
+function luongson_get_promo_image_labels() {
+	return array(
+		'banner_left'  => __( 'Banner trái', 'luongson' ),
+		'banner_mid'   => __( 'Banner giữa', 'luongson' ),
+		'banner_right' => __( 'Banner phải', 'luongson' ),
+		'catfish_left' => __( 'Catfish trái', 'luongson' ),
+		'catfish_right' => __( 'Catfish phải', 'luongson' ),
+	);
+}
+
+/**
+ * Get saved promo image settings from the database.
+ *
+ * @return array<string, array<string, int>>
+ */
+function luongson_get_saved_promo_images() {
+	$saved = get_option( LuongSon_Promo_Settings::OPTION_KEY, array() );
+
+	return is_array( $saved ) ? $saved : array();
+}
+
+/**
+ * Get a promo image attachment ID.
+ *
+ * @param string $key Promo image key.
+ * @return int
+ */
+function luongson_get_promo_image_id( $key ) {
+	static $image_ids = null;
+
+	if ( null === $image_ids ) {
+		$saved    = luongson_get_saved_promo_images();
+		$image_ids = array();
+
+		foreach ( luongson_get_promo_image_keys() as $image_key ) {
+			$image_id = isset( $saved[ $image_key ]['image_id'] ) ? absint( $saved[ $image_key ]['image_id'] ) : 0;
+
+			if ( $image_id && wp_attachment_is_image( $image_id ) ) {
+				$image_ids[ $image_key ] = $image_id;
+			}
+		}
+	}
+
+	return isset( $image_ids[ $key ] ) ? (int) $image_ids[ $key ] : 0;
+}
+
+/**
+ * Get a promo image URL from the media library.
+ *
+ * @param string $key  Promo image key.
+ * @param string $size Image size.
+ * @return string
+ */
+function luongson_get_promo_image_url( $key, $size = 'full' ) {
+	$image_id = luongson_get_promo_image_id( $key );
+
+	if ( ! $image_id ) {
+		return '';
+	}
+
+	$url = wp_get_attachment_image_url( $image_id, $size );
+
+	return $url ? $url : '';
+}
+
+/**
+ * Whether any banner header images are configured.
+ *
+ * @return bool
+ */
+function luongson_has_promo_banner() {
+	foreach ( array( 'banner_left', 'banner_mid', 'banner_right' ) as $key ) {
+		if ( luongson_get_promo_image_id( $key ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Whether any catfish images are configured.
+ *
+ * @return bool
+ */
+function luongson_has_promo_catfish() {
+	foreach ( array( 'catfish_left', 'catfish_right' ) as $key ) {
+		if ( luongson_get_promo_image_id( $key ) ) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 /**

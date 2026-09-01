@@ -10,6 +10,7 @@ defined( 'ABSPATH' ) || exit;
 require_once get_stylesheet_directory() . '/inc/template-tags.php';
 require_once get_stylesheet_directory() . '/inc/shortcodes.php';
 require_once get_stylesheet_directory() . '/admin/class-luongson-footer-settings.php';
+require_once get_stylesheet_directory() . '/admin/class-luongson-promo-settings.php';
 
 if ( is_admin() ) {
 	require_once get_stylesheet_directory() . '/admin/class-luongson-admin.php';

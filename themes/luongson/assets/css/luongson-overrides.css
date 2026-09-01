@@ -354,7 +354,4 @@ body.admin-bar #luongson-site-root .framer-QbuP0.framer-1ei7e2m {
   }
 }
 
-/* Hide Flatsome duplicate shell */
-body.luongson-theme > #wrapper:not(#luongson-site-root) {
-  display: none !important;
-}
+

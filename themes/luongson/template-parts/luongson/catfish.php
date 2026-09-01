@@ -7,12 +7,17 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$catfish_left  = luongson_asset_url( 'images/pBYhXA2dOuJep49OzKEN9e6UQ2Y_44fff334.jpg' );
-$catfish_right = luongson_asset_url( 'images/Zb2hW4nkvPuYMPWvi0DWT9DMZus_14af5193.png' );
+if ( ! luongson_has_promo_catfish() ) {
+	return;
+}
+
+$catfish_left_id  = luongson_get_promo_image_id( 'catfish_left' );
+$catfish_right_id = luongson_get_promo_image_id( 'catfish_right' );
 ?>
 <div class="framer-9hgzo luongson-catfish" data-framer-name="Catfish">
 	<div class="framer-1ofl1o3 hidden-gimj73 hidden-f1vof3"></div>
 	<div class="framer-9pns00">
+		<?php if ( $catfish_left_id ) : ?>
 		<div class="framer-195wq2k hidden-f1vof3">
 			<div class="ssr-variant">
 				<div class="framer-1aahoaj" data-framer-name="Color Map">
@@ -23,18 +28,19 @@ $catfish_right = luongson_asset_url( 'images/Zb2hW4nkvPuYMPWvi0DWT9DMZus_14af519
 							decoding="auto"
 							height="135"
 							sizes="(min-width: 1440px) max((max(min(100vw, 1920px) - 540px, 1px) - 10px) / 2, 1px), (min-width: 1280px) and (max-width: 1439.98px) max((max(min(100vw, 1920px) - 540px, 1px) - 10px) / 2, 1px), (max-width: 759.98px) max((max(min(100vw, 1920px) - 540px, 1px) - 10px) / 2, 1px), (min-width: 760px) and (max-width: 959.98px) max((max(min(100vw, 1920px) - 20px, 1px) - 10px) / 2, 1px), (min-width: 960px) and (max-width: 1279.98px) max((max(min(100vw, 1920px) - 230px, 1px) - 10px) / 2, 1px)"
-							src="<?php echo esc_url( $catfish_left . '?width=1092&height=135' ); ?>"
-							srcset="
-								<?php echo esc_url( $catfish_left . '?scale-down-to=512&width=1092&height=135' ); ?> 512w,
-								<?php echo esc_url( $catfish_left . '?scale-down-to=1024&width=1092&height=135' ); ?> 1024w,
-								<?php echo esc_url( $catfish_left . '?width=1092&height=135' ); ?> 1092w
-							"
+							src="<?php echo esc_url( luongson_get_promo_image_url( 'catfish_left' ) ); ?>"
+							<?php if ( $srcset = wp_get_attachment_image_srcset( $catfish_left_id, 'full' ) ) : ?>
+							srcset="<?php echo esc_attr( $srcset ); ?>"
+							<?php endif; ?>
 							width="1092"
 						/>
 					</div>
 				</div>
 			</div>
 		</div>
+		<?php endif; ?>
+
+		<?php if ( $catfish_right_id ) : ?>
 		<div class="framer-1dbij14">
 			<div class="ssr-variant">
 				<div class="framer-90iulr ls-s20" data-framer-name="Image">
@@ -45,18 +51,18 @@ $catfish_right = luongson_asset_url( 'images/Zb2hW4nkvPuYMPWvi0DWT9DMZus_14af519
 							decoding="auto"
 							height="180"
 							sizes="(min-width: 1440px) max(max((max(min(max(100vw - 220px, 1px), 1500px), 0px) - 40px) / 3, 1px), max((max((max(min(max(100vw - 220px, 1px), 1500px), 0px) - 60px) / 3, 50px) * 3 - 0px) / 3, 1px), max((max(min(100vw, 1920px) - 540px, 1px) - 10px) / 2, 1px)), (min-width: 1280px) and (max-width: 1439.98px) max(max((max(min(max(100vw - 220px, 1px), 1500px), 0px) - 40px) / 3, 1px), max((max((max(min(max(100vw - 220px, 1px), 1500px), 0px) - 40px) / 2, 50px) * 2 - 20px) / 3, 1px), max((max(min(100vw, 1920px) - 540px, 1px) - 10px) / 2, 1px)), (min-width: 760px) and (max-width: 959.98px) max(max((max(min(max(100vw, 1px), 1500px), 0px) - 30px) / 2, 1px), max((max((max(min(max(100vw, 1px), 1500px), 0px) - 30px) / 2, 50px) * 2 + 2px) / 2, 1px), max((max(min(100vw, 1920px) - 20px, 1px) - 10px) / 2, 1px)), (min-width: 960px) and (max-width: 1279.98px) max(max((max(min(max(100vw - 220px, 1px), 1500px), 0px) - 30px) / 2, 1px), max((max((max(min(max(100vw - 220px, 1px), 1500px), 0px) - 40px) / 2, 50px) * 2 - 0px) / 2, 1px), max((max(min(100vw, 1920px) - 230px, 1px) - 10px) / 2, 1px)), (max-width: 759.98px) max(calc(max(min(100vw, 1500px), 0px) - 8px), max(max(min(100vw, 1500px), 0px) - 20px, 50px), min(100vw, 1920px))"
-							src="<?php echo esc_url( $catfish_right . '?width=1456&height=180' ); ?>"
-							srcset="
-								<?php echo esc_url( $catfish_right . '?scale-down-to=512&width=1456&height=180' ); ?> 512w,
-								<?php echo esc_url( $catfish_right . '?scale-down-to=1024&width=1456&height=180' ); ?> 1024w,
-								<?php echo esc_url( $catfish_right . '?width=1456&height=180' ); ?> 1456w
-							"
+							src="<?php echo esc_url( luongson_get_promo_image_url( 'catfish_right' ) ); ?>"
+							<?php if ( $srcset = wp_get_attachment_image_srcset( $catfish_right_id, 'full' ) ) : ?>
+							srcset="<?php echo esc_attr( $srcset ); ?>"
+							<?php endif; ?>
 							width="1456"
 						/>
 					</div>
 				</div>
 			</div>
 		</div>
+		<?php endif; ?>
+
 		<div aria-label="<?php echo esc_attr__( 'Đóng quảng cáo', 'luongson' ); ?>" class="framer-hsrn5s" tabindex="0">
 			<svg class="framer-KpKpK framer-1d3ejv3" role="presentation" viewBox="0 0 24 24">
 				<path

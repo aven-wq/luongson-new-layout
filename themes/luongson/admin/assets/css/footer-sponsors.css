@@ -259,7 +259,25 @@
 	max-width: 100%;
 }
 
+.luongson-promo-images {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem 1.25rem;
+}
+
+.luongson-promo-image-field label {
+	display: block;
+	font-weight: 600;
+	margin-bottom: 0.4rem;
+	color: #1d2327;
+	font-size: 13px;
+}
+
 @media (max-width: 782px) {
+	.luongson-promo-images {
+		grid-template-columns: 1fr;
+	}
+
 	.luongson-sponsor-row__fields {
 		grid-template-columns: 1fr;
 	}

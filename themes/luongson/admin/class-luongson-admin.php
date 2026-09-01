@@ -23,6 +23,15 @@ function luongson_admin_menu() {
 
 	add_submenu_page(
 		'luongson-settings',
+		__( 'Banner & Quảng cáo', 'luongson' ),
+		__( 'Banner & Quảng cáo', 'luongson' ),
+		'manage_options',
+		'luongson-promo',
+		array( 'LuongSon_Promo_Settings', 'render_page' )
+	);
+
+	add_submenu_page(
+		'luongson-settings',
 		__( 'Footer', 'luongson' ),
 		__( 'Footer', 'luongson' ),
 		'manage_options',
