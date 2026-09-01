@@ -32,6 +32,15 @@ function luongson_admin_menu() {
 
 	add_submenu_page(
 		'luongson-settings',
+		__( 'Block Common', 'luongson' ),
+		__( 'Block Common', 'luongson' ),
+		'manage_options',
+		'luongson-block-common',
+		array( 'LuongSon_Block_Common_Settings', 'render_page' )
+	);
+
+	add_submenu_page(
+		'luongson-settings',
 		__( 'Footer', 'luongson' ),
 		__( 'Footer', 'luongson' ),
 		'manage_options',

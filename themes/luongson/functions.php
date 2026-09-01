@@ -11,6 +11,7 @@ require_once get_stylesheet_directory() . '/inc/template-tags.php';
 require_once get_stylesheet_directory() . '/inc/shortcodes.php';
 require_once get_stylesheet_directory() . '/admin/class-luongson-footer-settings.php';
 require_once get_stylesheet_directory() . '/admin/class-luongson-promo-settings.php';
+require_once get_stylesheet_directory() . '/admin/class-luongson-block-common-settings.php';
 
 if ( is_admin() ) {
 	require_once get_stylesheet_directory() . '/admin/class-luongson-admin.php';
@@ -73,6 +74,14 @@ function luongson_enqueue_assets() {
 		luongson_asset_uri( 'css/luongson-overrides.css' ),
 		array( 'luongson-animations' ),
 		file_exists( $override_path ) ? (string) filemtime( $override_path ) : $theme_ver
+	);
+
+	$custom_path = get_stylesheet_directory() . '/assets/css/custom.css';
+	wp_enqueue_style(
+		'luongson-custom',
+		luongson_asset_uri( 'css/custom.css' ),
+		array( 'luongson-overrides' ),
+		file_exists( $custom_path ) ? (string) filemtime( $custom_path ) : $theme_ver
 	);
 
 	$js_path = get_stylesheet_directory() . '/assets/js/navigation.js';

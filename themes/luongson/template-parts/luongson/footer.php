@@ -11,8 +11,55 @@ $logo           = luongson_get_site_logo();
 $logo_url       = $logo ? $logo['url'] : '';
 $logo_w         = $logo ? $logo['width'] : 600;
 $logo_h         = $logo ? $logo['height'] : 142;
-$footer_content = luongson_get_footer_content();
+$footer_content   = luongson_get_footer_content();
+$ambassador_seo   = luongson_get_ambassador_seo_content();
+$ambassador_image = luongson_get_ambassador_seo_image_attrs();
 ?>
+
+<div class="framer-1y11z59 luongson-ambassador-seo-section">
+	<div class="framer-1th9ham luongson-ambassador-block">
+		<div class="framer-s44gus">
+			<div class="framer-1y0t7xv ls-s26" data-framer-component-type="RichTextContainer"><p class="framer-text ls-s162" dir="auto"><?php echo esc_html( $ambassador_seo['title'] ); ?></p></div>
+			<div class="framer-1p5kmug ls-s26" data-framer-component-type="RichTextContainer">
+				<?php
+				echo wp_kses_post(
+					luongson_format_footer_rich_text(
+						$ambassador_seo['description'],
+						'ls-s163'
+					)
+				);
+				?>
+			</div>
+		</div>
+		<?php if ( $ambassador_image ) : ?>
+		<div class="ssr-variant">
+			<div class="framer-y3mx44" data-framer-name="Image">
+				<div class="ls-s4" data-framer-background-image-wrapper="true">
+					<img
+						class="ls-s164"
+						alt="<?php echo esc_attr( $ambassador_image['alt'] ); ?>"
+						decoding="auto"
+						height="<?php echo esc_attr( (string) $ambassador_image['height'] ); ?>"
+						loading="lazy"
+						sizes="<?php echo esc_attr( $ambassador_image['sizes'] ); ?>"
+						src="<?php echo esc_url( $ambassador_image['src'] ); ?>"
+						<?php if ( ! empty( $ambassador_image['srcset'] ) ) : ?>
+						srcset="<?php echo esc_attr( $ambassador_image['srcset'] ); ?>"
+						<?php endif; ?>
+						width="<?php echo esc_attr( (string) $ambassador_image['width'] ); ?>"
+					/>
+				</div>
+			</div>
+		</div>
+		<?php endif; ?>
+	</div>
+	<div class="framer-1p0eiqb luongson-seo-block" data-framer-name="Block SEO" data-hide-scrollbars="true">
+		<div class="framer-9y2ron">
+			<?php echo wp_kses_post( $ambassador_seo['seo_content'] ); ?>
+		</div>
+	</div>
+</div>
+
 <div class="framer-i8gs3c-container luongson-footer">
 	<div class="framer-MvKn2 framer-bk5noi framer-v-bk5noi ls-s166" data-framer-name="Variant 1">
 		<div class="framer-11ith8a ls-s6 luongson-footer-content" data-framer-name="Nội dung Footer">
