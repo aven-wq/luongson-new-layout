@@ -86,6 +86,78 @@
     padding-left: 5px !important;
 }
 
+body .ck2-card .ck2-card-title {
+    min-height: 1.7rem !important;
+}
+
+.ck2-play {
+    display: none !important;
+}
+
+.dv2-highlights-football-root.ck2-highlight-page {
+    font-family: "Momo Trust Sans", sans-serif !important;
+}
+
+body #main .ck2-highlight-search-wrap {
+    width: 224px;
+}
+
+body #main .ck2-highlight-page .ck2-highlight-search {
+    align-items: center;
+    background-color: rgb(250, 250, 250);
+    border-radius: 8px;
+    cursor: text;
+    display: flex;
+    flex: 1 0 0px;
+    flex-flow: row;
+    gap: 4px;
+    height: 28px;
+    max-width: 224px;
+    font-family: var(--framer-input-font-family);
+    font-weight: var(--framer-input-font-weight);
+    font-size: var(--framer-input-font-size);
+    font-style: var(--framer-input-font-style);
+    color: var(--framer-input-font-color);
+    font-feature-settings: var(--framer-input-font-open-type-features);
+    font-variation-settings: var(--framer-input-font-variation-axes);
+    border-width: medium;
+    border-style: none;
+    border-color: currentcolor;
+    border-image: initial;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100%;
+    height: var(--framer-input-wrapper-height, 100%);
+    letter-spacing: var(--framer-input-font-letter-spacing);
+    text-align: var(--framer-input-font-text-alignment);
+    line-height: var(--framer-input-font-line-height);
+}
+
+body .ck2-btn-load-more {
+    align-items: center;
+    background-color: rgb(255, 35, 35);
+    border-radius: 100px;
+    cursor: pointer;
+    padding: 10px 20px;
+    position: relative;
+    font-family: var(--framer-input-font-family);
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: capitalize;
+}
+
+body  .ck2-btn-load-more:hover:not(:disabled) {
+    background-color: rgb(0, 115, 255);
+    will-change: transform;
+    opacity: 1;
+    transform: translateY(-1px);
+}
+
+body .ck2-btn-load-more svg {
+    display: none;;
+}
+
 @media (max-width: 768px) {
     .row-collapse-space-10 .col:first-child {
         padding-right: 0 !important;
