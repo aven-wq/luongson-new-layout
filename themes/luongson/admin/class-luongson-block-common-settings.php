@@ -357,7 +357,9 @@ function luongson_get_ambassador_seo_content() {
 		'image_alt'   => array_key_exists( 'image_alt', $saved ) && '' !== $saved['image_alt']
 			? sanitize_text_field( $saved['image_alt'] )
 			: $defaults['image_alt'],
-		'seo_content' => ! empty( $saved['seo_content'] ) ? wp_kses_post( $saved['seo_content'] ) : $defaults['seo_content'],
+		'seo_content' => luongson_normalize_framer_list_markup(
+			! empty( $saved['seo_content'] ) ? wp_kses_post( $saved['seo_content'] ) : $defaults['seo_content']
+		),
 	);
 
 	/**

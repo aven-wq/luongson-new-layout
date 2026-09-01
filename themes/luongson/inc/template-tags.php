@@ -155,6 +155,29 @@ function luongson_is_nav_active( $url ) {
 }
 
 /**
+ * Compact whitespace inside Framer list markup.
+ *
+ * The WP editor inserts newlines between <li> and inner <p>. Parent
+ * RichTextContainer blocks use white-space: pre-wrap, so those newlines
+ * render as line breaks and misalign custom ::before list bullets.
+ *
+ * @param string $html Sanitized HTML.
+ * @return string
+ */
+function luongson_normalize_framer_list_markup( $html ) {
+	$html = (string) $html;
+
+	if ( '' === $html || ! preg_match( '/<(?:ul|ol)\b/i', $html ) ) {
+		return $html;
+	}
+
+	$html = preg_replace( '/(<(?:ul|ol|li)\b[^>]*>)\s+/i', '$1', $html );
+	$html = preg_replace( '/\s+(<\/(?:ul|ol|li)>)/i', '$1', $html );
+
+	return $html;
+}
+
+/**
  * Add Framer typography classes to footer rich text paragraphs.
  *
  * @param string   $html              Sanitized HTML from the editor.
