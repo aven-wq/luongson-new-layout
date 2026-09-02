@@ -133,6 +133,30 @@ function luongson_get_breadcrumb_label( $label = '' ) {
 		return $label;
 	}
 
+	if ( is_category() ) {
+		$label = single_cat_title( '', false );
+		if ( '' !== $label ) {
+			return $label;
+		}
+	}
+
+	if ( is_tag() ) {
+		$label = single_tag_title( '', false );
+		if ( '' !== $label ) {
+			return $label;
+		}
+	}
+
+	if ( is_home() && ! is_front_page() ) {
+		$posts_page_id = (int) get_option( 'page_for_posts' );
+		if ( $posts_page_id ) {
+			$title = get_the_title( $posts_page_id );
+			if ( '' !== $title ) {
+				return $title;
+			}
+		}
+	}
+
 	if ( is_singular() ) {
 		$title = get_the_title();
 

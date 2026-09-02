@@ -151,7 +151,25 @@ function luongson_is_nav_active( $url ) {
 	$current_path = trailingslashit( wp_parse_url( home_url( add_query_arg( array() ) ), PHP_URL_PATH ) ?: '/' );
 	$target_path  = trailingslashit( wp_parse_url( $url, PHP_URL_PATH ) ?: '/' );
 
-	return $current_path === $target_path;
+	if ( $current_path === $target_path ) {
+		return true;
+	}
+
+	if ( is_category() && trailingslashit( $url ) === trailingslashit( home_url( '/tin-tuc/' ) ) ) {
+		$term = get_queried_object();
+		if ( $term instanceof WP_Term ) {
+			if ( 'tin-tuc' === $term->slug ) {
+				return true;
+			}
+
+			$news_root = get_category_by_slug( 'tin-tuc' );
+			if ( $news_root instanceof WP_Term && cat_is_ancestor_of( (int) $news_root->term_id, (int) $term->term_id ) ) {
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 /**
