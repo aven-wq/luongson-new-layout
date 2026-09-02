@@ -23,6 +23,18 @@ if ( empty( $items ) ) {
 $pagination_base = str_replace( 999999999, '%#%', esc_url( get_pagenum_link( 999999999 ) ) );
 ?>
 <nav class="framer-1c73n61 luongson-archive-pagination" aria-label="<?php esc_attr_e( 'Phân trang bài viết', 'luongson' ); ?>">
+	<?php if ( $current > 1 ) : ?>
+		<a class="framer-1f3rioz luongson-pagination-prev" data-framer-name="Logo" href="<?php echo esc_url( get_pagenum_link( $current - 1 ) ); ?>" aria-label="<?php esc_attr_e( 'Trang trước', 'luongson' ); ?>">
+			<div class="framer-1npjkgl">
+				<div
+					class="framer-i76why ls-blog-s41"
+					data-framer-component-type="SVG"
+					aria-hidden="true"
+				></div>
+			</div>
+		</a>
+	<?php endif; ?>
+
 	<?php foreach ( $items as $item ) : ?>
 		<?php if ( 'dots' === ( $item['type'] ?? '' ) ) : ?>
 			<div class="framer-1f3rioz" data-framer-name="Logo">
@@ -52,7 +64,7 @@ $pagination_base = str_replace( 999999999, '%#%', esc_url( get_pagenum_link( 999
 	<?php endforeach; ?>
 
 	<?php if ( $current < $total ) : ?>
-		<a class="framer-1f3rioz" data-framer-name="Logo" href="<?php echo esc_url( get_pagenum_link( $current + 1 ) ); ?>" aria-label="<?php esc_attr_e( 'Trang sau', 'luongson' ); ?>">
+		<a class="framer-1f3rioz luongson-pagination-next" data-framer-name="Logo" href="<?php echo esc_url( get_pagenum_link( $current + 1 ) ); ?>" aria-label="<?php esc_attr_e( 'Trang sau', 'luongson' ); ?>">
 			<div class="framer-1npjkgl">
 				<div
 					class="framer-i76why ls-blog-s41"

@@ -444,3 +444,22 @@ body.admin-bar #luongson-site-root .framer-QbuP0.framer-1ei7e2m {
   border: 0;
 }
 
+.framer-Q1644 .luongson-pagination-prev .framer-1npjkgl,
+.framer-Q1644 .luongson-pagination-next .framer-1npjkgl {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.framer-Q1644 .luongson-pagination-prev .ls-blog-s41 {
+  transform: rotate(-90deg) !important;
+  position: absolute;
+    top: 1px;
+    left: -1px;
+}
+
+.framer-Q1644 .luongson-pagination-next .ls-blog-s41 {
+  transform: rotate(90deg) !important;
+}
+
