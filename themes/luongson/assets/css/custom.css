@@ -90,10 +90,6 @@ body .ck2-card .ck2-card-title {
     min-height: 1.7rem !important;
 }
 
-.ck2-play {
-    display: none !important;
-}
-
 .dv2-highlights-football-root.ck2-highlight-page {
     font-family: "Momo Trust Sans", sans-serif !important;
 }
@@ -158,6 +154,30 @@ body .ck2-btn-load-more svg {
     display: none;;
 }
 
+body .ck2-card-thumb {
+    aspect-ratio: 18 / 10;
+    background: white;
+}
+
+body .ck2-card-thumb img, body .ck2-card {
+    border-radius: 16px !important;
+}
+
+body .ck2-card-league, body .ck2-card-date {
+    font-size: 12px;
+    font-weight: 700;
+    color: #000;
+}
+
+body .ck2-card-date-year {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+body .ck2-play-btn {
+    border: 1px solid #24a90b;
+}
 @media (max-width: 768px) {
     .row-collapse-space-10 .col:first-child {
         padding-right: 0 !important;
