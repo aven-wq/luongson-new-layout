@@ -217,4 +217,8 @@ body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongs
     .row-collapse-space-10 .col:last-child {
         padding-left: 0 !important;
     }
+
+    #luongson-site-root .luongson-page-main {
+        padding: 0 10px;
+    }
 }

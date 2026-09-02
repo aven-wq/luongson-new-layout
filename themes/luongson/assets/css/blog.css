@@ -4283,7 +4283,6 @@ navigationcontainer [data-framer-component-type="NavigationContainer"] > *,
   place-content: center space-between;
   align-items: center;
   width: 100%;
-  padding: 0px 10px;
   display: flex;
   position: relative;
 }
@@ -4604,7 +4603,7 @@ navigationcontainer [data-framer-component-type="NavigationContainer"] > *,
   }
   .framer-Q1644 .framer-zecxh3 {
     grid-template-columns: minmax(0, 1fr);
-    gap: 8px;
+    gap: 16px;
   }
   .framer-Q1644 .framer-9ml5b5 {
     order: 2;

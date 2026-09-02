@@ -118,6 +118,10 @@
     z-index: 100 !important;
   }
 
+  #luongson-site-root .framer-1thqph1-container {
+    position: fixed !important;
+  }
+  
   #luongson-site-root .luongson-main-layout,
   #luongson-site-root .framer-1llbnyo {
     display: flex !important;
@@ -351,10 +355,6 @@ body.admin-bar #luongson-site-root .framer-QbuP0.framer-1ei7e2m {
     height: calc(100vh - 46px) !important;
     min-height: calc(100vh - 46px) !important;
     max-height: calc(100vh - 46px) !important;
-  }
-
-  body.admin-bar #luongson-site-root .luongson-mobile-header {
-    top: 46px !important;
   }
 }
 
