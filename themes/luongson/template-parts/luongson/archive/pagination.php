@@ -15,16 +15,17 @@ $args    = isset( $args ) && is_array( $args ) ? $args : array();
 $current = max( 1, (int) ( $args['current'] ?? 1 ) );
 $total   = max( 1, (int) ( $args['total'] ?? 1 ) );
 $items   = isset( $args['items'] ) && is_array( $args['items'] ) ? $args['items'] : array();
+$get_page_url = $args['get_page_url'] ?? 'get_pagenum_link';
 
-if ( empty( $items ) ) {
+if ( empty( $items ) || ! is_callable( $get_page_url ) ) {
 	return;
 }
 
-$pagination_base = str_replace( 999999999, '%#%', esc_url( get_pagenum_link( 999999999 ) ) );
+$pagination_base = str_replace( 999999999, '%#%', esc_url( call_user_func( $get_page_url, 999999999 ) ) );
 ?>
 <nav class="framer-1c73n61 luongson-archive-pagination" aria-label="<?php esc_attr_e( 'Phân trang bài viết', 'luongson' ); ?>">
 	<?php if ( $current > 1 ) : ?>
-		<a class="framer-1f3rioz luongson-pagination-prev" data-framer-name="Logo" href="<?php echo esc_url( get_pagenum_link( $current - 1 ) ); ?>" aria-label="<?php esc_attr_e( 'Trang trước', 'luongson' ); ?>">
+		<a class="framer-1f3rioz luongson-pagination-prev" data-framer-name="Logo" href="<?php echo esc_url( call_user_func( $get_page_url, $current - 1 ) ); ?>" aria-label="<?php esc_attr_e( 'Trang trước', 'luongson' ); ?>">
 			<div class="framer-1npjkgl">
 				<div
 					class="framer-i76why ls-blog-s41"
@@ -52,7 +53,7 @@ $pagination_base = str_replace( 999999999, '%#%', esc_url( get_pagenum_link( 999
 		}
 
 		$is_active = $page_number === $current;
-		$page_url  = 1 === $page_number ? get_pagenum_link( 1 ) : str_replace( '%#%', (string) $page_number, $pagination_base );
+		$page_url  = 1 === $page_number ? call_user_func( $get_page_url, 1 ) : str_replace( '%#%', (string) $page_number, $pagination_base );
 		$tag       = $is_active ? 'div' : 'a';
 		$attrs     = $is_active ? '' : ' href="' . esc_url( $page_url ) . '"';
 		?>
@@ -64,7 +65,7 @@ $pagination_base = str_replace( 999999999, '%#%', esc_url( get_pagenum_link( 999
 	<?php endforeach; ?>
 
 	<?php if ( $current < $total ) : ?>
-		<a class="framer-1f3rioz luongson-pagination-next" data-framer-name="Logo" href="<?php echo esc_url( get_pagenum_link( $current + 1 ) ); ?>" aria-label="<?php esc_attr_e( 'Trang sau', 'luongson' ); ?>">
+		<a class="framer-1f3rioz luongson-pagination-next" data-framer-name="Logo" href="<?php echo esc_url( call_user_func( $get_page_url, $current + 1 ) ); ?>" aria-label="<?php esc_attr_e( 'Trang sau', 'luongson' ); ?>">
 			<div class="framer-1npjkgl">
 				<div
 					class="framer-i76why ls-blog-s41"

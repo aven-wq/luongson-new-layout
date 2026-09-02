@@ -240,24 +240,35 @@ function luongson_build_archive_pagination_items( $current, $total ) {
 
 /**
  * Render archive pagination (tin.html framer-1c73n61).
+ *
+ * @param WP_Query|null        $query        Optional custom query. Defaults to main query.
+ * @param callable(int):string $get_page_url Optional page URL builder.
  */
-function luongson_render_archive_pagination() {
-	global $wp_query;
+function luongson_render_archive_pagination( $query = null, $get_page_url = null ) {
+	if ( ! $query instanceof WP_Query ) {
+		global $wp_query;
+		$query = $wp_query;
+	}
 
-	$total   = (int) $wp_query->max_num_pages;
-	$current = max( 1, (int) get_query_var( 'paged' ) );
+	$total   = (int) $query->max_num_pages;
+	$current = max( 1, (int) $query->get( 'paged' ) );
 
 	if ( $total <= 1 ) {
 		return;
+	}
+
+	if ( ! is_callable( $get_page_url ) ) {
+		$get_page_url = 'get_pagenum_link';
 	}
 
 	get_template_part(
 		'template-parts/luongson/archive/pagination',
 		null,
 		array(
-			'current' => $current,
-			'total'   => $total,
-			'items'   => luongson_build_archive_pagination_items( $current, $total ),
+			'current'      => $current,
+			'total'        => $total,
+			'items'        => luongson_build_archive_pagination_items( $current, $total ),
+			'get_page_url' => $get_page_url,
 		)
 	);
 }

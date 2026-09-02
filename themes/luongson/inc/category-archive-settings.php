@@ -20,6 +20,22 @@ function luongson_register_archive_image_sizes() {
 add_action( 'after_setup_theme', 'luongson_register_archive_image_sizes' );
 
 /**
+ * Whether a category uses small thumbnails on archive/related cards.
+ *
+ * @param int $term_id Category term ID.
+ * @return bool
+ */
+function luongson_category_has_small_thumb( $term_id ) {
+	$term_id = absint( $term_id );
+
+	if ( ! $term_id ) {
+		return false;
+	}
+
+	return (bool) get_term_meta( $term_id, LUONGSON_CATEGORY_SMALL_THUMB_META, true );
+}
+
+/**
  * Whether the current news archive view uses small thumbnails.
  */
 function luongson_news_archive_has_small_thumb() {
@@ -32,7 +48,7 @@ function luongson_news_archive_has_small_thumb() {
 		return false;
 	}
 
-	return (bool) get_term_meta( $term->term_id, LUONGSON_CATEGORY_SMALL_THUMB_META, true );
+	return luongson_category_has_small_thumb( (int) $term->term_id );
 }
 
 /**

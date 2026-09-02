@@ -70,6 +70,15 @@
     transform: scale(1.03);
 }
 
+.framer-Q1644 .framer-w6ehl .framer-16xpdaf {
+    overflow: hidden;
+}
+
+.framer-Q1644 .framer-w6ehl:hover .image-hover-scale-up {
+    opacity: 1;
+    transform: scale(1.03);
+}
+
 .block-khuyen-mai img {
     border-radius: 8px;
 }
@@ -177,6 +186,26 @@ body .ck2-card-date-year {
 
 body .ck2-play-btn {
     border: 1px solid #24a90b;
+}
+
+.single .luongson-archive-pagination {
+    margin-top: 10px;
+}
+
+#luongson-related-posts-heading, .framer-Q1644 .luongson-single-header .ls-blog-s104 {
+    margin-bottom: 10px !important;
+    font-size: 24px !important;
+    font-weight: 700 !important;
+      font-family: "Momo Trust Sans", sans-serif !important;
+}
+
+body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongson-single-featured .framer-16xpdaf {
+    border-radius: 0 !important;
+}
+
+.luongson-single-article, p.framer-text, div.framer-text, h1.framer-text, h2.framer-text, h3.framer-text, h4.framer-text, h5.framer-text, h6.framer-text, li.framer-text, ol.framer-text, ul.framer-text, mark.framer-text, span.framer-text:not([data-text-fill]) {
+    font-family: "Momo Trust Sans", sans-serif !important;
+    font-size: 16px !important;
 }
 @media (max-width: 768px) {
     .row-collapse-space-10 .col:first-child {

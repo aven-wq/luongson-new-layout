@@ -187,13 +187,20 @@ function luongson_render_breadcrumb( $args = array() ) {
 			'label'      => '',
 			'home_label' => __( 'Trang chủ', 'luongson' ),
 			'home_url'   => home_url( '/' ),
+			'items'      => array(),
 		)
 	);
 
-	$args['label'] = luongson_get_breadcrumb_label( $args['label'] );
+	if ( empty( $args['items'] ) && is_singular( 'post' ) ) {
+		$args['items'] = luongson_get_single_breadcrumb_items();
+	}
 
-	if ( '' === $args['label'] ) {
-		return '';
+	if ( empty( $args['items'] ) ) {
+		$args['label'] = luongson_get_breadcrumb_label( $args['label'] );
+
+		if ( '' === $args['label'] ) {
+			return '';
+		}
 	}
 
 	ob_start();

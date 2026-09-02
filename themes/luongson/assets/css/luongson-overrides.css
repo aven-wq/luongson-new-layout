@@ -472,3 +472,131 @@ body.admin-bar #luongson-site-root .framer-QbuP0.framer-1ei7e2m {
   margin-inline: auto;
 }
 
+/* --------------------------------------------------------------------------
+   Single post (Ads Right Sidebar shell)
+   -------------------------------------------------------------------------- */
+.framer-Q1644 .luongson-single-article {
+  width: 100%;
+}
+
+.framer-Q1644 .luongson-single-header {
+  place-content: flex-start !important;
+  align-items: flex-start !important;
+}
+
+.framer-Q1644 .luongson-single-header .framer-1sp4gth,
+.framer-Q1644 .luongson-single-related .framer-1sp4gth {
+  width: 100% !important;
+  flex: 1 1 auto !important;
+  white-space: normal !important;
+}
+
+.framer-Q1644 .luongson-single-header .ls-blog-s104,
+.framer-Q1644 .luongson-single-header .ls-blog-s104 strong,
+.framer-Q1644 .luongson-single-related .ls-blog-s104,
+.framer-Q1644 .luongson-single-related .ls-blog-s104 strong {
+  margin: 0;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.framer-Q1644 .luongson-single-featured {
+  width: 100%;
+  padding: 0;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+.framer-Q1644 .luongson-single-featured .framer-16xpdaf {
+  aspect-ratio: 1.77922 / 1;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+}
+
+.framer-Q1644 .luongson-single-featured [data-framer-background-image-wrapper="true"] {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.framer-Q1644 .luongson-single-featured .ls-blog-s88 {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+}
+
+.framer-Q1644 .luongson-single-content {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  font-family: "Momo Trust Sans", "Momo Trust Sans Placeholder", sans-serif;
+  font-size: 14px;
+  line-height: 1.65em;
+  color: rgb(38, 38, 38);
+}
+
+.framer-Q1644 .luongson-single-content > p:first-of-type,
+.framer-Q1644 .luongson-single-content > .wp-block-post-content > p:first-of-type {
+  font-weight: 700;
+}
+
+.framer-Q1644 .luongson-single-content p {
+  margin: 0 0 1em;
+}
+
+.framer-Q1644 .luongson-single-content h2,
+.framer-Q1644 .luongson-single-content h3,
+.framer-Q1644 .luongson-single-content h4 {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.5em;
+  margin: 1.25em 0 0.5em;
+  color: rgb(38, 38, 38);
+}
+
+.framer-Q1644 .luongson-single-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+.framer-Q1644 .luongson-single-author {
+  width: 100%;
+  padding: 0 10px 10px;
+  box-sizing: border-box;
+  text-align: right;
+}
+
+.framer-Q1644 .luongson-single-author p {
+  margin: 0;
+  font-family: "Momo Trust Sans", "Momo Trust Sans Placeholder", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4em;
+  color: rgb(38, 38, 38);
+}
+
+.framer-Q1644 .luongson-single-related {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 0 0;
+  box-sizing: border-box;
+}
+
+.framer-Q1644 .luongson-single-related-grid {
+  padding: 0 10px 10px;
+  box-sizing: border-box;
+}
+
+.framer-Q1644 .luongson-breadcrumb-link {
+  text-decoration: none;
+}
+
+.framer-Q1644 .luongson-breadcrumb-current .ls-blog-s103 {
+  --framer-text-color: rgb(38, 38, 38) !important;
+  color: rgb(38, 38, 38) !important;
+}
+
