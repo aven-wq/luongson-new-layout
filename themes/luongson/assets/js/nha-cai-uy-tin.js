@@ -162,16 +162,28 @@
     return true;
   }
 
-  function initTopBookmakersTicker() {
-    var containers = document.querySelectorAll('.luongson-top-bookmakers, .framer-1lnj4y4-container');
+  function getBookmakerContainers(root) {
+    if (root && root.nodeType === 1) {
+      if (root.matches('.luongson-top-bookmakers, .framer-1lnj4y4-container')) {
+        return [root];
+      }
+      return Array.from(root.querySelectorAll('.luongson-top-bookmakers, .framer-1lnj4y4-container'));
+    }
+
+    return Array.from(document.querySelectorAll('.luongson-top-bookmakers, .framer-1lnj4y4-container'));
+  }
+
+  function initTopBookmakersTicker(root) {
+    var containers = getBookmakerContainers(root);
     if (!containers.length) return;
 
     var attempts = 0;
 
     function boot() {
       var pending = false;
+      var current = getBookmakerContainers(root);
 
-      containers.forEach(function (container) {
+      current.forEach(function (container) {
         var track = container.querySelector('.framer-czcwzc ul, ul');
         if (!track || track.__lsTickerInit) return;
 
@@ -189,9 +201,51 @@
     boot();
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initTopBookmakersTicker);
-  } else {
+  function observeDynamicBookmakers() {
+    if (!window.MutationObserver || !document.body) return;
+
+    var timer = null;
+
+    function scheduleInit() {
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        initTopBookmakersTicker();
+      }, 50);
+    }
+
+    function nodeHasBookmakers(node) {
+      if (!node || node.nodeType !== 1) return false;
+      if (node.matches && node.matches('.luongson-top-bookmakers, .framer-1lnj4y4-container')) {
+        return true;
+      }
+      return !!(node.querySelector && node.querySelector('.luongson-top-bookmakers, .framer-1lnj4y4-container'));
+    }
+
+    var observer = new MutationObserver(function (mutations) {
+      for (var i = 0; i < mutations.length; i++) {
+        var added = mutations[i].addedNodes;
+        for (var j = 0; j < added.length; j++) {
+          if (nodeHasBookmakers(added[j])) {
+            scheduleInit();
+            return;
+          }
+        }
+      }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  window.luongsonInitNhaCaiUyTin = initTopBookmakersTicker;
+
+  function bootAll() {
     initTopBookmakersTicker();
+    observeDynamicBookmakers();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootAll);
+  } else {
+    bootAll();
   }
 })();

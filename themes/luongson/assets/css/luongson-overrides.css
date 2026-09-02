@@ -255,7 +255,11 @@ body.luongson-theme .luongson-page-main .col {
   width: 100% !important;
   max-width: 100% !important;
   box-sizing: border-box !important;
-  margin-top: auto !important;
+  margin-top: 0px !important;
+}
+
+#luongson-site-root .luongson-footer {
+  margin-top: 20px !important;
 }
 
 #luongson-site-root .luongson-footer-sponsors .framer-35hpbh {
