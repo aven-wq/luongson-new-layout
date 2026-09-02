@@ -196,17 +196,19 @@ body .ck2-play-btn {
     margin-bottom: 10px !important;
     font-size: 24px !important;
     font-weight: 700 !important;
-      font-family: "Momo Trust Sans", sans-serif !important;
+    font-family: "Momo Trust Sans", sans-serif !important;
 }
 
 body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongson-single-featured .framer-16xpdaf {
     border-radius: 0 !important;
 }
 
-.luongson-single-article, p.framer-text, div.framer-text, h1.framer-text, h2.framer-text, h3.framer-text, h4.framer-text, h5.framer-text, h6.framer-text, li.framer-text, ol.framer-text, ul.framer-text, mark.framer-text, span.framer-text:not([data-text-fill]) {
-    font-family: "Momo Trust Sans", sans-serif !important;
+.luongson-single-article, .luongson-single-article p, .luongson-single-article span, .luongson-single-article  label, .luongson-single-article strong,
+.luongson-single-article  ul, .luongson-single-article  a {
     font-size: 16px !important;
+    font-family: "Momo Trust Sans", sans-serif !important;
 }
+
 @media (max-width: 768px) {
     .row-collapse-space-10 .col:first-child {
         padding-right: 0 !important;

@@ -29,29 +29,6 @@ $image_alt = $title;
 					</div>
 				</header>
 
-				<?php if ( $image_id ) : ?>
-					<div class="luongson-single-featured">
-						<div class="framer-16xpdaf">
-							<div class="ls-blog-s87" data-framer-background-image-wrapper="true">
-								<?php
-								echo wp_get_attachment_image(
-									$image_id,
-									'large',
-									false,
-									array(
-										'class'    => 'ls-blog-s88 ls-blog-s113',
-										'decoding' => 'async',
-										'loading'  => 'eager',
-										'alt'      => $image_alt,
-										'sizes'    => '(min-width: 1280px) 900px, 100vw',
-									)
-								);
-								?>
-							</div>
-						</div>
-					</div>
-				<?php endif; ?>
-
 				<div class="luongson-single-content luongson-wp-content entry-content">
 					<?php the_content(); ?>
 				</div>
