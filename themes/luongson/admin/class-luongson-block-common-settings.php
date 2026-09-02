@@ -132,6 +132,18 @@ class LuongSon_Block_Common_Settings {
 
 				<?php submit_button( __( 'Lưu thay đổi', 'luongson' ) ); ?>
 			</form>
+
+			<div class="luongson-settings-stack luongson-settings-stack--shortcodes">
+				<section class="luongson-settings-block">
+					<header class="luongson-settings-block__head">
+						<h2><?php esc_html_e( 'Shortcode', 'luongson' ); ?></h2>
+						<p><?php esc_html_e( 'Dán shortcode vào trang/bài viết (UX Builder, Classic Editor hoặc block Shortcode) để hiển thị các khối nội dung của theme.', 'luongson' ); ?></p>
+					</header>
+					<div class="luongson-settings-block__body">
+						<?php self::render_shortcodes_section(); ?>
+					</div>
+				</section>
+			</div>
 		</div>
 		<?php
 	}
@@ -193,9 +205,160 @@ class LuongSon_Block_Common_Settings {
 					event.preventDefault();
 					clearImageField($(this).closest('.luongson-promo-image-field'));
 				});
+
+				$(document).on('click', '.luongson-copy-shortcode', function (event) {
+					event.preventDefault();
+
+					var $wrap = $(this).closest('.luongson-shortcode-copy');
+					var $input = $wrap.find('.luongson-shortcode-input');
+					var $button = $(this);
+					var text = $input.val();
+
+					function markCopied() {
+						var original = $button.data('label') || $button.text();
+						$button.data('label', original);
+						$button.text(<?php echo wp_json_encode( __( 'Đã sao chép!', 'luongson' ) ); ?>);
+						window.setTimeout(function () {
+							$button.text($button.data('label'));
+						}, 1600);
+					}
+
+					if (navigator.clipboard && navigator.clipboard.writeText) {
+						navigator.clipboard.writeText(text).then(markCopied);
+						return;
+					}
+
+					$input.trigger('focus').trigger('select');
+					document.execCommand('copy');
+					markCopied();
+				});
 			});
 		})(jQuery);
 		</script>
+		<?php
+	}
+
+	/**
+	 * Theme shortcode definitions for the admin reference panel.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private static function get_shortcode_definitions() {
+		return array(
+			array(
+				'tag'         => 'luongson_breadcrumb',
+				'title'       => __( 'Breadcrumb', 'luongson' ),
+				'description' => __( 'Hiển thị thanh điều hướng Trang chủ → trang hiện tại. Tự lấy tiêu đề bài viết/danh mục nếu không truyền label.', 'luongson' ),
+				'example'     => '[luongson_breadcrumb]',
+				'attributes'  => array(
+					'label'      => __( 'Nhãn trang hiện tại (mặc định: tiêu đề bài/trang).', 'luongson' ),
+					'home_label' => __( 'Nhãn liên kết trang chủ (mặc định: Trang chủ).', 'luongson' ),
+					'home_url'   => __( 'URL trang chủ (mặc định: trang chủ site).', 'luongson' ),
+				),
+			),
+			array(
+				'tag'         => 'luongson_nha_cai_uy_tin',
+				'title'       => __( 'Top nhà cái uy tín', 'luongson' ),
+				'description' => __( 'Khối ticker logo nhà cái lấy dữ liệu từ plugin Brandview. Dùng trong trang tin tức hoặc bất kỳ trang nào cần hiển thị top nhà cái.', 'luongson' ),
+				'example'     => '[luongson_nha_cai_uy_tin]',
+				'attributes'  => array(
+					'limit' => __( 'Số lượng tối đa (0 = tất cả).', 'luongson' ),
+					'type'  => __( 'Lọc loại: G (Game) hoặc S (Sport).', 'luongson' ),
+				),
+			),
+			array(
+				'tag'         => 'luongson_blv_form_submit',
+				'title'       => __( 'Form ứng tuyển BLV', 'luongson' ),
+				'description' => __( 'Form đăng ký bình luận viên theo thiết kế trang Ứng tuyển BLV. Hồ sơ được lưu tại menu WP Admin → Ứng tuyển BLV.', 'luongson' ),
+				'example'     => '[luongson_blv_form_submit]',
+				'attributes'  => array(
+					'title'        => __( 'Tiêu đề form.', 'luongson' ),
+					'description'  => __( 'Mô tả phía dưới tiêu đề.', 'luongson' ),
+					'submit_label' => __( 'Nhãn nút gửi.', 'luongson' ),
+					'form_id'      => __( 'ID phần tử form (mặc định: luongson-blv-form).', 'luongson' ),
+					'card_id'      => __( 'ID anchor cho liên kết #blv (mặc định: blv).', 'luongson' ),
+				),
+			),
+			array(
+				'tag'         => 'luongson_sponsor_ticker',
+				'title'       => __( 'Ticker nhà tài trợ', 'luongson' ),
+				'description' => __( 'Danh sách logo đối tác/nhà tài trợ cuộn ngang. Logo được quản lý tại LuongSon → Footer.', 'luongson' ),
+				'example'     => '[luongson_sponsor_ticker]',
+				'attributes'  => array(
+					'title'   => __( 'Hiện tiêu đề khối: yes hoặc no (mặc định: yes).', 'luongson' ),
+					'wrapper' => __( 'Bọc khối footer sponsors: yes hoặc no (mặc định: yes).', 'luongson' ),
+					'label'   => __( 'Tiêu đề tùy chỉnh (mặc định: ĐỐI TÁC & NHÀ TÀI TRỢ).', 'luongson' ),
+				),
+			),
+		);
+	}
+
+	/**
+	 * Output the shortcode reference list.
+	 */
+	private static function render_shortcodes_section() {
+		$shortcodes = self::get_shortcode_definitions();
+		?>
+		<div class="luongson-shortcodes-list">
+			<?php foreach ( $shortcodes as $shortcode ) : ?>
+				<?php self::render_shortcode_item( $shortcode ); ?>
+			<?php endforeach; ?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Output a single shortcode reference card.
+	 *
+	 * @param array<string, mixed> $shortcode Shortcode definition.
+	 */
+	private static function render_shortcode_item( $shortcode ) {
+		$tag         = isset( $shortcode['tag'] ) ? (string) $shortcode['tag'] : '';
+		$title       = isset( $shortcode['title'] ) ? (string) $shortcode['title'] : $tag;
+		$description = isset( $shortcode['description'] ) ? (string) $shortcode['description'] : '';
+		$example     = isset( $shortcode['example'] ) ? (string) $shortcode['example'] : '[' . $tag . ']';
+		$attributes  = isset( $shortcode['attributes'] ) && is_array( $shortcode['attributes'] ) ? $shortcode['attributes'] : array();
+		?>
+		<article class="luongson-shortcode-item">
+			<div class="luongson-shortcode-item__head">
+				<h3 class="luongson-shortcode-item__title"><?php echo esc_html( $title ); ?></h3>
+				<code class="luongson-shortcode-item__tag"><?php echo esc_html( $tag ); ?></code>
+			</div>
+
+			<?php if ( '' !== $description ) : ?>
+				<p class="luongson-shortcode-item__description"><?php echo esc_html( $description ); ?></p>
+			<?php endif; ?>
+
+			<div class="luongson-shortcode-copy">
+				<label class="luongson-shortcode-copy__label"><?php esc_html_e( 'Shortcode', 'luongson' ); ?></label>
+				<div class="luongson-shortcode-copy__field">
+					<input
+						type="text"
+						class="luongson-shortcode-input"
+						readonly
+						value="<?php echo esc_attr( $example ); ?>"
+						aria-label="<?php echo esc_attr( $title ); ?>"
+					/>
+					<button type="button" class="button button-secondary luongson-copy-shortcode">
+						<?php esc_html_e( 'Sao chép', 'luongson' ); ?>
+					</button>
+				</div>
+			</div>
+
+			<?php if ( ! empty( $attributes ) ) : ?>
+				<div class="luongson-shortcode-item__attrs">
+					<p class="luongson-shortcode-item__attrs-label"><?php esc_html_e( 'Thuộc tính tùy chọn', 'luongson' ); ?></p>
+					<ul class="luongson-shortcode-item__attrs-list">
+						<?php foreach ( $attributes as $name => $help ) : ?>
+							<li>
+								<code><?php echo esc_html( (string) $name ); ?></code>
+								<span><?php echo esc_html( (string) $help ); ?></span>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+				</div>
+			<?php endif; ?>
+		</article>
 		<?php
 	}
 

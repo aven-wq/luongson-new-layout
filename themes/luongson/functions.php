@@ -14,6 +14,7 @@ require_once get_stylesheet_directory() . '/inc/single-template.php';
 require_once get_stylesheet_directory() . '/inc/category-archive-settings.php';
 require_once get_stylesheet_directory() . '/inc/shortcodes.php';
 require_once get_stylesheet_directory() . '/inc/nha-cai-uy-tin.php';
+require_once get_stylesheet_directory() . '/inc/blv-form-submit.php';
 require_once get_stylesheet_directory() . '/admin/class-luongson-footer-settings.php';
 require_once get_stylesheet_directory() . '/admin/class-luongson-promo-settings.php';
 require_once get_stylesheet_directory() . '/admin/class-luongson-block-common-settings.php';
