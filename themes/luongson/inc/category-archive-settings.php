@@ -7,7 +7,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const LUONGSON_CATEGORY_SMALL_THUMB_META = 'luongson_small_thumb';
+const LUONGSON_CATEGORY_SMALL_THUMB_META     = 'luongson_small_thumb';
+const LUONGSON_CATEGORY_POSTS_PER_PAGE_META  = 'luongson_posts_per_page';
+const LUONGSON_CATEGORY_POSTS_PER_PAGE_DEFAULT = 15;
 
 /**
  * Register custom image size for small archive thumbnails.
@@ -34,10 +36,59 @@ function luongson_news_archive_has_small_thumb() {
 }
 
 /**
- * Render small-thumb checkbox on "Add category" screen.
+ * Posts per page for a category archive.
+ *
+ * @param int $term_id Category term ID. Uses current category when omitted.
+ * @return int
  */
-function luongson_category_add_small_thumb_field() {
+function luongson_get_category_posts_per_page( $term_id = 0 ) {
+	if ( ! $term_id && is_category() ) {
+		$term = get_queried_object();
+		if ( $term instanceof WP_Term ) {
+			$term_id = (int) $term->term_id;
+		}
+	}
+
+	if ( ! $term_id ) {
+		return LUONGSON_CATEGORY_POSTS_PER_PAGE_DEFAULT;
+	}
+
+	$value = get_term_meta( $term_id, LUONGSON_CATEGORY_POSTS_PER_PAGE_META, true );
+
+	if ( '' === $value || false === $value ) {
+		return LUONGSON_CATEGORY_POSTS_PER_PAGE_DEFAULT;
+	}
+
+	return max( 1, min( 100, absint( $value ) ) );
+}
+
+/**
+ * Render archive settings on "Add category" screen.
+ */
+function luongson_category_add_archive_fields() {
 	?>
+	<div class="form-field term-posts-per-page-wrap">
+		<label for="luongson-posts-per-page"><?php esc_html_e( 'Số bài trên 1 trang', 'luongson' ); ?></label>
+		<input
+			type="number"
+			name="luongson_posts_per_page"
+			id="luongson-posts-per-page"
+			value="<?php echo esc_attr( (string) LUONGSON_CATEGORY_POSTS_PER_PAGE_DEFAULT ); ?>"
+			min="1"
+			max="100"
+			step="1"
+			class="small-text"
+		/>
+		<p class="description">
+			<?php
+			printf(
+				/* translators: %d: default posts per page */
+				esc_html__( 'Số bài viết hiển thị trên mỗi trang danh mục. Mặc định: %d.', 'luongson' ),
+				LUONGSON_CATEGORY_POSTS_PER_PAGE_DEFAULT
+			);
+			?>
+		</p>
+	</div>
 	<div class="form-field term-small-thumb-wrap">
 		<label for="luongson-small-thumb">
 			<input type="checkbox" name="luongson_small_thumb" id="luongson-small-thumb" value="1" />
@@ -49,16 +100,43 @@ function luongson_category_add_small_thumb_field() {
 	</div>
 	<?php
 }
-add_action( 'category_add_form_fields', 'luongson_category_add_small_thumb_field' );
+add_action( 'category_add_form_fields', 'luongson_category_add_archive_fields' );
 
 /**
- * Render small-thumb checkbox on "Edit category" screen.
+ * Render archive settings on "Edit category" screen.
  *
  * @param WP_Term $term Current category term.
  */
-function luongson_category_edit_small_thumb_field( $term ) {
-	$enabled = (bool) get_term_meta( $term->term_id, LUONGSON_CATEGORY_SMALL_THUMB_META, true );
+function luongson_category_edit_archive_fields( $term ) {
+	$enabled         = (bool) get_term_meta( $term->term_id, LUONGSON_CATEGORY_SMALL_THUMB_META, true );
+	$posts_per_page  = luongson_get_category_posts_per_page( (int) $term->term_id );
 	?>
+	<tr class="form-field term-posts-per-page-wrap">
+		<th scope="row">
+			<label for="luongson-posts-per-page"><?php esc_html_e( 'Số bài trên 1 trang', 'luongson' ); ?></label>
+		</th>
+		<td>
+			<input
+				type="number"
+				name="luongson_posts_per_page"
+				id="luongson-posts-per-page"
+				value="<?php echo esc_attr( (string) $posts_per_page ); ?>"
+				min="1"
+				max="100"
+				step="1"
+				class="small-text"
+			/>
+			<p class="description">
+				<?php
+				printf(
+					/* translators: %d: default posts per page */
+					esc_html__( 'Số bài viết hiển thị trên mỗi trang danh mục. Mặc định: %d.', 'luongson' ),
+					LUONGSON_CATEGORY_POSTS_PER_PAGE_DEFAULT
+				);
+				?>
+			</p>
+		</td>
+	</tr>
 	<tr class="form-field term-small-thumb-wrap">
 		<th scope="row"><?php esc_html_e( 'Small thumb', 'luongson' ); ?></th>
 		<td>
@@ -73,16 +151,26 @@ function luongson_category_edit_small_thumb_field( $term ) {
 	</tr>
 	<?php
 }
-add_action( 'category_edit_form_fields', 'luongson_category_edit_small_thumb_field' );
+add_action( 'category_edit_form_fields', 'luongson_category_edit_archive_fields' );
 
 /**
- * Save small-thumb option for a category.
+ * Save archive display options for a category.
  *
  * @param int $term_id Category term ID.
  */
-function luongson_save_category_small_thumb_meta( $term_id ) {
+function luongson_save_category_archive_settings( $term_id ) {
 	if ( ! current_user_can( 'manage_categories' ) ) {
 		return;
+	}
+
+	if ( isset( $_POST['luongson_posts_per_page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$posts_per_page = max( 1, min( 100, absint( wp_unslash( $_POST['luongson_posts_per_page'] ) ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+		if ( LUONGSON_CATEGORY_POSTS_PER_PAGE_DEFAULT === $posts_per_page ) {
+			delete_term_meta( $term_id, LUONGSON_CATEGORY_POSTS_PER_PAGE_META );
+		} else {
+			update_term_meta( $term_id, LUONGSON_CATEGORY_POSTS_PER_PAGE_META, (string) $posts_per_page );
+		}
 	}
 
 	if ( ! empty( $_POST['luongson_small_thumb'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
@@ -91,5 +179,5 @@ function luongson_save_category_small_thumb_meta( $term_id ) {
 		delete_term_meta( $term_id, LUONGSON_CATEGORY_SMALL_THUMB_META );
 	}
 }
-add_action( 'created_category', 'luongson_save_category_small_thumb_meta' );
-add_action( 'edited_category', 'luongson_save_category_small_thumb_meta' );
+add_action( 'created_category', 'luongson_save_category_archive_settings' );
+add_action( 'edited_category', 'luongson_save_category_archive_settings' );

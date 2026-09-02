@@ -15,15 +15,53 @@ function luongson_is_news_archive_layout() {
 }
 
 /**
+ * Resolve category term ID from a main archive query.
+ *
+ * @param WP_Query $query Query object.
+ * @return int
+ */
+function luongson_get_archive_category_term_id_from_query( $query ) {
+	if ( ! $query instanceof WP_Query || ! $query->is_category() ) {
+		return 0;
+	}
+
+	$cat = $query->get( 'cat' );
+	if ( $cat ) {
+		$cat_ids = array_map( 'absint', array_filter( explode( ',', (string) $cat ) ) );
+		if ( ! empty( $cat_ids ) ) {
+			return (int) $cat_ids[0];
+		}
+	}
+
+	$slug = $query->get( 'category_name' );
+	if ( $slug ) {
+		$term = get_category_by_slug( (string) $slug );
+		if ( $term instanceof WP_Term ) {
+			return (int) $term->term_id;
+		}
+	}
+
+	return 0;
+}
+
+/**
  * Posts per page on news archive views.
  */
-function luongson_get_news_archive_posts_per_page() {
+function luongson_get_news_archive_posts_per_page( $term_id = 0 ) {
+	$default = 15;
+
+	if ( $term_id ) {
+		$default = luongson_get_category_posts_per_page( $term_id );
+	} elseif ( is_category() ) {
+		$default = luongson_get_category_posts_per_page();
+	}
+
 	/**
 	 * Filter posts per page on news category/archive templates.
 	 *
-	 * @param int $per_page Default 12 (matches tin.html).
+	 * @param int $per_page Default 15 for categories.
 	 */
-	return (int) apply_filters( 'luongson_news_archive_posts_per_page', 12 );
+	return (int) apply_filters( 'luongson_news_archive_posts_per_page', $default );
 }
 
 /**
@@ -114,7 +152,12 @@ function luongson_news_archive_pre_get_posts( $query ) {
 		return;
 	}
 
-	$query->set( 'posts_per_page', luongson_get_news_archive_posts_per_page() );
+	$query->set(
+		'posts_per_page',
+		luongson_get_news_archive_posts_per_page(
+			luongson_get_archive_category_term_id_from_query( $query )
+		)
+	);
 }
 add_action( 'pre_get_posts', 'luongson_news_archive_pre_get_posts' );
 
