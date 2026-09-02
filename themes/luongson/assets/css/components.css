@@ -2861,6 +2861,10 @@ html body {
 /* ==========================================================================
    Shared Component: Brand Ambassador & SEO Block (.luongson-ambassador-seo-section)
    ========================================================================== */
+.luongson-ambassador-seo-section {
+  margin-top: 20px !important;
+}
+
 .luongson-ambassador-seo-section,
 .framer-1y11z59 {
   height: min-content !important;
