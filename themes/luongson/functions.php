@@ -10,6 +10,7 @@ defined( 'ABSPATH' ) || exit;
 require_once get_stylesheet_directory() . '/inc/template-tags.php';
 require_once get_stylesheet_directory() . '/inc/ads-right-sidebar-template.php';
 require_once get_stylesheet_directory() . '/inc/archive-template.php';
+require_once get_stylesheet_directory() . '/inc/category-archive-settings.php';
 require_once get_stylesheet_directory() . '/inc/shortcodes.php';
 require_once get_stylesheet_directory() . '/inc/nha-cai-uy-tin.php';
 require_once get_stylesheet_directory() . '/admin/class-luongson-footer-settings.php';

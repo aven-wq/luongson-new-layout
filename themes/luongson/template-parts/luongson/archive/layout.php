@@ -10,6 +10,8 @@ defined( 'ABSPATH' ) || exit;
 $heading           = luongson_get_news_archive_heading();
 $nha_cai_position  = luongson_get_news_archive_nha_cai_position();
 $post_index        = 0;
+$small_thumb       = luongson_news_archive_has_small_thumb();
+$grid_classes      = 'framer-zecxh3' . ( $small_thumb ? ' luongson-small-thumb' : '' );
 ?>
 <div class="luongson-ads-right-sidebar-page framer-Q1644 ls-blog-s85">
 	<div class="framer-iggz1v">
@@ -23,7 +25,7 @@ $post_index        = 0;
 				<div class="framer-1sp4gth ls-blog-s98" data-framer-component-type="RichTextContainer"><p dir="auto" class="framer-text ls-blog-s104"><strong class="framer-text"><?php echo esc_html( $heading ); ?></strong></p></div>
 			</div>
 
-			<div class="framer-zecxh3">
+			<div class="<?php echo esc_attr( $grid_classes ); ?>">
 				<?php if ( have_posts() ) : ?>
 					<?php
 					while ( have_posts() ) {
