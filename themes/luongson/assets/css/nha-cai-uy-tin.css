@@ -143,3 +143,99 @@
   outline: 2px solid rgb(255, 35, 35);
   outline-offset: 2px;
 }
+
+/* Mobile layout (Framer framer-v-gbxzi3). */
+@media (max-width: 759.98px) {
+  #luongson-site-root .luongson-top-bookmakers.framer-1lnj4y4-container,
+  .luongson-top-bookmakers.framer-1lnj4y4-container,
+  #luongson-site-root .framer-yy5utx-container.luongson-top-bookmakers,
+  .framer-yy5utx-container.luongson-top-bookmakers {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  #luongson-site-root .luongson-top-bookmakers .framer-WnCbM.framer-jomkig,
+  .luongson-top-bookmakers .framer-WnCbM.framer-jomkig {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: min-content !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  #luongson-site-root .luongson-top-bookmakers .framer-11vqsuc,
+  .luongson-top-bookmakers .framer-11vqsuc {
+    display: flex !important;
+    flex-flow: row wrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 4px !important;
+    width: 100% !important;
+    height: min-content !important;
+    padding: 8px 8px 4px !important;
+    position: relative !important;
+    overflow: visible !important;
+  }
+
+  #luongson-site-root .luongson-top-bookmakers .framer-11vqsuc [data-framer-component-type="RichTextContainer"],
+  .luongson-top-bookmakers .framer-11vqsuc [data-framer-component-type="RichTextContainer"] {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    white-space: pre !important;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    height: auto !important;
+  }
+
+  #luongson-site-root .luongson-top-bookmakers .framer-b9mrqv.ls-s65,
+  .luongson-top-bookmakers .framer-b9mrqv.ls-s65 {
+    transform: none !important;
+  }
+
+  #luongson-site-root .luongson-top-bookmakers .framer-yvgt5m,
+  .luongson-top-bookmakers .framer-yvgt5m {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    flex: 0 0 auto !important;
+    width: 21px !important;
+    height: 21px !important;
+    overflow: visible !important;
+  }
+
+  #luongson-site-root .luongson-top-bookmakers .framer-wpr0vp,
+  .luongson-top-bookmakers .framer-wpr0vp {
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    height: 90px !important;
+    overflow: hidden !important;
+  }
+
+  #luongson-site-root .luongson-top-bookmakers .framer-czcwzc,
+  .luongson-top-bookmakers .framer-czcwzc {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  #luongson-site-root .framer-Q1644 .framer-cbakad,
+  .framer-Q1644 .framer-cbakad {
+    height: min-content !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  #luongson-site-root .framer-Q1644 .framer-yy5utx-container,
+  .framer-Q1644 .framer-yy5utx-container {
+    width: 100% !important;
+    height: auto !important;
+    flex: 1 1 auto !important;
+  }
+}

@@ -20,9 +20,6 @@ if ( 0 === $total ) {
 <div class="framer-1lnj4y4-container luongson-top-bookmakers">
 	<div class="framer-WnCbM framer-jomkig framer-v-jomkig ls-s61" data-framer-name="Variant 1">
 		<div class="framer-11vqsuc ls-s6" data-framer-name="Frame 5">
-			<div class="framer-12yjqms ls-s62" data-framer-component-type="RichTextContainer" data-framer-name="Top"><p class="framer-text ls-s63"><span class="framer-text ls-s64">Top</span></p></div>
-			<div class="framer-b9mrqv ls-s65" data-framer-component-type="RichTextContainer" data-framer-name="nhà cái"><p class="framer-text ls-s66"><span class="framer-text ls-s67">nhà cái</span></p></div>
-			<div class="framer-gg6s9k ls-s68" data-framer-component-type="RichTextContainer" data-framer-name="uy tín"><p class="framer-text ls-s63"><span class="framer-text ls-s69" data-text-fill="true"><span class="framer-text ls-s70">uy tín</span></span></p></div>
 			<div class="framer-yvgt5m ls-s71">
 				<div aria-hidden="true" class="framer-xktb8h ls-s72" data-framer-component-type="SVG" data-framer-name="Star 1">
 					<div class="svgContainer ls-s73">
@@ -32,6 +29,9 @@ if ( 0 === $total ) {
 					</div>
 				</div>
 			</div>
+			<div class="framer-12yjqms ls-s62" data-framer-component-type="RichTextContainer" data-framer-name="Top"><p class="framer-text ls-s63"><span class="framer-text ls-s64">Top</span></p></div>
+			<div class="framer-b9mrqv ls-s65" data-framer-component-type="RichTextContainer" data-framer-name="nhà cái"><p class="framer-text ls-s66"><span class="framer-text ls-s67">nhà cái</span></p></div>
+			<div class="framer-gg6s9k ls-s68" data-framer-component-type="RichTextContainer" data-framer-name="uy tín"><p class="framer-text ls-s63"><span class="framer-text ls-s69" data-text-fill="true"><span class="framer-text ls-s70">uy tín</span></span></p></div>
 		</div>
 		<div class="framer-wpr0vp ls-s6 luongson-bookmakers-ticker" data-framer-name="Frame 7">
 			<div class="framer-czcwzc ls-s75" data-framer-name="Brand" data-hide-scrollbars="true" draggable="false">

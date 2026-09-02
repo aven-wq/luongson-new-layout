@@ -366,6 +366,11 @@ body.admin-bar #luongson-site-root .framer-QbuP0.framer-1ei7e2m {
   position: relative;
 }
 
+/* WP inserts this block after N cards in DOM — disable Framer order:6 (mobile/tablet). */
+.framer-Q1644 .framer-zecxh3 > .framer-cbakad {
+  order: unset !important;
+}
+
 .framer-Q1644 .framer-w6ehl .luongson-article-card-link {
   position: absolute;
   inset: 0;
