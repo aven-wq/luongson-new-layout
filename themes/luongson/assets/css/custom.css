@@ -343,6 +343,46 @@ body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongs
 .blv-page-info .icon-box-text {
     padding: 0 !important;
 }
+
+.gwd-dynamic-html-container button svg {
+    background: rgb(174, 179, 199);
+    border-radius: 100px;
+    width: 20px;
+    height: 20px;
+    color: white;
+    fill: white;
+    padding: 5px;
+}
+
+.gwd-dynamic-html-container button svg:hover {
+    background: red;
+}
+
+.gwd-dynamic-html-container button svg path {
+    fill: white;
+    stroke: white;
+}
+
+.gwd-dynamic-html-container img {
+    opacity: 1;
+    will-change: transform;
+    transform-origin: center center;
+    animation: gwd-icon-pulse 1.2s ease-in-out infinite;
+}
+
+.gwd-dynamic-html-wrapper ins {
+    padding: 0 !important;
+}
+
+@keyframes gwd-icon-pulse {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+}
 @media (max-width: 1024px) {
     .banner-blv  .text-inner h1 {
         font-size: 35px;
