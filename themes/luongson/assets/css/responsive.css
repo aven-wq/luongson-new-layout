@@ -104,7 +104,7 @@ body {
     width: 1px !important;
     min-width: 0 !important;
     height: min-content !important;
-    padding: 0 10px !important;
+    padding: 0!important;
   }
 
   /* Ambassador & SEO Section Row */
@@ -655,7 +655,7 @@ body {
     flex-flow: row !important;
     width: 100% !important;
     gap: 20px !important;
-    padding: 0 10px !important;
+    padding: 0!important;
     box-sizing: border-box !important;
   }
 

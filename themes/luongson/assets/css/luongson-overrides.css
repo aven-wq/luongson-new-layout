@@ -282,11 +282,6 @@
   box-sizing: border-box !important;
 }
 
-body.luongson-theme .luongson-page-main .row,
-body.luongson-theme .luongson-page-main .col {
-  max-width: 100% !important;
-}
-
 /* --------------------------------------------------------------------------
    Footer
    -------------------------------------------------------------------------- */

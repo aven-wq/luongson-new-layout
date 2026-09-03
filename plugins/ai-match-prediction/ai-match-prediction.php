@@ -3,7 +3,7 @@
  * Plugin Name: AI Match Prediction - Sports Widget
  * Plugin URI: https://prediction.thinkwithdev.com
  * Description: Widget AI Dự Đoán & Phân Tích Kèo Bóng Đá Realtime (Hỗ trợ 1-Click Auto Upgrade từ WP Admin)
- * Version: 1.0.3
+ * Version: 1.1.1
  * Author: AI Match Prediction SaaS
  * Author URI: https://prediction.thinkwithdev.com
  * License: GPLv2 or later
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 
 class AIMatchPredictionPlugin {
     private static $instance = null;
-    private $version = '1.0.3';
+    private $version = '1.1.1';
     private $slug = 'ai-match-prediction';
     private $api_endpoint = 'https://prediction.thinkwithdev.com';
 
@@ -36,6 +36,7 @@ class AIMatchPredictionPlugin {
         add_filter('plugins_api', array($this, 'plugin_info'), 20, 3);
         add_filter('plugin_action_links_' . plugin_basename(__FILE__), array($this, 'add_action_links'));
         add_action('in_plugin_update_message-' . plugin_basename(__FILE__), array($this, 'render_update_notice'), 10, 2);
+        add_filter('script_loader_tag', array($this, 'add_async_attribute'), 10, 2);
         add_filter('http_request_host_is_external', array($this, 'allow_local_http_requests'), 10, 3);
         add_filter('http_request_args', array($this, 'allow_unsafe_local_urls'), 10, 2);
     }
@@ -68,6 +69,13 @@ class AIMatchPredictionPlugin {
         add_shortcode('ai_match_prediction', array($this, 'render_widget_shortcode'));
     }
 
+    public function add_async_attribute($tag, $handle) {
+        if ('ai-prediction-widget-bundle' === $handle && false === strpos($tag, 'async')) {
+            return str_replace(' src=', ' async src=', $tag);
+        }
+        return $tag;
+    }
+
     public function render_widget_shortcode($atts) {
         $a = shortcode_atts(array(
             'pk' => get_option('ai_prediction_private_key', ''),
@@ -76,10 +84,16 @@ class AIMatchPredictionPlugin {
             'assets_base' => plugins_url('assets/', __FILE__)
         ), $atts);
 
-        $script_url = esc_url(rtrim($a['api_base'], '/') . '/bundle.js');
+        $local_bundle = plugin_dir_path(__FILE__) . 'assets/bundle.js';
+        $script_url = file_exists($local_bundle)
+            ? plugins_url('assets/bundle.js', __FILE__)
+            : esc_url(rtrim($a['api_base'], '/') . '/bundle.js');
+
+        wp_enqueue_script('ai-prediction-widget-bundle', $script_url, array(), $this->version, true);
+
         return sprintf(
-            '<script src="%s" async></script><ai-prediction-widget private-key="%s" match-id="%s" api-base="%s" assets-base="%s"></ai-prediction-widget>',
-            $script_url, esc_attr($a['pk']), esc_attr($a['match_id']), esc_url($a['api_base']), esc_url($a['assets_base'])
+            '<ai-prediction-widget private-key="%s" match-id="%s" api-base="%s" assets-base="%s"></ai-prediction-widget>',
+            esc_attr($a['pk']), esc_attr($a['match_id']), esc_url($a['api_base']), esc_url($a['assets_base'])
         );
     }
 
@@ -253,28 +267,17 @@ class AIMatchPredictionPlugin {
             <!-- Quick Start & Usage Guide Bento Card -->
             <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                 <h2 style="margin-top: 0; font-size: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">📖 Hướng Dẫn Sử Dụng & Nhúng Widget</h2>
-                
-                <div style="margin-bottom: 16px;">
-                    <h3 style="font-size: 14px; color: #0f172a; margin-bottom: 6px;">1. Nhúng Bằng Shortcode Trong Bài Viết / Trang (Gutenberg / Elementor / Classic):</h3>
-                    <p style="font-size: 13px; color: #475569; margin: 4px 0;">Dán đoạn mã shortcode sau vào bất kỳ vị trí nào trong bài viết hoặc trang bạn muốn hiển thị Widget AI:</p>
-                    <div style="background: #0f172a; color: #f8fafc; padding: 10px 14px; border-radius: 6px; font-family: monospace; font-size: 13px; margin: 8px 0;">
-                        [ai_prediction_widget]
-                    </div>
+                <div style="margin-bottom: 14px;">
+                    <h3 style="font-size: 14px; color: #0f172a; margin: 4px 0;">1. Nhúng Shortcode:</h3>
+                    <div style="background: #0f172a; color: #f8fafc; padding: 8px 12px; border-radius: 6px; font-family: monospace; font-size: 13px;">[ai_prediction_widget]</div>
                 </div>
-
-                <div style="margin-bottom: 16px;">
-                    <h3 style="font-size: 14px; color: #0f172a; margin-bottom: 6px;">2. Nhúng Cố Định Cho Một Trận Đấu Cụ Thể (Theo Match ID):</h3>
-                    <p style="font-size: 13px; color: #475569; margin: 4px 0;">Nếu bài viết nhận định riêng cho 1 trận đấu cụ thể, truyền thêm tham số <code>match_id</code>:</p>
-                    <div style="background: #0f172a; color: #f8fafc; padding: 10px 14px; border-radius: 6px; font-family: monospace; font-size: 13px; margin: 8px 0;">
-                        [ai_prediction_widget match_id="123456"]
-                    </div>
+                <div style="margin-bottom: 14px;">
+                    <h3 style="font-size: 14px; color: #0f172a; margin: 4px 0;">2. Nhúng theo Match ID:</h3>
+                    <div style="background: #0f172a; color: #f8fafc; padding: 8px 12px; border-radius: 6px; font-family: monospace; font-size: 13px;">[ai_prediction_widget match_id="123456"]</div>
                 </div>
-
                 <div>
-                    <h3 style="font-size: 14px; color: #0f172a; margin-bottom: 6px;">3. Nhúng Trực Tiếp Trong Mã Nguồn Theme PHP (single.php / footer.php):</h3>
-                    <div style="background: #0f172a; color: #f8fafc; padding: 10px 14px; border-radius: 6px; font-family: monospace; font-size: 13px; margin: 8px 0;">
-                        &lt;?php echo do_shortcode('[ai_prediction_widget]'); ?&gt;
-                    </div>
+                    <h3 style="font-size: 14px; color: #0f172a; margin: 4px 0;">3. Nhúng Theme PHP:</h3>
+                    <div style="background: #0f172a; color: #f8fafc; padding: 8px 12px; border-radius: 6px; font-family: monospace; font-size: 13px;">&lt;?php echo do_shortcode('[ai_prediction_widget]'); ?&gt;</div>
                 </div>
             </div>
         </div>

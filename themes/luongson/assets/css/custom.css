@@ -374,6 +374,13 @@ body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongs
     padding: 0 !important;
 }
 
+.img-bottom-0.img {
+    margin-bottom: 0 !important;
+}
+
+.img-radius-8 img {
+    border-radius: 8px;
+}
 @keyframes gwd-icon-pulse {
     0%,
     100% {
@@ -383,6 +390,25 @@ body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongs
         transform: scale(1.2);
     }
 }
+
+@media (min-width: 850px) {
+    body .luongson-div-2 .luongson-div-2-left {
+        flex-basis: 80%;
+        max-width: 80%;
+        padding-right: 10px !important;
+    }
+
+    body .luongson-div-2 .luongson-div-2-right {
+        flex-basis: 20%;
+        max-width: 20%;
+        padding-left: 10px !important;
+    }
+
+    body .row.row-collapse {
+        max-width: 1480px;
+    }
+}
+
 @media (max-width: 1024px) {
     .banner-blv  .text-inner h1 {
         font-size: 35px;
