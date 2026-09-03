@@ -4881,10 +4881,7 @@ ol.framer-text,
 ul.framer-text,
 mark.framer-text,
 span.framer-text:not([data-text-fill]) {
-  font-family: var(
-    --framer-font-family-preview,
-    var(--framer-blockquote-font-family, var(--framer-font-family, Inter, Inter Placeholder, sans-serif))
-  );
+  font-family: "Momo Trust Sans", sans-serif;
   font-style: var(--framer-font-style-preview, var(--framer-blockquote-font-style, var(--framer-font-style, normal)));
   font-weight: var(--framer-font-weight-preview, var(--framer-blockquote-font-weight, var(--framer-font-weight, 400)));
   color: var(--framer-blockquote-text-color, var(--framer-text-color, #000));
