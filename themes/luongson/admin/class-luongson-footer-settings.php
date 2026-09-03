@@ -556,6 +556,7 @@ function luongson_get_promo_image_keys() {
 		'banner_right',
 		'catfish_left',
 		'catfish_right',
+		'banner_chao_tan_thu_mark',
 	);
 }
 
@@ -571,6 +572,7 @@ function luongson_get_promo_image_labels() {
 		'banner_right' => __( 'Banner phải', 'luongson' ),
 		'catfish_left' => __( 'Catfish trái', 'luongson' ),
 		'catfish_right' => __( 'Catfish phải', 'luongson' ),
+		'banner_chao_tan_thu_mark' => __( 'Mark banner chao tan thu', 'luongson' ),
 	);
 }
 
@@ -627,6 +629,19 @@ function luongson_get_promo_image_url( $key, $size = 'full' ) {
 	$url = wp_get_attachment_image_url( $image_id, $size );
 
 	return $url ? $url : '';
+}
+
+/**
+ * Get a saved promo link URL.
+ *
+ * @param string $key Promo link key.
+ * @return string
+ */
+function luongson_get_promo_link_url( $key ) {
+	$saved = luongson_get_saved_promo_images();
+	$url   = isset( $saved[ $key ]['url'] ) ? (string) $saved[ $key ]['url'] : '';
+
+	return $url;
 }
 
 /**

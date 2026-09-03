@@ -238,3 +238,83 @@ function luongson_shortcode_breadcrumb( $atts ) {
 	return luongson_render_breadcrumb( $atts );
 }
 add_shortcode( 'luongson_breadcrumb', 'luongson_shortcode_breadcrumb' );
+
+/**
+ * Render banner chào tân thủ from the Framer index design.
+ *
+ * @param array<string, string> $args {
+ *     Optional. Rendering options.
+ *
+ *     @type string $title    Headline text.
+ *     @type string $subtitle Supporting line.
+ *     @type string $cta      CTA button label.
+ *     @type string $url      Optional link URL.
+ *     @type string $image    Banner image URL.
+ *     @type string $mark     Premier League mark URL.
+ * }
+ * @return string
+ */
+function luongson_render_banner_chao_tan_thu( $args = array() ) {
+	$args = wp_parse_args(
+		$args,
+		array(
+			'title'    => 'chào tân thủ, cược thả ga',
+			'subtitle' => 'Khuyễn mãi nạp đầu - hoàn tiền cược cực cao',
+			'cta'      => 'Cược ngay',
+			'url'      => luongson_get_promo_link_url( 'banner_chao_tan_thu_link' ),
+			'image'    => luongson_asset_uri( 'images/U949SLmfNe0t7dwd8nihkNdARM_1cd668a5.png' ),
+			'mark'     => luongson_get_promo_image_url( 'banner_chao_tan_thu_mark' ) ?: luongson_asset_uri( 'images/premier-league-mark.svg' ),
+		)
+	);
+
+	ob_start();
+	get_template_part(
+		'template-parts/luongson/banner-chao-tan-thu',
+		null,
+		$args
+	);
+
+	return (string) ob_get_clean();
+}
+
+/**
+ * Shortcode: [banner_chao_tan_thu]
+ *
+ * Attributes:
+ * - title="..."    Headline (default: chào tân thủ, cược thả ga).
+ * - subtitle="..." Supporting line.
+ * - cta="..."      CTA label (default: Cược ngay).
+ * - url="..."      Optional link wrapping the banner.
+ * - image="..."    Banner image URL.
+ * - mark="..."     Premier League mark URL.
+ *
+ * @param array<string, string>|string $atts Shortcode attributes.
+ * @return string
+ */
+function luongson_shortcode_banner_chao_tan_thu( $atts ) {
+	$atts = shortcode_atts(
+		array(
+			'title'    => 'chào tân thủ, cược thả ga',
+			'subtitle' => 'Khuyễn mãi nạp đầu - hoàn tiền cược cực cao',
+			'cta'      => 'Cược ngay',
+			'url'      => '',
+			'image'    => '',
+			'mark'     => '',
+		),
+		$atts,
+		'banner_chao_tan_thu'
+	);
+
+	if ( '' === trim( $atts['url'] ) ) {
+		unset( $atts['url'] );
+	}
+	if ( '' === trim( $atts['image'] ) ) {
+		unset( $atts['image'] );
+	}
+	if ( '' === trim( $atts['mark'] ) ) {
+		unset( $atts['mark'] );
+	}
+
+	return luongson_render_banner_chao_tan_thu( $atts );
+}
+add_shortcode( 'banner_chao_tan_thu', 'luongson_shortcode_banner_chao_tan_thu' );

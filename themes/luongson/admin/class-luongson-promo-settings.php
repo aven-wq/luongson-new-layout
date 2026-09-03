@@ -91,6 +91,15 @@ class LuongSon_Promo_Settings {
 			);
 		}
 
+		$link_key = 'banner_chao_tan_thu_link';
+		$link     = isset( $input[ $link_key ]['url'] ) ? sanitize_text_field( wp_unslash( $input[ $link_key ]['url'] ) ) : '';
+
+		if ( '' !== $link ) {
+			$clean[ $link_key ] = array(
+				'url' => $link,
+			);
+		}
+
 		return $clean;
 	}
 
@@ -131,6 +140,16 @@ class LuongSon_Promo_Settings {
 						</header>
 						<div class="luongson-settings-block__body">
 							<?php self::render_promo_image_fields( 'catfish' ); ?>
+						</div>
+					</section>
+
+					<section class="luongson-settings-block">
+						<header class="luongson-settings-block__head">
+							<h2><?php esc_html_e( 'Banner chao tan thu', 'luongson' ); ?></h2>
+							<p><?php esc_html_e( 'Cau hinh link click va logo mark cho shortcode [banner_chao_tan_thu].', 'luongson' ); ?></p>
+						</header>
+						<div class="luongson-settings-block__body">
+							<?php self::render_promo_image_fields( 'banner_chao_tan_thu' ); ?>
 						</div>
 					</section>
 				</div>
@@ -212,9 +231,13 @@ class LuongSon_Promo_Settings {
 	private static function render_promo_image_fields( $group ) {
 		$promo_images = luongson_get_saved_promo_images();
 		$labels       = luongson_get_promo_image_labels();
-		$keys         = 'banner' === $group
-			? array( 'banner_left', 'banner_mid', 'banner_right' )
-			: array( 'catfish_left', 'catfish_right' );
+		if ( 'banner' === $group ) {
+			$keys = array( 'banner_left', 'banner_mid', 'banner_right' );
+		} elseif ( 'catfish' === $group ) {
+			$keys = array( 'catfish_left', 'catfish_right' );
+		} else {
+			$keys = array( 'banner_chao_tan_thu_mark' );
+		}
 		?>
 		<div class="luongson-promo-images">
 			<?php foreach ( $keys as $key ) : ?>
@@ -226,6 +249,10 @@ class LuongSon_Promo_Settings {
 				);
 				?>
 			<?php endforeach; ?>
+
+			<?php if ( 'banner_chao_tan_thu' === $group ) : ?>
+				<?php self::render_promo_link_field( 'banner_chao_tan_thu_link', __( 'Link banner', 'luongson' ), isset( $promo_images['banner_chao_tan_thu_link'] ) ? $promo_images['banner_chao_tan_thu_link'] : array() ); ?>
+			<?php endif; ?>
 		</div>
 		<?php
 	}
@@ -269,6 +296,32 @@ class LuongSon_Promo_Settings {
 						<?php esc_html_e( 'Gỡ ảnh', 'luongson' ); ?>
 					</button>
 				</div>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Output a single promo link field.
+	 *
+	 * @param string               $key   Field key.
+	 * @param string               $label Field label.
+	 * @param array<string, mixed> $value Saved data.
+	 */
+	private static function render_promo_link_field( $key, $label, $value ) {
+		$url = isset( $value['url'] ) ? (string) $value['url'] : '';
+		?>
+		<div class="luongson-promo-image-field">
+			<label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></label>
+			<div class="luongson-image-actions">
+				<input
+					id="<?php echo esc_attr( $key ); ?>"
+					type="text"
+					class="regular-text"
+					placeholder="https://example.com hoặc /khuyen-mai"
+					name="<?php echo esc_attr( self::OPTION_KEY ); ?>[<?php echo esc_attr( $key ); ?>][url]"
+					value="<?php echo esc_attr( $url ); ?>"
+				/>
 			</div>
 		</div>
 		<?php

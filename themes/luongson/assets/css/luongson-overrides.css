@@ -636,3 +636,9 @@ body.admin-bar #luongson-site-root .framer-QbuP0.framer-1ei7e2m {
   color: rgb(38, 38, 38) !important;
 }
 
+a.luongson-live-banner {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+}
+

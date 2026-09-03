@@ -381,13 +381,27 @@ body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongs
 .img-radius-8 img {
     border-radius: 8px;
 }
+
+.luongson-top-bookmakers ul li {
+    margin-left: 0 !important;
+}
+
+.framer-wh6HR .framer-1lxno9o {
+    will-change: scale;
+    animation: gwd-icon-pulse 1.2s ease-in-out infinite;
+}
+
+.framer-wh6HR .framer-1lxno9o:hover {
+    background-color: rgb(66, 0, 94);
+}
+
 @keyframes gwd-icon-pulse {
     0%,
     100% {
-        transform: scale(1);
+        scale: 1;
     }
     50% {
-        transform: scale(1.2);
+        scale: 1.1;
     }
 }
 

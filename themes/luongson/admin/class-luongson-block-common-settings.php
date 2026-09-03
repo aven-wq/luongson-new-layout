@@ -290,6 +290,20 @@ class LuongSon_Block_Common_Settings {
 					'label'   => __( 'Tiêu đề tùy chỉnh (mặc định: ĐỐI TÁC & NHÀ TÀI TRỢ).', 'luongson' ),
 				),
 			),
+			array(
+				'tag'         => 'banner_chao_tan_thu',
+				'title'       => __( 'Banner chào tân thủ', 'luongson' ),
+				'description' => __( 'Banner khuyến mãi chào tân thủ (Free Live Football Banner) từ thiết kế Framer trang chủ.', 'luongson' ),
+				'example'     => '[banner_chao_tan_thu]',
+				'attributes'  => array(
+					'title'    => __( 'Tiêu đề chính (mặc định: chào tân thủ, cược thả ga).', 'luongson' ),
+					'subtitle' => __( 'Dòng mô tả khuyến mãi.', 'luongson' ),
+					'cta'      => __( 'Nhãn nút CTA (mặc định: Cược ngay).', 'luongson' ),
+					'url'      => __( 'URL khi click banner (mở tab mới).', 'luongson' ),
+					'image'    => __( 'URL ảnh nhân vật bên phải.', 'luongson' ),
+					'mark'     => __( 'URL logo Premier League trên nút CTA.', 'luongson' ),
+				),
+			),
 		);
 	}
 
