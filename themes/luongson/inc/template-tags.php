@@ -59,85 +59,105 @@ function luongson_get_site_logo() {
 }
 
 /**
- * Navigation items mirrored from the design sidebar.
+ * Menu object assigned to the sidebar (falls back to Main Menu).
  *
- * @return array<int, array<string, string>>
+ * @return WP_Term|false
+ */
+function luongson_get_sidebar_nav_menu() {
+	$locations = get_nav_menu_locations();
+
+	foreach ( array( 'luongson-sidebar', 'primary' ) as $location ) {
+		if ( empty( $locations[ $location ] ) ) {
+			continue;
+		}
+
+		$menu = wp_get_nav_menu_object( (int) $locations[ $location ] );
+		if ( $menu ) {
+			return $menu;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Flatsome menu-icon fields for a nav item.
+ *
+ * @param int $item_id Menu item post ID.
+ * @return array{type:string,url?:string,alt?:string,html?:string}|null
+ */
+function luongson_get_menu_item_icon( $item_id ) {
+	$item_id   = (int) $item_id;
+	$icon_type = get_post_meta( $item_id, '_menu_item_icon-type', true );
+	$icon_id   = (int) get_post_meta( $item_id, '_menu_item_icon-id', true );
+	$icon_html = get_post_meta( $item_id, '_menu_item_icon-html', true );
+
+	if ( 'html' === $icon_type && '' !== (string) $icon_html ) {
+		return array(
+			'type' => 'html',
+			'html' => (string) $icon_html,
+		);
+	}
+
+	if ( $icon_id ) {
+		$src = wp_get_attachment_image_src( $icon_id, 'full' );
+		if ( $src ) {
+			return array(
+				'type' => 'image',
+				'url'  => $src[0],
+				'alt'  => (string) get_post_meta( $icon_id, '_wp_attachment_image_alt', true ),
+			);
+		}
+	}
+
+	return null;
+}
+
+/**
+ * Navigation items from Appearance → Menus.
+ *
+ * @return array<int, array<string, mixed>>
  */
 function luongson_get_nav_items() {
-	return array(
-		array(
-			'slug'       => 'home',
-			'label'      => 'Trang chủ',
-			'url'        => home_url( '/' ),
-			'icon'       => 'framer-BHaPX framer-an6fg4',
-			'link_class' => 'framer-k92g5e',
-			'text_class' => 'framer-527tjl',
-		),
-		array(
-			'slug'       => 'lich-thi-dau',
-			'label'      => 'Lịch thi đấu',
-			'url'        => home_url( '/lich-thi-dau/' ),
-			'icon'       => 'framer-deoUy framer-17bmagu',
-			'link_class' => 'framer-qweaht',
-			'text_class' => 'framer-pdwkbf',
-		),
-		array(
-			'slug'       => 'highlights',
-			'label'      => 'Highlights',
-			'url'        => home_url( '/highlights/' ),
-			'icon'       => 'framer-ry8uE framer-cr94t6',
-			'link_class' => 'framer-fm51jy',
-			'text_class' => 'framer-1f8d32j',
-		),
-		array(
-			'slug'       => 'aff',
-			'label'      => 'AFF Cup',
-			'url'        => home_url( '/aff/' ),
-			'icon'       => 'aff-icon',
-			'link_class' => 'framer-rtdaqv',
-			'text_class' => 'framer-1w0oiiz',
-		),
-		array(
-			'slug'       => 'nhan-dinh',
-			'label'      => 'Nhận định',
-			'url'        => home_url( '/nhan-dinh/' ),
-			'icon'       => 'framer-mh61q framer-e15086',
-			'link_class' => 'framer-17zqi0c',
-			'text_class' => 'framer-1wh0vnl',
-		),
-		array(
-			'slug'       => 'soi-keo',
-			'label'      => 'Soi kèo',
-			'url'        => home_url( '/soi-keo/' ),
-			'icon'       => 'framer-8myKw framer-1oy5sfo',
-			'link_class' => 'framer-n8ithq',
-			'text_class' => 'framer-bnvzw0',
-		),
-		array(
-			'slug'       => 'tin-tuc',
-			'label'      => 'Tin tức',
-			'url'        => home_url( '/tin-tuc/' ),
-			'icon'       => 'framer-p1WUs framer-jal8by',
-			'link_class' => 'framer-mzboi1',
-			'text_class' => 'framer-2fyly2',
-		),
-		array(
-			'slug'       => 'khuyen-mai',
-			'label'      => 'Khuyến mãi',
-			'url'        => home_url( '/khuyen-mai/' ),
-			'icon'       => 'framer-i1TDP framer-10iggq5',
-			'link_class' => 'framer-o1anxw',
-			'text_class' => 'framer-7anvse',
-		),
-		array(
-			'slug'       => 'ung-tuyen-blv',
-			'label'      => 'Ứng tuyển BLV',
-			'url'        => home_url( '/ung-tuyen-blv/' ),
-			'icon'       => 'framer-sQNpM framer-n6e0s1',
-			'link_class' => 'framer-1ryvz9p',
-			'text_class' => 'framer-ld3gan',
-		),
-	);
+	$menu = luongson_get_sidebar_nav_menu();
+	if ( ! $menu ) {
+		return array();
+	}
+
+	$menu_items = wp_get_nav_menu_items( $menu->term_id );
+	if ( empty( $menu_items ) || ! is_array( $menu_items ) ) {
+		return array();
+	}
+
+	_wp_menu_item_classes_by_context( $menu_items );
+
+	$items = array();
+
+	foreach ( $menu_items as $menu_item ) {
+		if ( (int) $menu_item->menu_item_parent !== 0 ) {
+			continue;
+		}
+
+		$classes = is_array( $menu_item->classes ) ? $menu_item->classes : array();
+		$current = in_array( 'current-menu-item', $classes, true )
+			|| in_array( 'current-menu-ancestor', $classes, true )
+			|| in_array( 'current-menu-parent', $classes, true )
+			|| ! empty( $menu_item->current )
+			|| ! empty( $menu_item->current_item_ancestor )
+			|| ! empty( $menu_item->current_item_parent );
+
+		$items[] = array(
+			'id'       => (int) $menu_item->ID,
+			'label'    => $menu_item->title,
+			'url'      => $menu_item->url,
+			'target'   => $menu_item->target,
+			'xfn'      => $menu_item->xfn,
+			'icon'     => luongson_get_menu_item_icon( (int) $menu_item->ID ),
+			'current'  => $current,
+		);
+	}
+
+	return $items;
 }
 
 /**
@@ -253,37 +273,34 @@ function luongson_format_footer_rich_text( $html, $default_class, $paragraph_cla
 }
 
 /**
- * Render sidebar navigation links.
+ * Render sidebar navigation links from the WP menu.
  */
 function luongson_render_nav_links() {
 	foreach ( luongson_get_nav_items() as $item ) {
-		$is_active = luongson_is_nav_active( $item['url'] );
-		$classes   = trim( ( $item['link_class'] ?? '' ) . ' framer-qohcna ls-s7' );
+		$is_active = ! empty( $item['current'] ) || luongson_is_nav_active( $item['url'] );
+		$icon      = $item['icon'] ?? null;
 		?>
 		<a
-			class="<?php echo esc_attr( $classes ); ?>"
+			class="framer-qohcna ls-s7"
 			href="<?php echo esc_url( $item['url'] ); ?>"
+			<?php echo ! empty( $item['target'] ) ? ' target="' . esc_attr( $item['target'] ) . '"' : ''; ?>
+			<?php echo ! empty( $item['xfn'] ) ? ' rel="' . esc_attr( $item['xfn'] ) . '"' : ''; ?>
 			<?php echo $is_active ? ' data-framer-page-link-current="true"' : ''; ?>
 		>
-			<?php if ( 'aff-icon' === $item['icon'] ) : ?>
-				<div class="framer-1p5zqos ls-s11">
-					<div class="framer-3yq53u ls-s12" data-framer-name="Image">
-						<div class="ls-s4" data-framer-background-image-wrapper="true">
-							<img
-								class="ls-s5"
-								alt="AFF Cup"
-								decoding="auto"
-								height="1205"
-								width="1280"
-								src="<?php echo esc_url( luongson_asset_url( 'images/PuTsiLumL1D8AfGmuOinRVCOIj8_beaad5ce.png?width=1280&height=1205' ) ); ?>"
-							/>
-						</div>
-					</div>
-				</div>
-			<?php else : ?>
-				<div class="<?php echo esc_attr( $item['icon'] ); ?> ls-s8"></div>
-			<?php endif; ?>
-			<div class="<?php echo esc_attr( trim( ( $item['text_class'] ?? '' ) . ' ls-s9' ) ); ?>" data-framer-component-type="RichTextContainer">
+			<div class="ls-s8 luongson-sidebar-nav-icon">
+				<?php if ( is_array( $icon ) && 'image' === ( $icon['type'] ?? '' ) && ! empty( $icon['url'] ) ) : ?>
+					<img
+						src="<?php echo esc_url( $icon['url'] ); ?>"
+						alt="<?php echo esc_attr( $icon['alt'] ?? '' ); ?>"
+						width="18"
+						height="18"
+						decoding="async"
+					/>
+				<?php elseif ( is_array( $icon ) && 'html' === ( $icon['type'] ?? '' ) && ! empty( $icon['html'] ) ) : ?>
+					<?php echo do_shortcode( $icon['html'] ); ?>
+				<?php endif; ?>
+			</div>
+			<div class="ls-s9" data-framer-component-type="RichTextContainer">
 				<p class="framer-text ls-s10" dir="auto"><?php echo esc_html( $item['label'] ); ?></p>
 			</div>
 		</a>

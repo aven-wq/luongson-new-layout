@@ -295,6 +295,8 @@ body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongs
     margin-bottom: 0;
     font-weight: 300;
     color: #5c5c5c;
+    line-height: 22px;
+    font-size: 13.7px;
 }
 
 .blv-page-info .icon-box {
@@ -313,6 +315,10 @@ body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongs
     overflow: visible;
     margin-bottom: 20px;
 } 
+
+.blv-page-info {
+    padding: 0 !important;
+}
 
 .blv-page-info .icon-box .icon-inner {
     background-color: #fff;

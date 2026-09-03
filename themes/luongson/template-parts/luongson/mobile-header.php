@@ -7,7 +7,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$logo_url = luongson_asset_url( 'images/8suNKBFdLKs23ISzr0C36SqrXFU_8543fca5.png?width=600&height=142' );
+$logo     = luongson_get_site_logo();
+$logo_url = $logo ? $logo['url'] : '';
+$logo_w   = $logo ? $logo['width'] : 600;
+$logo_h   = $logo ? $logo['height'] : 142;
 ?>
 <div class="ssr-variant luongson-mobile-header">
 	<div class="framer-1thqph1-container">
@@ -16,14 +19,16 @@ $logo_url = luongson_asset_url( 'images/8suNKBFdLKs23ISzr0C36SqrXFU_8543fca5.png
 				<div class="framer-1hocoz ls-s6" data-framer-name="Logo">
 					<div class="ls-s4" data-framer-background-image-wrapper="true">
 						<a href="<?php echo esc_url( home_url( '/' ) ); ?>" style="display:block;width:100%;height:100%;">
+							<?php if ( $logo_url ) : ?>
 							<img
 								class="ls-s5"
 								alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>"
 								decoding="auto"
-								height="142"
-								width="600"
+								height="<?php echo esc_attr( (string) $logo_h ); ?>"
+								width="<?php echo esc_attr( (string) $logo_w ); ?>"
 								src="<?php echo esc_url( $logo_url ); ?>"
 							/>
+							<?php endif; ?>
 						</a>
 					</div>
 				</div>

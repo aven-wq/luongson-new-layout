@@ -4868,47 +4868,6 @@ ul.framer-text {
   padding: 0px;
 }
 
-p.framer-text,
-div.framer-text,
-h1.framer-text,
-h2.framer-text,
-h3.framer-text,
-h4.framer-text,
-h5.framer-text,
-h6.framer-text,
-li.framer-text,
-ol.framer-text,
-ul.framer-text,
-mark.framer-text,
-span.framer-text:not([data-text-fill]) {
-  font-family: "Momo Trust Sans", sans-serif;
-  font-style: var(--framer-font-style-preview, var(--framer-blockquote-font-style, var(--framer-font-style, normal)));
-  font-weight: var(--framer-font-weight-preview, var(--framer-blockquote-font-weight, var(--framer-font-weight, 400)));
-  color: var(--framer-blockquote-text-color, var(--framer-text-color, #000));
-  font-size: calc(var(--framer-blockquote-font-size, var(--framer-font-size, 16px)) * var(--framer-font-size-scale, 1));
-  letter-spacing: var(--framer-blockquote-letter-spacing, var(--framer-letter-spacing, 0));
-  text-transform: var(--framer-blockquote-text-transform, var(--framer-text-transform, none));
-  text-decoration-line: var(--framer-blockquote-text-decoration, var(--framer-text-decoration, initial));
-  text-decoration-style: var(--framer-blockquote-text-decoration-style, var(--framer-text-decoration-style, initial));
-  text-decoration-color: var(--framer-blockquote-text-decoration-color, var(--framer-text-decoration-color, initial));
-  text-decoration-thickness: var(
-    --framer-blockquote-text-decoration-thickness,
-    var(--framer-text-decoration-thickness, initial)
-  );
-  text-decoration-skip-ink: var(
-    --framer-blockquote-text-decoration-skip-ink,
-    var(--framer-text-decoration-skip-ink, initial)
-  );
-  text-underline-offset: var(--framer-blockquote-text-decoration-offset, var(--framer-text-decoration-offset, initial));
-  line-height: var(--framer-blockquote-line-height, var(--framer-line-height, 1.2em));
-  text-align: var(--framer-blockquote-text-alignment, var(--framer-text-alignment, start));
-  -webkit-text-stroke-width: var(--framer-text-stroke-width, initial);
-  -webkit-text-stroke-color: var(--framer-text-stroke-color, initial);
-  font-feature-settings: var(--framer-font-open-type-features, initial);
-  font-variation-settings: var(--framer-font-variation-axes-preview, var(--framer-font-variation-axes, normal));
-  text-wrap: var(--framer-text-wrap-override, var(--framer-text-wrap));
-}
-
 mark.framer-text,
 p.framer-text,
 div.framer-text,
