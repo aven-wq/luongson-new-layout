@@ -264,6 +264,79 @@ body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongs
     line-height: 26px;
 }
 
+.blv-page-info {
+    font-family: "Momo Trust Sans", sans-serif !important;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgb(66, 66, 66);
+    line-height: 26px;
+}
+
+.header-blv {
+    font-family: "Momo Trust Sans", sans-serif !important;
+}
+
+.header-blv p:first-child {
+    color: #0049d1;
+    margin-bottom: 0;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.header-blv h3 {
+    font-size: 28px;
+    color: #000;
+    margin: 10px 0;
+    font-weight: 800;
+    font-family: "Momo Trust Sans", sans-serif !important;
+}
+
+.header-blv p:last-child {
+    margin-bottom: 0;
+    font-weight: 300;
+    color: #5c5c5c;
+}
+
+.blv-page-info .icon-box {
+    background-color: rgb(242, 242, 242);
+    border-radius: 16px;
+    flex-flow: row;
+    flex: 0 0 auto;
+    place-content: center flex-start;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    height: min-content;
+    padding: 16px;
+    display: flex;
+    position: relative;
+    overflow: visible;
+    margin-bottom: 20px;
+} 
+
+.blv-page-info .icon-box .icon-inner {
+    background-color: #fff;
+    border-radius: 100px;
+}
+
+.blv-page-info .icon-box h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgb(28, 28, 28);
+    margin-bottom: 0;
+}
+
+.blv-page-info .icon-box p {
+    font-size: 14px;
+    color: #000;
+    margin-bottom: 0;
+    line-height: 21px;
+    font-weight: 300;
+}
+
+.blv-page-info .icon-box-text {
+    padding: 0 !important;
+}
 @media (max-width: 1024px) {
     .banner-blv  .text-inner h1 {
         font-size: 35px;
