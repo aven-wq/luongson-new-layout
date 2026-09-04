@@ -1,0 +1,342 @@
+/**
+ * LuongSon Sport — Top bình luận viên
+ * Extracted from themes/html/index.html (+ components/animations/responsive CSS)
+ */
+
+.luongson-top-commentators {
+  --ls-sport-font: "Momo Trust Sans", "Momo Trust Sans Placeholder", system-ui, sans-serif;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+.luongson-top-commentators *,
+.luongson-top-commentators *::before,
+.luongson-top-commentators *::after {
+  box-sizing: border-box;
+}
+
+/* Header */
+.luongson-commentators-header {
+  height: min-content;
+  overflow: clip;
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center flex-start;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 10px 0;
+  display: flex;
+  position: relative;
+}
+
+.luongson-commentators-header__icon {
+  aspect-ratio: 1 / 1;
+  flex: 0 0 auto;
+  width: 24px;
+  height: auto;
+  display: block;
+  color: #000;
+}
+
+.luongson-commentators-header__title {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  position: relative;
+  white-space: pre;
+  line-height: 0;
+}
+
+.luongson-commentators-header__title p {
+  margin: 0;
+  font-family: var(--ls-sport-font);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: black;
+}
+
+/* List / ticker viewport */
+.luongson-commentators-list {
+  height: min-content;
+  overflow: hidden !important;
+  flex-flow: column;
+  flex: 0 0 auto;
+  place-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0 10px;
+  display: flex;
+  position: relative !important;
+}
+
+/* Track */
+.luongson-commentators-track {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 4px 0 !important;
+  width: max-content !important;
+  max-width: none !important;
+  gap: 10px !important;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+  cursor: grab;
+  border-radius: 10px;
+  position: relative;
+}
+
+.luongson-commentators-track:active {
+  cursor: grabbing;
+}
+
+/* Card */
+.luongson-commentator-card {
+  height: 80px !important;
+  overflow: clip !important;
+  will-change: transform;
+  background-color: rgb(0, 37, 171) !important;
+  border-radius: 16px !important;
+  flex-flow: row !important;
+  flex: 0 0 auto !important;
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+  place-content: center space-between !important;
+  align-items: center !important;
+  width: 100%;
+  min-width: 260px;
+  padding: 10px 14px 10px 10px !important;
+  display: flex !important;
+  position: relative !important;
+  box-sizing: border-box !important;
+  transition:
+    transform 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.luongson-commentator-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+}
+
+.luongson-commentator-card.is-blue {
+  background-color: rgb(0, 37, 171) !important;
+}
+
+.luongson-commentator-card.is-teal {
+  background-color: rgb(0, 106, 117) !important;
+}
+
+.luongson-commentator-card.is-green {
+  background-color: rgb(0, 128, 77) !important;
+}
+
+/* Avatar */
+.luongson-commentator-avatar {
+  --border-bottom-width: 1px;
+  --border-color: #fff3;
+  --border-left-width: 1px;
+  --border-right-width: 1px;
+  --border-style: solid;
+  --border-top-width: 1px;
+  aspect-ratio: 1 / 1 !important;
+  height: auto !important;
+  overflow: clip !important;
+  border-radius: 16px !important;
+  flex: 0 0 auto !important;
+  width: 60px !important;
+  position: relative !important;
+}
+
+.luongson-commentator-avatar[data-border="true"]::after {
+  content: "";
+  border-width: var(--border-top-width, 0) var(--border-right-width, 0) var(--border-bottom-width, 0)
+    var(--border-left-width, 0);
+  border-color: var(--border-color, none);
+  border-style: var(--border-style, none);
+  box-sizing: border-box;
+  border-radius: inherit;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.luongson-commentator-avatar__media {
+  position: absolute !important;
+  border-radius: inherit !important;
+  inset: 0 !important;
+}
+
+.luongson-commentator-avatar img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: inherit !important;
+  object-position: 47.6% 11.9% !important;
+  object-fit: cover !important;
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.luongson-commentator-card:hover .luongson-commentator-avatar img {
+  transform: scale(1.08);
+}
+
+/* Info */
+.luongson-commentator-info {
+  flex-flow: column !important;
+  flex: 1 0 0px !important;
+  place-content: flex-start center !important;
+  align-items: flex-start !important;
+  gap: 5px !important;
+  width: 1px !important;
+  height: min-content !important;
+  padding: 0 0 0 10px !important;
+  display: flex !important;
+  position: relative !important;
+  min-width: 0;
+}
+
+.luongson-commentator-info__name,
+.luongson-commentator-info__meta {
+  width: 100%;
+  position: relative;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.luongson-commentator-info__name p,
+.luongson-commentator-info__meta p {
+  margin: 0;
+  font-family: var(--ls-sport-font);
+  line-height: 1.25;
+}
+
+.luongson-commentator-info__name p {
+  font-size: 14px;
+  font-weight: 700;
+  color: rgb(255, 255, 255);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.luongson-commentator-info__meta p {
+  font-size: 10px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* Follow button */
+.luongson-commentator-follow-btn {
+  cursor: pointer !important;
+  background-color: rgb(255, 255, 255) !important;
+  border: none !important;
+  border-radius: 9px !important;
+  flex-flow: row !important;
+  flex: 0 0 auto !important;
+  place-content: center !important;
+  align-items: center !important;
+  width: min-content !important;
+  height: min-content !important;
+  padding: 8px 12px !important;
+  display: flex !important;
+  position: relative !important;
+  transition:
+    transform 0.18s ease,
+    background-color 0.18s ease,
+    box-shadow 0.18s ease;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.luongson-commentator-follow-btn:hover {
+  transform: scale(1.06);
+  background-color: #f5f5f5 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+.luongson-commentator-follow-btn:active {
+  transform: scale(0.94);
+}
+
+.luongson-commentator-follow-btn__label {
+  margin: 0;
+  font-family: var(--ls-sport-font);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: #111;
+  line-height: 1;
+}
+
+@keyframes luongson-sport-heart-beat {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.2);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  75% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.luongson-commentator-follow-btn.followed {
+  background-color: #ffe8ee !important;
+  color: #ff1e56;
+  animation: luongson-sport-heart-beat 0.45s ease-in-out;
+}
+
+.luongson-commentator-follow-btn.followed .luongson-commentator-follow-btn__label {
+  color: #ff1e56;
+}
+
+/* Mobile: stack vertically, disable ticker layout */
+@media (max-width: 809.98px) {
+  .luongson-commentators-list {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    width: 100% !important;
+  }
+
+  .luongson-commentators-track {
+    display: flex !important;
+    flex-flow: column !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 10px !important;
+    cursor: default;
+    transform: none !important;
+  }
+
+  .luongson-commentators-track > * {
+    width: 100% !important;
+    height: 80px !important;
+    flex: 0 0 auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+}
