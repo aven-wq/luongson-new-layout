@@ -628,9 +628,37 @@
 
 .luongson-home-match .framer-woxy63 {
   width: 350px;
-  overflow-x: scroll;
+  overflow-x: auto;
   align-items: start;
   justify-content: start;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(33, 110, 186) transparent;
+  padding-bottom: 6px;
+}
+
+.luongson-home-match .framer-woxy63::-webkit-scrollbar {
+  height: 4px;
+}
+
+.luongson-home-match .framer-woxy63::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 999px;
+}
+
+.luongson-home-match .framer-woxy63::-webkit-scrollbar-thumb {
+  background: rgba(255, 125, 74, 0.45);
+  border-radius: 999px;
+  transition: background 0.2s ease;
+}
+
+.luongson-home-match .framer-woxy63::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 125, 74, 0.85);
+}
+
+.luongson-home-match .framer-woxy63::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 .luongson-home-match :is(.framer-66unz7, .framer-9fd7fs) {
