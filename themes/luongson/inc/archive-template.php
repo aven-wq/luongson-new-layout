@@ -82,8 +82,14 @@ function luongson_get_news_archive_nha_cai_position() {
 function luongson_get_news_archive_heading() {
 	if ( is_category() ) {
 		$term = get_queried_object();
-		if ( $term instanceof WP_Term && '' !== trim( (string) $term->name ) ) {
-			return (string) $term->name;
+		if ( $term instanceof WP_Term ) {
+			$heading = function_exists( 'luongson_get_category_sub_title' )
+				? luongson_get_category_sub_title( $term )
+				: trim( (string) $term->name );
+
+			if ( '' !== $heading ) {
+				return $heading;
+			}
 		}
 	}
 

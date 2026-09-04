@@ -7,9 +7,39 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const LUONGSON_CATEGORY_SMALL_THUMB_META     = 'luongson_small_thumb';
-const LUONGSON_CATEGORY_POSTS_PER_PAGE_META  = 'luongson_posts_per_page';
+const LUONGSON_CATEGORY_SMALL_THUMB_META       = 'luongson_small_thumb';
+const LUONGSON_CATEGORY_POSTS_PER_PAGE_META    = 'luongson_posts_per_page';
+const LUONGSON_CATEGORY_SUB_TITLE_META         = 'sub_title';
 const LUONGSON_CATEGORY_POSTS_PER_PAGE_DEFAULT = 15;
+
+/**
+ * Category archive heading: sub_title when set, otherwise term name.
+ *
+ * @param int|WP_Term $term Category term ID or object.
+ * @return string
+ */
+function luongson_get_category_sub_title( $term ) {
+	if ( $term instanceof WP_Term ) {
+		$term_id   = (int) $term->term_id;
+		$term_name = (string) $term->name;
+	} else {
+		$term_id = absint( $term );
+		$term    = $term_id ? get_term( $term_id, 'category' ) : null;
+		$term_name = ( $term instanceof WP_Term ) ? (string) $term->name : '';
+	}
+
+	if ( ! $term_id ) {
+		return '';
+	}
+
+	$sub_title = trim( (string) get_term_meta( $term_id, LUONGSON_CATEGORY_SUB_TITLE_META, true ) );
+
+	if ( '' !== $sub_title ) {
+		return $sub_title;
+	}
+
+	return trim( $term_name );
+}
 
 /**
  * Register custom image size for small archive thumbnails.
@@ -83,6 +113,13 @@ function luongson_get_category_posts_per_page( $term_id = 0 ) {
  */
 function luongson_category_add_archive_fields() {
 	?>
+	<div class="form-field term-sub-title-wrap">
+		<label for="luongson-sub-title"><?php esc_html_e( 'Sub title', 'luongson' ); ?></label>
+		<input type="text" name="sub_title" id="luongson-sub-title" value="" />
+		<p class="description">
+			<?php esc_html_e( 'Tiêu đề hiển thị trên trang danh mục. Để trống sẽ dùng tên danh mục.', 'luongson' ); ?>
+		</p>
+	</div>
 	<div class="form-field term-posts-per-page-wrap">
 		<label for="luongson-posts-per-page"><?php esc_html_e( 'Số bài trên 1 trang', 'luongson' ); ?></label>
 		<input
@@ -124,9 +161,27 @@ add_action( 'category_add_form_fields', 'luongson_category_add_archive_fields' )
  * @param WP_Term $term Current category term.
  */
 function luongson_category_edit_archive_fields( $term ) {
-	$enabled         = (bool) get_term_meta( $term->term_id, LUONGSON_CATEGORY_SMALL_THUMB_META, true );
-	$posts_per_page  = luongson_get_category_posts_per_page( (int) $term->term_id );
+	$enabled        = (bool) get_term_meta( $term->term_id, LUONGSON_CATEGORY_SMALL_THUMB_META, true );
+	$posts_per_page = luongson_get_category_posts_per_page( (int) $term->term_id );
+	$sub_title      = (string) get_term_meta( $term->term_id, LUONGSON_CATEGORY_SUB_TITLE_META, true );
 	?>
+	<tr class="form-field term-sub-title-wrap">
+		<th scope="row">
+			<label for="luongson-sub-title"><?php esc_html_e( 'Sub title', 'luongson' ); ?></label>
+		</th>
+		<td>
+			<input
+				type="text"
+				name="sub_title"
+				id="luongson-sub-title"
+				value="<?php echo esc_attr( $sub_title ); ?>"
+				class="regular-text"
+			/>
+			<p class="description">
+				<?php esc_html_e( 'Tiêu đề hiển thị trên trang danh mục. Để trống sẽ dùng tên danh mục.', 'luongson' ); ?>
+			</p>
+		</td>
+	</tr>
 	<tr class="form-field term-posts-per-page-wrap">
 		<th scope="row">
 			<label for="luongson-posts-per-page"><?php esc_html_e( 'Số bài trên 1 trang', 'luongson' ); ?></label>
@@ -177,6 +232,16 @@ add_action( 'category_edit_form_fields', 'luongson_category_edit_archive_fields'
 function luongson_save_category_archive_settings( $term_id ) {
 	if ( ! current_user_can( 'manage_categories' ) ) {
 		return;
+	}
+
+	if ( isset( $_POST['sub_title'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$sub_title = sanitize_text_field( wp_unslash( $_POST['sub_title'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+		if ( '' === $sub_title ) {
+			delete_term_meta( $term_id, LUONGSON_CATEGORY_SUB_TITLE_META );
+		} else {
+			update_term_meta( $term_id, LUONGSON_CATEGORY_SUB_TITLE_META, $sub_title );
+		}
 	}
 
 	if ( isset( $_POST['luongson_posts_per_page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing

@@ -79,12 +79,12 @@ if ( empty( $items ) ) {
 			<?php elseif ( '' !== $item_url ) : ?>
 				<a class="framer-jokgij framer-2zqk9m luongson-breadcrumb-link" href="<?php echo esc_url( $item_url ); ?>">
 					<div class="framer-1jezyeg ls-blog-s98" data-framer-name="<?php echo esc_attr( $item_label ); ?>" data-framer-component-type="RichTextContainer">
-						<p dir="auto" class="framer-text ls-blog-s103"><?php echo esc_html( $item_label ); ?></p>
+						<p dir="auto" class="framer-text ls-blog-s101"><?php echo esc_html( $item_label ); ?></p>
 					</div>
 				</a>
 			<?php else : ?>
 				<div class="framer-1jezyeg ls-blog-s98" data-framer-name="<?php echo esc_attr( $item_label ); ?>" data-framer-component-type="RichTextContainer">
-					<p dir="auto" class="framer-text ls-blog-s103"><?php echo esc_html( $item_label ); ?></p>
+					<p dir="auto" class="framer-text ls-blog-s101"><?php echo esc_html( $item_label ); ?></p>
 				</div>
 			<?php endif; ?>
 		<?php endforeach; ?>
