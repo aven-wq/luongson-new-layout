@@ -14,12 +14,6 @@
   box-sizing: border-box !important;
 }
 
-/* Framer sets all component types absolute — breaks nav/footer/banner text */
-#luongson-site-root [data-framer-component-type="RichTextContainer"],
-.mobile-overlay-portal [data-framer-component-type="RichTextContainer"] {
-  position: relative !important;
-}
-
 /* --------------------------------------------------------------------------
    Desktop (>= 1024px)
    -------------------------------------------------------------------------- */
