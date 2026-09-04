@@ -2,7 +2,7 @@
 /**
  * Plugin Name: LuongSon Sport
  * Description: Shortcodes: [luongson_top_commentators], [luongson_home_match], [luongson_list_matches]
- * Version: 1.2.0
+ * Version: 1.2.1
  * Author: LuongSon
  */
 
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'LUONGSON_SPORT_VERSION', '1.2.0' );
+define( 'LUONGSON_SPORT_VERSION', '1.2.1' );
 define( 'LUONGSON_SPORT_URL', plugin_dir_url( __FILE__ ) );
 define( 'LUONGSON_SPORT_DIR', plugin_dir_path( __FILE__ ) );
 

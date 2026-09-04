@@ -227,7 +227,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					>
 						<div class="framer-15u49ms" data-framer-name="Avatar Hoàng">
 							<div class="ls-s4" data-framer-background-image-wrapper="true">
-								<img class="ls-s58" alt="Shelby" decoding="async" height="360" src="<?php echo esc_url( $img . 'wIKNhKyKJ9nlZZOnf2LaeteFjyk_f44a3706.jpg' ); ?>" width="240" />
+								<img class="ls-s58" alt="Shelby" decoding="async" height="360" src="<?php echo esc_url( $img . 'shelby.jpg' ); ?>" width="240" />
 							</div>
 						</div>
 						<div class="framer-s5vc6r ls-s26" data-framer-component-type="RichTextContainer"><p class="framer-text ls-s57" dir="auto">Shelby</p></div>
