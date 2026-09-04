@@ -1,0 +1,1323 @@
+/**
+ * LuongSon Sport — Live matches list ("Đang phát sóng")
+ * Extracted from themes/html/index.html (+ global/components/responsive CSS)
+ */
+
+/* -------------------------------------------------------------------------- */
+/* Tokens & base                                                              */
+/* -------------------------------------------------------------------------- */
+
+.luongson-list-matches {
+  --ls-sport-font: "Momo Trust Sans", "Momo Trust Sans Placeholder", system-ui, sans-serif;
+  --ls-sport-font-display: "Anton SC", "Anton SC Placeholder", Impact, sans-serif;
+  --ls-font-momo: "Momo Trust Sans", "Momo Trust Sans Placeholder", sans-serif;
+  --ls-font-display-snap: "Anton SC", "Anton SC Placeholder", sans-serif;
+  --overflow-clip-fallback: clip;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.luongson-list-matches *,
+.luongson-list-matches *::before,
+.luongson-list-matches *::after {
+  box-sizing: border-box;
+}
+
+.luongson-list-matches .framer-text {
+  margin: 0;
+  font-family: var(--framer-font-family, var(--ls-sport-font));
+  font-style: var(--framer-font-style, normal);
+  font-weight: var(--framer-font-weight, 400);
+  color: var(--framer-text-color, #000);
+  font-size: var(--framer-font-size, 16px);
+  letter-spacing: var(--framer-letter-spacing, 0);
+  text-align: var(--framer-text-alignment, start);
+  line-height: var(--framer-line-height, 1.2em);
+}
+
+.luongson-list-matches [data-border="true"] {
+  position: relative;
+}
+
+.luongson-list-matches [data-border="true"]::after {
+  content: "";
+  border-width: var(--border-top-width, 0) var(--border-right-width, 0) var(--border-bottom-width, 0)
+    var(--border-left-width, 0);
+  border-color: var(--border-color, none);
+  border-style: var(--border-style, none);
+  box-sizing: border-box;
+  border-radius: inherit;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.luongson-list-matches .framer-jf66j3 {
+  display: flex;
+}
+
+.luongson-list-matches .ssr-variant {
+  display: contents;
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* Header & live grid                                                        */
+/* -------------------------------------------------------------------------- */
+
+.luongson-list-matches .framer-1hfex6k {
+  height: min-content;
+  overflow: var(--overflow-clip-fallback, clip);
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center flex-start;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 10px 0px;
+  display: flex;
+  position: relative;
+}
+
+.luongson-list-matches .framer-1tt0ekp {
+  height: 24px;
+  overflow: var(--overflow-clip-fallback, clip);
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 24px;
+  padding: 0px;
+  display: flex;
+  position: relative;
+}
+
+.luongson-list-matches .framer-19c1cxs {
+  aspect-ratio: 1 / 1;
+  background-color: rgb(239, 68, 68);
+  border-radius: 100px;
+  flex: 0 0 auto;
+  width: 12px;
+  height: auto;
+  position: relative;
+}
+
+.luongson-list-matches .framer-18ae6ri {
+  --framer-link-text-color: #09f;
+  --framer-link-text-decoration: underline;
+  white-space: pre;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  position: relative;
+}
+
+.luongson-list-matches .framer-1ths2n4 {
+  flex: 0 0 auto;
+  grid-template-rows: repeat(2, min-content);
+  grid-template-columns: repeat(3, minmax(50px, 1fr));
+  grid-auto-rows: min-content;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  height: min-content;
+  padding: 0px 10px;
+  display: grid;
+  position: relative;
+  overflow: visible;
+}
+
+@keyframes luongsonListMatchesLivePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(1.18); }
+}
+
+.luongson-list-matches .framer-19c1cxs {
+  animation: luongsonListMatchesLivePulse 1.4s ease-in-out infinite;
+}
+
+.luongson-list-matches .luongson-match-card .framer-9wekp1 {
+  animation: luongsonListMatchesLivePulse 1.4s ease-in-out infinite;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Match card                                                                */
+/* -------------------------------------------------------------------------- */
+
+/* ========================================================
+   LUONGSON MATCH CARD STYLES (.luongson-match-card)
+   ======================================================== */
+.luongson-list-matches .luongson-match-card {
+  --border-bottom-width: 1px;
+  --border-color: #82828252;
+  --border-left-width: 1px;
+  --border-right-width: 1px;
+  --border-style: solid;
+  --border-top-width: 1px;
+  cursor: pointer;
+  min-width: 0px;
+  height: min-content;
+  overflow: var(--overflow-clip-fallback, clip);
+  will-change: var(--framer-will-change-effect-override, transform);
+  background-color: rgb(245, 245, 245);
+  border-radius: 16px;
+  flex-flow: column;
+  flex: 0 0 auto;
+  place-content: flex-start center;
+  place-self: start;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  padding: 12px;
+  display: flex;
+  position: relative;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-header {
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center space-between;
+  align-items: center;
+  width: 100%;
+  height: min-content;
+  padding: 0px;
+  display: flex;
+  position: relative;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-league,
+.luongson-list-matches .luongson-match-card .luongson-match-odds-type-text,
+.luongson-list-matches .luongson-match-card .luongson-match-odds-val {
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  flex: 1 0 0px;
+  width: 1px;
+  height: auto;
+  position: relative;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-status-container,
+.luongson-list-matches .luongson-match-card .luongson-match-commentator-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  position: relative;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-status-dot,
+.luongson-list-matches .luongson-match-card .framer-9wekp1 {
+  aspect-ratio: 1 / 1;
+  flex: 0 0 auto;
+  width: 8px;
+  height: auto;
+  position: relative;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-status-text,
+.luongson-list-matches .luongson-match-card .framer-oy32wj {
+  white-space: pre;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  position: relative;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-time-box {
+  flex-flow: row;
+  flex: 1 0 0px;
+  place-content: center flex-end;
+  align-items: center;
+  gap: 4px;
+  width: 1px;
+  height: min-content;
+  padding: 0px;
+  display: flex;
+  position: relative;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-time,
+.luongson-list-matches .luongson-match-card .luongson-match-date,
+.luongson-list-matches .luongson-match-card .luongson-match-score-text,
+.luongson-list-matches .luongson-match-card .luongson-match-stat-text {
+  white-space: pre;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  position: relative;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-body {
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center space-between;
+  align-items: center;
+  width: 100%;
+  height: min-content;
+  padding: 0px;
+  text-decoration: none;
+  display: flex;
+  position: relative;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-team {
+  flex-flow: column;
+  flex: 1 0 0px;
+  place-content: center;
+  align-items: center;
+  gap: 8px;
+  width: 1px;
+  height: min-content;
+  padding: 0px;
+  display: flex;
+  position: relative;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-team-logo {
+  aspect-ratio: 1 / 1;
+  border-radius: 100px;
+  flex-flow: column;
+  flex: 0 0 auto;
+  place-content: center;
+  align-items: center;
+  gap: 0px;
+  width: 60px;
+  height: auto;
+  padding: 0px;
+  display: flex;
+  position: relative;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-team-logo-inner {
+  aspect-ratio: 1 / 1;
+  flex: 0 0 auto;
+  width: 60px;
+  height: auto;
+  position: relative;
+  overflow: visible;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-team-name {
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-score-center {
+  flex-flow: column;
+  flex: 0 0 auto;
+  place-content: center;
+  align-items: center;
+  gap: 8px;
+  width: min-content;
+  height: min-content;
+  padding: 0px;
+  display: flex;
+  position: relative;
+  overflow: visible;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-score-box {
+  background-color: rgb(46, 88, 255);
+  border-radius: 12px;
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center;
+  align-items: center;
+  gap: 12px;
+  width: 76px;
+  height: min-content;
+  padding: 10px;
+  display: flex;
+  position: relative;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-stats {
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center space-between;
+  align-items: center;
+  width: 76px;
+  height: min-content;
+  padding: 0px 6px 0px 4px;
+  display: flex;
+  position: relative;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-stat-item {
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center;
+  align-items: center;
+  gap: 2px;
+  width: min-content;
+  height: min-content;
+  padding: 0px;
+  display: flex;
+  position: relative;
+  overflow: visible;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-stat-flag {
+  --1m6trwb: 0.2;
+  --21h8s6: #0051ff;
+  --pgex8v: 1.5;
+  aspect-ratio: 1 / 1;
+  flex: 0 0 auto;
+  width: 8px;
+  height: auto;
+  position: relative;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-stat-card {
+  width: 6px;
+  height: 8px;
+  position: relative;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-footer {
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center space-between;
+  align-items: center;
+  width: 100%;
+  height: min-content;
+  padding: 0px;
+  display: flex;
+  position: relative;
+  overflow: visible;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-odds-wrapper {
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center flex-end;
+  align-items: center;
+  gap: 4px;
+  width: 60%;
+  height: min-content;
+  padding: 0px;
+  display: flex;
+  position: relative;
+  overflow: visible;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-odds-box {
+  --corner-shape-fallback: 0.796;
+  border-bottom-left-radius: calc(12px * var(--one-if-corner-shape-supported, var(--corner-shape-fallback, 1)));
+  border-bottom-right-radius: calc(12px * var(--one-if-corner-shape-supported, var(--corner-shape-fallback, 1)));
+  border-top-left-radius: calc(12px * var(--one-if-corner-shape-supported, var(--corner-shape-fallback, 1)));
+  border-top-right-radius: calc(12px * var(--one-if-corner-shape-supported, var(--corner-shape-fallback, 1)));
+  corner-shape: superellipse(1.4);
+  background-color: rgb(255, 255, 255);
+  flex-flow: column;
+  flex: 1 0 0px;
+  place-content: center;
+  align-items: center;
+  gap: 2px;
+  width: 1px;
+  height: 28px;
+  padding: 0px 4px;
+  display: flex;
+  position: relative;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-odds-type,
+.luongson-list-matches .luongson-match-card .luongson-match-odds-values {
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+  height: min-content;
+  padding: 0px;
+  display: flex;
+  position: relative;
+  overflow: visible;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-bet-btn {
+  --border-bottom-width: 1px;
+  --border-color: #4aff6b;
+  --border-left-width: 1px;
+  --border-right-width: 1px;
+  --border-style: solid;
+  --border-top-width: 1px;
+  --corner-shape-fallback: 0.796;
+  aspect-ratio: 3.88889 / 1;
+  border-bottom-left-radius: calc(12px * var(--one-if-corner-shape-supported, var(--corner-shape-fallback, 1)));
+  border-bottom-right-radius: calc(12px * var(--one-if-corner-shape-supported, var(--corner-shape-fallback, 1)));
+  border-top-left-radius: calc(12px * var(--one-if-corner-shape-supported, var(--corner-shape-fallback, 1)));
+  border-top-right-radius: calc(12px * var(--one-if-corner-shape-supported, var(--corner-shape-fallback, 1)));
+  corner-shape: superellipse(1.4);
+  cursor: pointer;
+  height: auto;
+  overflow: var(--overflow-clip-fallback, clip);
+  will-change: var(--framer-will-change-effect-override, transform);
+  background-color: rgb(0, 38, 18);
+  flex: 0 0 auto;
+  width: 109px;
+  position: relative;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 2px;
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-bet-logo {
+  aspect-ratio: 4.11765 / 1;
+  flex: 0 0 auto;
+  width: 62px;
+  height: auto;
+  position: absolute;
+  top: 50%;
+  left: 40px;
+  overflow: visible;
+  transform: translateY(-50%);
+}
+
+.luongson-list-matches .luongson-match-card .luongson-match-bet-text {
+  --framer-link-text-color: #09f;
+  --framer-link-text-decoration: underline;
+  white-space: pre;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  transform: translateY(-50%);
+}
+
+.luongson-list-matches .framer-bSUln,
+.luongson-list-matches .framer-2TOMF {
+  aspect-ratio: 1 / 1;
+  width: 24px;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.luongson-list-matches .luongson-match-stat-flag {
+  width: 8px;
+  color: #0051ff;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Utility text / image tokens                                               */
+/* -------------------------------------------------------------------------- */
+
+.luongson-list-matches .ls-s4 {
+  position: absolute !important;
+  border-radius: inherit !important;
+  corner-shape: inherit !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+}
+
+.luongson-list-matches .ls-s5 {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: inherit !important;
+  corner-shape: inherit !important;
+  object-position: center !important;
+  object-fit: cover !important;
+}
+
+.luongson-list-matches .ls-s9 {
+  --extracted-r6o4lv: rgb(255, 255, 255) !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+.luongson-list-matches .ls-s26 {
+  transform: none !important;
+}
+
+.luongson-list-matches .ls-s51 {
+  opacity: 0.715 !important;
+  transform: scale(1.07125) !important;
+  will-change: transform !important;
+}
+
+.luongson-list-matches .ls-s59 {
+  transform: translateY(-50%) !important;
+}
+
+.luongson-list-matches .ls-s136 {
+  --font-selector: R0Y7TW9tbyBUcnVzdCBTYW5zLTcwMA== !important;
+  --framer-font-family: "Momo Trust Sans", "Momo Trust Sans Placeholder", sans-serif !important;
+  --framer-font-size: 24px !important;
+  --framer-font-weight: 700 !important;
+  --framer-text-alignment: center !important;
+}
+
+.luongson-list-matches .ls-s137 {
+  --font-selector: R0Y7TW9tbyBUcnVzdCBTYW5zLTYwMA== !important;
+  --framer-font-family: "Momo Trust Sans", "Momo Trust Sans Placeholder", sans-serif !important;
+  --framer-font-size: 11px !important;
+  --framer-font-weight: 600 !important;
+  --framer-line-height: 1em !important;
+}
+
+.luongson-list-matches .ls-s138 {
+  background-color: rgb(239, 68, 68) !important;
+  border-radius: 100px !important;
+  opacity: 1 !important;
+}
+
+.luongson-list-matches .ls-s139 {
+  background-color: rgb(255, 255, 255) !important;
+  border-radius: 100px !important;
+  opacity: 0.679375 !important;
+  transform: none !important;
+  will-change: transform !important;
+}
+
+.luongson-list-matches .ls-s140 {
+  --font-selector: R0Y7TW9tbyBUcnVzdCBTYW5zLTcwMA== !important;
+  --framer-font-family: "Momo Trust Sans", "Momo Trust Sans Placeholder", sans-serif !important;
+  --framer-font-size: 11px !important;
+  --framer-font-weight: 700 !important;
+  --framer-line-height: 1em !important;
+  --framer-text-color: var(--extracted-r6o4lv, rgb(255, 255, 255)) !important;
+}
+
+.luongson-list-matches .ls-s141 {
+  --font-selector: R0Y7TW9tbyBUcnVzdCBTYW5zLTYwMA== !important;
+  --framer-font-family: "Momo Trust Sans", "Momo Trust Sans Placeholder", sans-serif !important;
+  --framer-font-size: 11px !important;
+  --framer-font-weight: 600 !important;
+  --framer-line-height: 1em !important;
+  --framer-text-color: rgb(117, 117, 117) !important;
+}
+
+.luongson-list-matches .ls-s142 {
+  --font-selector: R0Y7TW9tbyBUcnVzdCBTYW5zLTcwMA== !important;
+  --framer-font-family: "Momo Trust Sans", "Momo Trust Sans Placeholder", sans-serif !important;
+  --framer-font-size: 14px !important;
+  --framer-font-weight: 700 !important;
+  --framer-text-alignment: center !important;
+}
+
+.luongson-list-matches .ls-s143 {
+  --font-selector: R0Y7QW50b24gU0MtcmVndWxhcg== !important;
+  --framer-font-family: "Anton SC", "Anton SC Placeholder", sans-serif !important;
+  --framer-font-size: 24px !important;
+  --framer-line-height: 1em !important;
+  --framer-text-color: rgb(255, 255, 255) !important;
+}
+
+.luongson-list-matches .ls-s144 {
+  --font-selector: R0Y7TW9tbyBUcnVzdCBTYW5zLXJlZ3VsYXI= !important;
+  --framer-font-family: "Momo Trust Sans", "Momo Trust Sans Placeholder", sans-serif !important;
+  --framer-font-size: 9px !important;
+  --framer-text-alignment: center !important;
+}
+
+.luongson-list-matches .ls-s145 {
+  image-rendering: pixelated !important;
+  flex-shrink: 0 !important;
+  background-size: 100% 100% !important;
+  background-image: url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 xmlns:xlink=%22http://www.w3.org/1999/xlink%22 viewBox=%220 0 6 8%22 overflow=%22visible%22><path d=%22M 0 1 C 0 0.448 0.448 0 1 0 C 2.11 0 3.89 0 5 0 C 5.552 0 6 0.448 6 1 C 6 2.537 6 5.463 6 7 C 6 7.552 5.552 8 5 8 C 3.89 8 2.11 8 1 8 C 0.448 8 0 7.552 0 7 C 0 5.463 0 2.537 0 1 Z%22 fill=%22rgb(255, 178, 13)%22></path></svg>") !important;
+}
+
+.luongson-list-matches .ls-s146 {
+  image-rendering: pixelated !important;
+  flex-shrink: 0 !important;
+  background-size: 100% 100% !important;
+  background-image: url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 xmlns:xlink=%22http://www.w3.org/1999/xlink%22 viewBox=%220 0 6 8%22 overflow=%22visible%22><path d=%22M 0 1 C 0 0.448 0.448 0 1 0 C 2.11 0 3.89 0 5 0 C 5.552 0 6 0.448 6 1 C 6 2.537 6 5.463 6 7 C 6 7.552 5.552 8 5 8 C 3.89 8 2.11 8 1 8 C 0.448 8 0 7.552 0 7 C 0 5.463 0 2.537 0 1 Z%22 fill=%22rgb(239, 68, 68)%22></path></svg>") !important;
+}
+
+.luongson-list-matches .ls-s147 {
+  background-color: rgb(0, 110, 219) !important;
+  border-radius: 18px !important;
+  opacity: 1 !important;
+}
+
+.luongson-list-matches .ls-s148 {
+  --border-bottom-width: 1px !important;
+  --border-color: rgba(255, 255, 255, 0.2) !important;
+  --border-left-width: 1px !important;
+  --border-right-width: 1px !important;
+  --border-style: solid !important;
+  --border-top-width: 1px !important;
+  border-radius: 100px !important;
+  opacity: 1 !important;
+}
+
+.luongson-list-matches .ls-s149 {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: inherit !important;
+  corner-shape: inherit !important;
+  object-position: 45.8% 41% !important;
+  object-fit: cover !important;
+}
+
+.luongson-list-matches .ls-s150 {
+  --font-selector: R0Y7TW9tbyBUcnVzdCBTYW5zLTYwMA== !important;
+  --framer-font-family: "Momo Trust Sans", "Momo Trust Sans Placeholder", sans-serif !important;
+  --framer-font-size: 11px !important;
+  --framer-font-weight: 600 !important;
+  --framer-text-color: var(--extracted-r6o4lv, rgb(255, 255, 255)) !important;
+}
+
+.luongson-list-matches .ls-s151 {
+  --1m6trwb: 0 !important;
+  --21h8s6: rgb(255, 255, 255) !important;
+  --pgex8v: 2 !important;
+  opacity: 1 !important;
+}
+
+.luongson-list-matches .ls-s152 {
+  --font-selector: R0Y7TW9tbyBUcnVzdCBTYW5zLXJlZ3VsYXI= !important;
+  --framer-font-family: "Momo Trust Sans", "Momo Trust Sans Placeholder", sans-serif !important;
+  --framer-font-size: 9px !important;
+  --framer-line-height: 1em !important;
+  --framer-text-alignment: center !important;
+}
+
+.luongson-list-matches .ls-s153 {
+  --font-selector: R0Y7TW9tbyBUcnVzdCBTYW5zLTcwMA== !important;
+  --framer-font-family: "Momo Trust Sans", "Momo Trust Sans Placeholder", sans-serif !important;
+  --framer-font-size: 9px !important;
+  --framer-font-weight: 700 !important;
+  --framer-line-height: 1em !important;
+  --framer-text-alignment: center !important;
+  --framer-text-color: rgb(0, 153, 46) !important;
+}
+
+.luongson-list-matches .ls-s154 {
+  --font-selector: R0Y7TW9tbyBUcnVzdCBTYW5zLTcwMA== !important;
+  --framer-font-family: "Momo Trust Sans", "Momo Trust Sans Placeholder", sans-serif !important;
+  --framer-font-size: 9px !important;
+  --framer-font-weight: 700 !important;
+  --framer-line-height: 1em !important;
+  --framer-text-alignment: center !important;
+  --framer-text-color: rgb(255, 0, 0) !important;
+}
+
+.luongson-list-matches .ls-s155 {
+  --font-selector: R0Y7QW50b24gU0MtcmVndWxhcg== !important;
+  --framer-font-family: "Anton SC", "Anton SC Placeholder", sans-serif !important;
+  --framer-font-size: 15px !important;
+  --framer-text-color: rgb(255, 255, 255) !important;
+}
+
+.luongson-list-matches .ls-s156 {
+  background-color: rgb(255, 255, 255) !important;
+  border-bottom-left-radius: 100px !important;
+  border-bottom-right-radius: 100px !important;
+  border-top-left-radius: 100px !important;
+  border-top-right-radius: 100px !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+/* -------------------------------------------------------------------------- */
+/* Live status badge + match-info modal                                      */
+/* -------------------------------------------------------------------------- */
+
+.framer-iz7ZB.framer-3i8edo {
+  cursor: pointer;
+  flex-flow: row;
+  place-content: center;
+  align-items: center;
+  gap: 4px;
+  width: min-content;
+  height: min-content;
+  padding: 3px 6px;
+  display: flex;
+  position: relative;
+}
+
+.framer-iz7ZB .framer-9wekp1 {
+  aspect-ratio: 1 / 1;
+  flex: 0 0 auto;
+  width: 8px;
+  height: auto;
+  position: relative;
+}
+
+.framer-iz7ZB .framer-oy32wj,
+.framer-iz7ZB .framer-k00u1l,
+.framer-iz7ZB .framer-9h3v1m,
+.framer-iz7ZB .framer-1907n8s,
+.framer-iz7ZB .framer-1vv346m,
+.framer-iz7ZB .framer-4rz9po,
+.framer-iz7ZB .framer-puwrvi,
+.framer-iz7ZB .framer-gac7m7,
+.framer-iz7ZB .framer-b0in9n,
+.framer-iz7ZB .framer-bvkwnl,
+.framer-iz7ZB .framer-dws4k8,
+.framer-iz7ZB .framer-ysnhtg {
+  white-space: pre;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  position: relative;
+}
+
+.framer-iz7ZB .framer-aojxv6 {
+  height: min-content;
+  overflow: var(--overflow-clip-fallback, clip);
+  will-change: var(--framer-will-change-override, transform);
+  flex-flow: column;
+  place-content: center flex-start;
+  align-items: center;
+  gap: 12px;
+  width: min-content;
+  padding: 12px 12px 20px;
+  display: flex;
+  position: relative;
+}
+
+.framer-iz7ZB .framer-ry4stz {
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center;
+  align-items: center;
+  gap: 6px;
+  width: min-content;
+  height: min-content;
+  padding: 0px;
+  display: flex;
+  position: relative;
+  overflow: visible;
+}
+
+.framer-iz7ZB .framer-1an5e9x,
+.framer-iz7ZB .framer-10mbhol,
+.framer-iz7ZB .framer-1pmanb5 {
+  cursor: pointer;
+  will-change: var(--framer-will-change-effect-override, transform);
+  flex-flow: column;
+  flex: 0 0 auto;
+  place-content: center;
+  align-items: center;
+  gap: 10px;
+  width: min-content;
+  height: min-content;
+  padding: 6px 12px;
+  display: flex;
+  position: relative;
+  overflow: visible;
+}
+
+.framer-iz7ZB .framer-1trrpnw,
+.framer-iz7ZB .framer-bgrmuy,
+.framer-iz7ZB .framer-1587lao,
+.framer-iz7ZB .framer-yce0z5,
+.framer-iz7ZB .framer-xjkbmx,
+.framer-iz7ZB .framer-bl1n0r,
+.framer-iz7ZB .framer-11lb8cc,
+.framer-iz7ZB .framer-nmrzbo {
+  flex-flow: column;
+  flex: 0 0 auto;
+  place-content: center;
+  align-items: center;
+  gap: 8px;
+  width: min-content;
+  height: min-content;
+  padding: 0px;
+  display: flex;
+  position: relative;
+  overflow: visible;
+}
+
+.framer-iz7ZB .framer-lw7m8o,
+.framer-iz7ZB .framer-1u6jvqj,
+.framer-iz7ZB .framer-zss6fq,
+.framer-iz7ZB .framer-ty4t7c,
+.framer-iz7ZB .framer-1sgrvud,
+.framer-iz7ZB .framer-mdn5hv,
+.framer-iz7ZB .framer-1q9h07r,
+.framer-iz7ZB .framer-1ibdxtk {
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center space-between;
+  align-items: center;
+  width: 360px;
+  height: min-content;
+  padding: 0px;
+  display: flex;
+  position: relative;
+  overflow: visible;
+}
+
+.framer-iz7ZB .framer-a2fbit,
+.framer-iz7ZB .framer-vu2aff,
+.framer-iz7ZB .framer-h1o2hv,
+.framer-iz7ZB .framer-xx3myi,
+.framer-iz7ZB .framer-1s3rb2t,
+.framer-iz7ZB .framer-13lnoht,
+.framer-iz7ZB .framer-1a4u3ke,
+.framer-iz7ZB .framer-1t89efh,
+.framer-iz7ZB .framer-1dfupgd,
+.framer-iz7ZB .framer-1uj1trx,
+.framer-iz7ZB .framer-1v2yfmh,
+.framer-iz7ZB .framer-sblwng,
+.framer-iz7ZB .framer-d56ahn,
+.framer-iz7ZB .framer-6tmamu,
+.framer-iz7ZB .framer-rozn0b,
+.framer-iz7ZB .framer-rt7wpv {
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  flex: 1 0 0px;
+  width: 1px;
+  height: auto;
+  position: relative;
+}
+
+.framer-iz7ZB .framer-1amiahw,
+.framer-iz7ZB .framer-1feu85z,
+.framer-iz7ZB .framer-1aof70k,
+.framer-iz7ZB .framer-x8jp9i,
+.framer-iz7ZB .framer-1kb4wjn,
+.framer-iz7ZB .framer-4rigqm,
+.framer-iz7ZB .framer-ui41va,
+.framer-iz7ZB .framer-hlv9iz {
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 360px;
+  height: min-content;
+  padding: 0px;
+  display: flex;
+  position: relative;
+  overflow: visible;
+}
+
+.framer-iz7ZB .framer-wtawsi,
+.framer-iz7ZB .framer-1s49rqs,
+.framer-iz7ZB .framer-178b2zo,
+.framer-iz7ZB .framer-17jdo00,
+.framer-iz7ZB .framer-1yjap8f,
+.framer-iz7ZB .framer-1sexck6,
+.framer-iz7ZB .framer-183ar8d,
+.framer-iz7ZB .framer-1qu21oe,
+.framer-iz7ZB .framer-zwoy2,
+.framer-iz7ZB .framer-1ibb5np,
+.framer-iz7ZB .framer-hi9vag,
+.framer-iz7ZB .framer-14qr236,
+.framer-iz7ZB .framer-11yx3jj,
+.framer-iz7ZB .framer-va1nw0,
+.framer-iz7ZB .framer-1n2ttzj,
+.framer-iz7ZB .framer-18b5mhn {
+  flex: 1 0 0px;
+  width: 1px;
+  height: 10px;
+  position: relative;
+  overflow: visible;
+}
+
+.framer-iz7ZB .framer-1q3228h {
+  flex: 0 0 auto;
+  width: 57%;
+  height: 100%;
+  position: absolute;
+  top: 0%;
+  right: 0px;
+  overflow: visible;
+}
+
+.framer-iz7ZB .framer-1mov7wv,
+.framer-iz7ZB .framer-1hyr9sk {
+  flex: 0 0 auto;
+  width: 43%;
+  height: 100%;
+  position: absolute;
+  top: 0%;
+  left: 0px;
+  overflow: visible;
+}
+
+.framer-iz7ZB .framer-1x604t0,
+.framer-iz7ZB .framer-1i0d3s5 {
+  flex: 0 0 auto;
+  width: 80%;
+  height: 100%;
+  position: absolute;
+  top: 0%;
+  right: 0px;
+  overflow: visible;
+}
+
+.framer-iz7ZB .framer-aefbwd,
+.framer-iz7ZB .framer-1hrpzha {
+  flex: 0 0 auto;
+  width: 20%;
+  height: 100%;
+  position: absolute;
+  top: 0%;
+  left: 0px;
+  overflow: visible;
+}
+
+.framer-iz7ZB .framer-19t9a93 {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0%;
+  right: 0px;
+  overflow: visible;
+}
+
+.framer-iz7ZB .framer-1cg1fl1 {
+  flex: 0 0 auto;
+  width: 70%;
+  height: 100%;
+  position: absolute;
+  top: 0%;
+  right: 0px;
+  overflow: visible;
+}
+
+.framer-iz7ZB .framer-1akp76q {
+  flex: 0 0 auto;
+  width: 30%;
+  height: 100%;
+  position: absolute;
+  top: 0%;
+  left: 0px;
+  overflow: visible;
+}
+
+.framer-iz7ZB .framer-p7lsql {
+  flex: 0 0 auto;
+  width: 60%;
+  height: 100%;
+  position: absolute;
+  top: 0%;
+  right: 0px;
+  overflow: visible;
+}
+
+.framer-iz7ZB .framer-1kqvqsm {
+  flex: 0 0 auto;
+  width: 40%;
+  height: 100%;
+  position: absolute;
+  top: 0%;
+  left: 0px;
+  overflow: visible;
+}
+
+.framer-iz7ZB .framer-1juwgxq {
+  flex: 0 0 auto;
+  width: 53%;
+  height: 100%;
+  position: absolute;
+  top: 0%;
+  right: 0px;
+  overflow: visible;
+}
+
+.framer-iz7ZB .framer-o67ujt {
+  flex: 0 0 auto;
+  width: 47%;
+  height: 100%;
+  position: absolute;
+  top: 0%;
+  left: 0px;
+  overflow: visible;
+}
+
+.framer-iz7ZB .framer-1fe3abr {
+  flex: 0 0 auto;
+  width: 74%;
+  height: 100%;
+  position: absolute;
+  top: 0%;
+  right: 0px;
+  overflow: visible;
+}
+
+.framer-iz7ZB .framer-pp1e24 {
+  flex: 0 0 auto;
+  width: 26%;
+  height: 100%;
+  position: absolute;
+  top: 0%;
+  left: 0px;
+  overflow: visible;
+}
+
+.framer-iz7ZB.framer-v-1copppo .framer-1q3228h {
+  width: 70%;
+}
+
+.framer-iz7ZB.framer-v-1copppo .framer-1mov7wv {
+  width: 30%;
+}
+
+.framer-iz7ZB.framer-v-5qubvm .framer-1q3228h {
+  width: 45%;
+}
+
+.framer-iz7ZB.framer-v-5qubvm .framer-1mov7wv {
+  width: 55%;
+}
+
+.framer-iz7ZB[data-border="true"]::after,
+.framer-iz7ZB [data-border="true"]::after {
+  content: "";
+  border-width: var(--border-top-width, 0) var(--border-right-width, 0) var(--border-bottom-width, 0)
+    var(--border-left-width, 0);
+  border-color: var(--border-color, none);
+  border-style: var(--border-style, none);
+  box-sizing: border-box;
+  border-radius: inherit;
+  corner-shape: inherit;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.framer-bSUln {
+  aspect-ratio: 1 / 1;
+  mask: none;
+  width: 24px;
+  display: block;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Commentator dropdown                                                      */
+/* -------------------------------------------------------------------------- */
+
+.framer-dil7X.framer-xxcll,
+.framer-dil7X .framer-xxcll {
+  display: block;
+}
+
+.framer-dil7X.framer-1f7aihz {
+  flex-flow: row;
+  place-content: center space-between;
+  align-items: center;
+  width: 140px;
+  height: 28px;
+  padding: 0px;
+  display: flex;
+  position: relative;
+  overflow: visible;
+}
+
+.framer-dil7X .framer-l9nh29 {
+  cursor: pointer;
+  will-change: var(--framer-will-change-effect-override, transform);
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center flex-start;
+  align-items: center;
+  gap: 7px;
+  width: 140px;
+  height: 28px;
+  padding: 2px 8px 2px 2px;
+  display: flex;
+  position: relative;
+  overflow: visible;
+}
+
+.framer-dil7X .framer-16bmefw,
+.framer-dil7X .framer-tahklm,
+.framer-dil7X .framer-efylkb,
+.framer-dil7X .framer-1lnb1eh {
+  height: 24px;
+  overflow: var(--overflow-clip-fallback, clip);
+  will-change: var(--framer-will-change-override, transform);
+  flex: 0 0 auto;
+  width: 24px;
+  position: relative;
+}
+
+.framer-dil7X .framer-pgnkcz,
+.framer-dil7X .framer-hjt0uq,
+.framer-dil7X .framer-1kzxccu,
+.framer-dil7X .framer-khshqr {
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  flex: 1 0 0px;
+  width: 1px;
+  height: auto;
+  position: relative;
+}
+
+.framer-dil7X .framer-17903m9 {
+  flex: 0 0 auto;
+  width: 12px;
+  height: auto;
+  position: relative;
+}
+
+.framer-dil7X .framer-c71cur {
+  height: min-content;
+  overflow: var(--overflow-clip-fallback, clip);
+  will-change: var(--framer-will-change-override, transform);
+  flex-flow: column;
+  place-content: flex-start;
+  align-items: flex-start;
+  gap: 2px;
+  width: 170px;
+  padding: 6px;
+  display: flex;
+  position: relative;
+}
+
+.framer-dil7X .framer-caa1bv,
+.framer-dil7X .framer-1uakdm5,
+.framer-dil7X .framer-11ofke8 {
+  cursor: pointer;
+  will-change: var(--framer-will-change-effect-override, transform);
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center flex-start;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 34px;
+  padding: 5px 8px;
+  display: flex;
+  position: relative;
+}
+
+.framer-dil7X[data-border="true"]::after,
+.framer-dil7X [data-border="true"]::after {
+  content: "";
+  border-width: var(--border-top-width, 0) var(--border-right-width, 0) var(--border-bottom-width, 0)
+    var(--border-left-width, 0);
+  border-color: var(--border-color, none);
+  border-style: var(--border-style, none);
+  box-sizing: border-box;
+  border-radius: inherit;
+  corner-shape: inherit;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.framer-2TOMF,
+.framer-tRkek {
+  aspect-ratio: 1 / 1;
+  mask: none;
+  width: 24px;
+  display: block;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Portals (appended to document.body)                                        */
+/* -------------------------------------------------------------------------- */
+
+.commentator-popover-portal [data-border="true"]::after,
+.match-info-popover-portal [data-border="true"]::after {
+  content: "";
+  border-width: var(--border-top-width, 0) var(--border-right-width, 0) var(--border-bottom-width, 0)
+    var(--border-left-width, 0);
+  border-color: var(--border-color, none);
+  border-style: var(--border-style, none);
+  box-sizing: border-box;
+  border-radius: inherit;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.commentator-popover-portal .framer-text,
+.match-info-popover-portal .framer-text {
+  margin: 0;
+}
+
+
+.commentator-popover-portal .ls-s4, .match-info-popover-portal .ls-s4 {
+  position: absolute !important;
+  border-radius: inherit !important;
+  corner-shape: inherit !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+}
+
+.commentator-popover-portal .ls-s149 {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: inherit !important;
+  corner-shape: inherit !important;
+  object-position: 45.8% 41% !important;
+  object-fit: cover !important;
+}
+
+
+
+/* -------------------------------------------------------------------------- */
+/* Responsive grid                                                            */
+/* -------------------------------------------------------------------------- */
+
+@media (min-width: 1440px) {
+  .luongson-list-matches .luongson-live-grid,
+  .luongson-list-matches .framer-1ths2n4 {
+    grid-template-columns: repeat(3, minmax(50px, 1fr));
+    gap: 12px 10px;
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1439.98px) {
+  .luongson-list-matches .luongson-live-grid,
+  .luongson-list-matches .framer-1ths2n4 {
+    grid-template-columns: repeat(2, minmax(50px, 1fr));
+    gap: 12px 10px;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1279.98px) {
+  .luongson-list-matches .luongson-live-grid,
+  .luongson-list-matches .framer-1ths2n4 {
+    grid-template-columns: repeat(2, minmax(50px, 1fr));
+    gap: 12px 10px;
+  }
+}
+
+@media (min-width: 760px) and (max-width: 1023.98px) {
+  .luongson-list-matches .luongson-live-grid,
+  .luongson-list-matches .framer-1ths2n4 {
+    grid-template-columns: repeat(2, minmax(50px, 1fr));
+    gap: 12px 10px;
+  }
+}
+
+@media (max-width: 759.98px) {
+  .luongson-list-matches .luongson-live-grid,
+  .luongson-list-matches .framer-1ths2n4 {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
