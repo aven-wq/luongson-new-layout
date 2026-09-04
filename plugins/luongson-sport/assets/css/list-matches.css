@@ -394,6 +394,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-transform: capitalize;
 }
 
 .luongson-match-commentator-chevron {
@@ -642,7 +643,7 @@
   --border-color: rgb(82, 125, 255);
   --border-style: solid;
   position: relative;
-  padding: 6px 12px;
+  padding: 0px 15px;
   border: 0;
   border-radius: 20px;
   background: transparent;
@@ -651,9 +652,13 @@
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
+  line-height: 26px;
+  text-transform: capitalize;
+  height: unset;
+  min-height: unset;
 }
 
-.luongson-match-modal-tab.is-active {
+.luongson-match-modal-tab.is-active, .luongson-match-modal-tab:hover {
   background: rgb(82, 125, 255);
   color: #fff;
 }
