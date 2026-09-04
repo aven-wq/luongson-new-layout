@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: LuongSon Sport
- * Description: Shortcodes: [luongson_top_commentators], [luongson_home_match], [luongson_list_matches]
- * Version: 1.2.1
+ * Description: Shortcodes: [luongson_top_commentators], [luongson_home_match], [luongson_list_matches], [luongson_schedule]
+ * Version: 1.3.0
  * Author: LuongSon
  */
 
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'LUONGSON_SPORT_VERSION', '1.2.1' );
+define( 'LUONGSON_SPORT_VERSION', '1.3.2' );
 define( 'LUONGSON_SPORT_URL', plugin_dir_url( __FILE__ ) );
 define( 'LUONGSON_SPORT_DIR', plugin_dir_path( __FILE__ ) );
 
@@ -112,3 +112,34 @@ function luongson_sport_shortcode_list_matches() {
 	return (string) ob_get_clean();
 }
 add_shortcode( 'luongson_list_matches', 'luongson_sport_shortcode_list_matches' );
+
+/**
+ * Shortcode [luongson_schedule]
+ *
+ * Match schedule ("Lịch thi đấu") with date picker and match rows (odds + bet CTAs).
+ *
+ * @return string
+ */
+function luongson_sport_shortcode_schedule() {
+	wp_enqueue_style(
+		'luongson-sport-schedule',
+		LUONGSON_SPORT_URL . 'assets/css/schedule.css',
+		array(),
+		LUONGSON_SPORT_VERSION
+	);
+
+	wp_enqueue_script(
+		'luongson-sport-schedule',
+		LUONGSON_SPORT_URL . 'assets/js/schedule.js',
+		array(),
+		LUONGSON_SPORT_VERSION,
+		true
+	);
+
+	$img = LUONGSON_SPORT_URL . 'assets/images/';
+
+	ob_start();
+	include LUONGSON_SPORT_DIR . 'templates/schedule.php';
+	return (string) ob_get_clean();
+}
+add_shortcode( 'luongson_schedule', 'luongson_sport_shortcode_schedule' );
