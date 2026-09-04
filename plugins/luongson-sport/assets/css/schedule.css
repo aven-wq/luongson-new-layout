@@ -502,7 +502,7 @@
 .luongson-schedule svg.framer-bSUln {
   color: var(--21h8s6, currentColor);
   aspect-ratio: 1 / 1;
-  width: 24px;
+  width: 8px;
   display: block;
 }
 
@@ -535,6 +535,7 @@
   width: 140px;
   height: 1px;
   padding: 0 4px;
+  border-radius: 8px;
 }
 
 .luongson-schedule :is(.framer-1fj6fv7, .framer-11m1cm9, .framer-hewvbf, .framer-130lxau) {
@@ -599,6 +600,7 @@
   flex: 0 0 auto;
   width: 109px;
   position: relative;
+  border-radius: 8px;
 }
 
 .luongson-schedule .framer-lrcy3t {
