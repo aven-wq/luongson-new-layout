@@ -356,4 +356,8 @@
     min-width: 0 !important;
     max-width: none !important;
   }
+
+  .luongson-commentators-list, .luongson-commentators-header {
+    padding: 0;
+  }
 }

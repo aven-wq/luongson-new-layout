@@ -354,6 +354,7 @@
   color: #fff;
   cursor: pointer;
   font: inherit;
+  margin: 0;
 }
 
 .luongson-match-commentator-trigger:hover,
@@ -793,5 +794,13 @@
   .luongson-match-modal-portal__panel,
   .luongson-match-modal-row {
     width: min(384px, calc(100vw - 24px));
+  }
+
+  .luongson-live-grid, .luongson-list-matches__header {
+    padding: 0;
+  }
+
+  .luongson-match-card .luongson-match-footer {
+    gap: 0;
   }
 }
