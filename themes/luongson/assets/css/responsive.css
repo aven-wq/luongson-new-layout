@@ -58,13 +58,13 @@ body {
     display: none !important;
   }
 
-  /* Fixed Left Sidebar */
+  /* Fixed Left Sidebar — left offset matches centered shell in overrides */
   .luongson-sidebar-left,
   .framer-ea4vkm-container {
     display: block !important;
     position: fixed !important;
     top: 0;
-    left: 0;
+    left: max(0px, calc(50% - 860px));
     width: 200px !important;
     height: 100vh !important;
     z-index: 100;
