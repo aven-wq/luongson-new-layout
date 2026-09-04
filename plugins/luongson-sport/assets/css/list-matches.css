@@ -740,10 +740,6 @@
   .luongson-live-ads {
     gap: 20px;
   }
-
-  .luongson-live-ad--wide {
-    display: none;
-  }
 }
 
 @media (min-width: 760px) and (max-width: 1439.98px) {
@@ -779,6 +775,10 @@
     display: block;
   }
 
+  .luongson-live-ad--wide {
+    display: none;
+  }
+  
   .luongson-match-odds-wrapper {
     width: auto;
     flex: 1 1 auto;
