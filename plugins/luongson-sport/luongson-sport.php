@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'LUONGSON_SPORT_VERSION', '1.3.2' );
+define( 'LUONGSON_SPORT_VERSION', '1.3.3' );
 define( 'LUONGSON_SPORT_URL', plugin_dir_url( __FILE__ ) );
 define( 'LUONGSON_SPORT_DIR', plugin_dir_path( __FILE__ ) );
 

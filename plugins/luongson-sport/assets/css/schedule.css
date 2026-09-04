@@ -157,20 +157,22 @@
   position: relative;
 }
 
+/* Single-line truncate: avoid -webkit-box/line-clamp on RichTextContainer
+   (nested p/a collapses to "..." only). Ellipsis on the text node instead. */
 .luongson-schedule :is(.framer-fo8uj4, .framer-lpvq2y, .framer-pvvwao, .framer-12jd5dg, .framer-167qswu) {
-  --text-truncation-display-inline-for-safari-16: inline;
-  --text-truncation-display-none-for-safari-16: none;
-  --text-truncation-line-break-for-safari-16: "\a ";
-  -webkit-line-clamp: 1;
-  line-clamp: 1;
   height: auto;
-  overflow: var(--overflow-clip-fallback, clip);
-  white-space: pre-line;
-  word-break: break-word;
-  overflow-wrap: break-word;
-  -webkit-box-orient: vertical;
-  display: -webkit-box;
+  min-width: 0;
+  overflow: hidden;
   position: relative;
+}
+
+.luongson-schedule :is(.framer-fo8uj4, .framer-lpvq2y, .framer-pvvwao, .framer-12jd5dg, .framer-167qswu) > .framer-text,
+.luongson-schedule :is(.framer-fo8uj4, .framer-lpvq2y, .framer-pvvwao, .framer-12jd5dg, .framer-167qswu) > .framer-text > a.framer-text {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .luongson-schedule :is(
@@ -460,6 +462,7 @@
 .luongson-schedule :is(.framer-12jd5dg, .framer-167qswu) {
   flex: 1 0 0;
   width: 1px;
+  min-width: 0;
 }
 
 .luongson-schedule :is(.framer-1qcymno, .framer-1nt9csj) {
