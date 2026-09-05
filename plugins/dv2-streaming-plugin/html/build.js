@@ -5,7 +5,7 @@ const postcss = require('postcss');
 const { minify: minifyJS } = require('terser');
 
 // Directories to process
-const subfolders = ['shared', 'cakhia', 'luongson', 'socolive', 'thapcam', 'vebo', 'vebo-v2', 'cakhia-v2'];
+const subfolders = ['shared', 'cakhia', 'luongson', 'socolive', 'thapcam', 'vebo', 'vebo-v2', 'cakhia-v2', 'luongson-v2'];
 const distDir = path.join(__dirname, 'dist');
 
 // Local backup/reference files — never include in production bundles.

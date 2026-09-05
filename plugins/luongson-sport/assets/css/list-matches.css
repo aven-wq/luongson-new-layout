@@ -131,6 +131,13 @@
   background: var(--ls-card-bg);
   cursor: pointer;
   overflow: clip;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.luongson-match-card:hover {
+  background-color: rgb(222, 247, 255);
+  opacity: 1;
+  transform: scale(1.03);
 }
 
 .luongson-match-header {
