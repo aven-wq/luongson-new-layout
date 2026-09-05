@@ -3,7 +3,7 @@
  * Plugin Name: AI Match Prediction - Sports Widget
  * Plugin URI: https://prediction.thinkwithdev.com
  * Description: Widget AI Dự Đoán & Phân Tích Kèo Bóng Đá Realtime (Hỗ trợ 1-Click Auto Upgrade từ WP Admin)
- * Version: 1.1.1
+ * Version: 1.1.2
  * Author: AI Match Prediction SaaS
  * Author URI: https://prediction.thinkwithdev.com
  * License: GPLv2 or later
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 
 class AIMatchPredictionPlugin {
     private static $instance = null;
-    private $version = '1.1.1';
+    private $version = '1.1.2';
     private $slug = 'ai-match-prediction';
     private $api_endpoint = 'https://prediction.thinkwithdev.com';
 
