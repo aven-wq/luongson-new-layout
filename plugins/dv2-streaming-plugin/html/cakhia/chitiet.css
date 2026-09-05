@@ -1,0 +1,188 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background: #121212;
+    color: #fff;
+}
+
+.dv2-layout-ck.dv2-detail-livestream {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+/* Tabs */
+.dv2-layout-ck.dv2-detail-livestream .dv2-tabs {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #444;
+}
+
+.dv2-layout-ck.dv2-detail-livestream .dv2-tab {
+    width: calc(100% / 3);
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 10px 10px 0 0;
+    transition: 0.3s;
+}
+
+.dv2-layout-ck.dv2-detail-livestream .dv2-tab.dv2-active {
+    background: linear-gradient(180deg, #042104 39.71%, #045830 119.12%);
+}
+
+/* Video */
+.dv2-layout-ck.dv2-detail-livestream .dv2-video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    /* 16:9 Aspect Ratio */
+    background: #000;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.dv2-layout-ck.dv2-detail-livestream .dv2-video-wrapper video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.dv2-layout-ck.dv2-detail-livestream .dv2-no-stream {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ff4c4c;
+    font-size: 18px;
+    height: 100%;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Match info */
+.dv2-layout-ck.dv2-detail-livestream .dv2-match-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #1e1e1e;
+    padding: 15px;
+    border-radius: 12px;
+}
+
+.dv2-layout-ck.dv2-detail-livestream .dv2-league {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dv2-layout-ck.dv2-detail-livestream .dv2-league img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
+
+.dv2-layout-ck.dv2-detail-livestream .dv2-teams {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.dv2-layout-ck.dv2-detail-livestream .dv2-team {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dv2-layout-ck.dv2-detail-livestream .dv2-team img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.dv2-layout-ck.dv2-detail-livestream .dv2-score {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.dv2-layout-ck.dv2-detail-livestream .dv2-match-time {
+    text-align: left;
+    font-size: 14px;
+    color: #aaa;
+    margin-top: 5px;
+}
+
+.dv2-layout-ck.dv2-detail-livestream .dv2-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 16px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 10px 20px;
+    border-radius: 6px;
+    z-index: 1;
+}
+
+.dv2-layout-ck.dv2-detail-livestream .dv2-loading .dv2-load-league {
+    margin: 10px 0;
+}
+
+.dv2-stream-ads {
+    margin-top: 10px;
+}
+
+.dv2-stream-links {
+    position: relative;
+    width: 100%;
+    margin: 10px auto;
+    padding-bottom: 10px;
+    display: flex;
+    gap: 15px;
+}
+
+.dv2-stream-links span {
+    cursor: pointer;
+    display: block;
+    padding: 5px 20px;
+    background: #f8c21b;
+    color: #000;
+    border-radius: 10px;
+    box-shadow: 0.5em 0.5em 0.5em rgba(0, 0, 0, 0.3);
+    transition: all 0.25s ease;
+}
+
+.dv2-stream-links span:hover {
+    background: #BF0426;
+    color: white;
+}
+
+@media(max-width: 600px) {
+    .dv2-layout-ck.dv2-detail-livestream .dv2-teams {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .dv2-layout-ck.dv2-detail-livestream .dv2-score {
+        font-size: 20px;
+    }
+
+    .dv2-layout-ck.dv2-detail-livestream .dv2-tab {
+        padding: 8px 10px;
+        font-size: 14px;
+    }
+}

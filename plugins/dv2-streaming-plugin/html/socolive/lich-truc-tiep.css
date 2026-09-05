@@ -1,0 +1,456 @@
+.html,
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', 'Arial', sans-serif;
+}
+
+.dv2-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn {
+    background-color: #f0f1f6;
+    width: 100%;
+    margin: 70px 0 auto;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-date-list ul {
+    list-style: none;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-date-list ul li.dv2-item {
+    position: relative;
+    display: inline-block;
+    width: 126px;
+    padding: 4px 0;
+    text-align: center;
+    cursor: pointer;
+    /* adding css */
+    line-height: 1.3;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-date-list ul li.dv2-item .dv2-day {
+    font-size: 14px;
+    color: #777;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-date-list ul li.dv2-item .dv2-date {
+    font-size: 18px;
+    color: #777;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-date-list ul li.dv2-item.dv2-active .dv2-date {
+    font-size: 24px;
+    color: #000;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-date-list ul li.dv2-item.dv2-active::after {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 60px;
+    height: 6px;
+    margin-top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #f8c21b;
+    border-radius: 3px;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box {
+    width: 100%;
+    min-height: 640px;
+    margin-top: 34px;
+    border-radius: 4px;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data {
+    display: block;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .match-loading {
+    width: 100%;
+    padding-top: 230px;
+    text-align: center;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .match-loading img {
+    width: 124px;
+    height: 124px;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .match-none {
+    width: 100%;
+    height: 640px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .match-none img {
+    width: 300px;
+    height: 176px;
+    margin-top: 196px;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .match-none span {
+    color: #b5b5b5;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-day .section-title {
+    color: #303030;
+    align-items: center;
+    justify-content: start;
+    gap: 5px;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-day.dv2-active {
+    display: block;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-day.dv2-hidden {
+    display: none;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card {
+    height: 140px;
+    margin-bottom: 12px;
+    border-right: solid 7px #ffc71c;
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+}
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card.hot-match {
+    border:1px solid red
+}
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-left {
+    float: left;
+    height: 100%;
+    position: relative;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-left .dv2-info {
+    float: left;
+    margin: 41.5px 63px 0 52px;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-left .dv2-info .name {
+    width: 120px;
+    margin-bottom: 4px;
+    color: #777;
+    font-size: 18px;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-left .dv2-info .time {
+    font-size: 24px;
+    font-weight: 600;
+    color: #000;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-left .dv2-team {
+    float: right;
+    margin-top: 25px;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-left .dv2-team .host {
+    margin-bottom: 22px;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-left .dv2-team .host img,
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-left .dv2-team .guest img {
+    width: 36px;
+    height: 36px;
+    margin-right: 8px;
+    vertical-align: middle;
+    object-fit: cover;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-left .dv2-team .host span,
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-left .dv2-team .guest span {
+    display: inline-block;
+    width: 150px;
+    font-size: 16px;
+    color: #000;
+    vertical-align: middle;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-right {
+    float: right;
+    position: relative;
+    height: 100%;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-right .subscribe {
+    position: absolute;
+    z-index: 1;
+    top: 8px;
+    right: 18px;
+    min-width: 50px;
+    height: 24px;
+    padding: 0 12px;
+    line-height: 24px;
+    background: #ffc71c;
+    border-radius: 17px;
+    text-align: center;
+    color: #fff;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-right .anchor-list {
+    margin-top: 35px;
+    margin-right: 38px;
+    user-select: none;
+    display: flex;
+    align-items: center;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-right .living-box {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 0;
+    color: #000;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-right .living-box img {
+    width: 7px;
+    margin-right: 6px;
+    vertical-align: middle;
+    object-fit: cover;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-right .living-box span {
+    font-size: 12px;
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-right .anchor-list .avatar-list {
+    width: 600px;
+    overflow: hidden;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-right .anchor-list .avatar-next {
+    background: url(https://sta.vnres.co/web/assets/soco/img/arrows-right2.png) center no-repeat !important;
+    width: 44px;
+    height: 44px;
+    opacity: .4;
+    transition: opacity .15s;
+    cursor: pointer;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-right .anchor-list .avatar-prev {
+    background: url(https://sta.vnres.co/web/assets/soco/img/arrows-right2.png) center no-repeat !important;
+    width: 44px;
+    height: 44px;
+    opacity: .4;
+    transition: opacity .15s;
+    cursor: pointer;
+    transform: rotate(180deg);
+}
+
+/* Ẩn mũi tên khi không đủ item để trượt */
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-right .anchor-list .avatar-next.swiper-button-lock,
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-right .anchor-list .avatar-prev.swiper-button-lock {
+    display: none !important;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-right .anchor-list .avatar-list .avatar-box {
+    position: relative;
+    width: 90px;
+    margin-right: 18px;
+    font-size: 0;
+    text-align: center;
+    cursor: pointer;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-right .anchor-list .avatar-list .avatar-box .live {
+    position: absolute;
+    width: 28px;
+    height: 16px;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    display: block;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-right .anchor-list .avatar-list .avatar-box .name {
+    width: 100%;
+    font-size: 14px;
+    text-align: center;
+    color: #000;
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-right .anchor-list .avatar-list .avatar-box .avatar {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 6px;
+    border-radius: 50%;
+}
+
+
+.swiper-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: flex;
+    transition-property: transform;
+    box-sizing: content-box;
+}
+
+.swiper-slide {
+    flex-shrink: 0;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transition-property: transform;
+}
+
+@media screen and (max-width: 1280px) {
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-right .anchor-list .avatar-list {
+        width: 385px;
+    }
+}
+@media screen and (max-width: 1024px) {
+    .dv2-layout-scl.dv2-match-wrapper-ctn {
+        width: 100%;
+        margin-top: 80px;
+    }
+}
+
+@media screen and (max-width: 850px) {
+    .dv2-layout-scl.dv2-match-wrapper-ctn {
+        width: 100%;
+        margin-top: 115px;
+    }
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-right {
+        display: none;
+    }
+
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-date-list ul {
+        width: 100%;
+        overflow-y: hidden;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-date-list ul li.dv2-item {
+        margin: 0px;
+        width: 105px;
+    }
+}
+
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-schedule-ad {
+    margin: 8px 0;
+    padding: 8px 0;
+}
+
+@media screen and (max-width: 769px) {
+    .dv2-layout-scl.dv2-match-wrapper-ctn {
+        width: 100%;
+        margin-top: 115px;
+    }
+
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box {
+        width: 100%;
+    }
+
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data {
+        width: 100%;
+    }
+
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-day {
+        width: 100%;
+    }
+
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card {
+        width: 100%;
+    }
+
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-left .dv2-info {
+        margin: 35px;
+    }
+
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-right {
+        display: none;
+    }
+
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-date-list ul {
+        width: 100%;
+        overflow-y: hidden;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-date-list ul li.dv2-item {
+        margin: 0px;
+        width: 100px;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-left {
+        display: flex;
+        gap: 5px;
+    }
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-left .dv2-team .host,
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-left .dv2-team .guest {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .dv2-layout-scl.dv2-match-wrapper-ctn {
+        width: 100%;
+    }
+
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box {
+        width: 100%;
+    }
+
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data {
+        width: 100%;
+    }
+
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-day {
+        width: 100%;
+    }
+
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card {
+        width: 100%;
+    }
+
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-left .dv2-info {
+        margin: 0;
+        display: flex;
+        align-items: start;
+        justify-content: center;
+        flex-direction: column;
+        margin: 0;
+        margin-left: 20px;
+    }
+
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-card .dv2-right {
+        display: none;
+    }
+
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-date-list ul {
+        width: 100%;
+        overflow-y: hidden;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .dv2-layout-scl.dv2-match-wrapper-ctn .dv2-date-list ul li.dv2-item {
+        margin: 0px;
+        width: 105px;
+    }
+}
+.dv2-layout-scl.dv2-match-wrapper-ctn .dv2-match-box .dv2-match-data .dv2-match-schedule-ad {
+    margin: 8px 0;
+    padding: 8px 0;
+}

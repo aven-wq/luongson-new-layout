@@ -1,0 +1,1013 @@
+/* Shared stream player wrapper, custom controls, and ad chrome */
+
+.dv2-kickoff-countdown {
+    color: red;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.dv2-video-wrapper {
+    min-width: 0;
+    position: relative;
+}
+
+.dv2-video-stage,
+.dv2-video-wrapper > .dv2-video-container {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 auto;
+}
+
+.dv2-video-stage.dv2-video-stage--bounded,
+.dv2-video-wrapper > .dv2-video-container.dv2-video-stage--bounded {
+    position: absolute;
+    z-index: 2;
+    max-width: none;
+}
+
+.dv2-video-stage--bounded > video,
+.dv2-video-stage--bounded > #stream-player,
+.dv2-video-container.dv2-video-stage--bounded > video,
+.dv2-video-container.dv2-video-stage--bounded > #stream-player {
+    width: 100%;
+    height: 100%;
+}
+
+.dv2-video-stage--bounded > #stream-player video {
+    width: 100%;
+    height: 100%;
+}
+
+.dv2-video-wrapper video,
+.dv2-video-wrapper #stream-player video {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.dv2-video-wrapper #stream-player {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+}
+
+.dv2-video-wrapper video::-webkit-media-controls,
+.dv2-video-wrapper #stream-player video::-webkit-media-controls {
+    display: none !important;
+}
+
+.dv2-video-wrapper video::-webkit-media-controls-enclosure,
+.dv2-video-wrapper #stream-player video::-webkit-media-controls-enclosure {
+    display: none !important;
+}
+
+.dv2-video-wrapper .dv2-stream-chrome {
+    display: none;
+    pointer-events: none;
+}
+
+.dv2-video-wrapper.dv2-full-stream-active .dv2-stream-chrome {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 12;
+    pointer-events: none;
+}
+
+.dv2-video-wrapper .dv2-stream-chrome-header {
+    display: none !important;
+    pointer-events: none;
+}
+
+.dv2-video-wrapper.dv2-full-stream-active:not(.dv2-stream-wrapper-fs):not(:fullscreen):not(:-webkit-full-screen) .dv2-stream-chrome-right-body {
+    max-width: 150px;
+}
+
+.dv2-video-wrapper.dv2-full-stream-active:not(.dv2-stream-wrapper-fs):not(:fullscreen):not(:-webkit-full-screen) .dv2-stream-chrome-right-body img,
+.dv2-video-wrapper.dv2-full-stream-active:not(.dv2-stream-wrapper-fs):not(:fullscreen):not(:-webkit-full-screen) .dv2-stream-chrome-right-body ins {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+}
+
+.dv2-stream-controls {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 11;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 12px;
+    border-radius: 0 0 8px 8px;
+    background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.82));
+    color: #fff;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+}
+
+.dv2-video-wrapper.dv2-stream-ui-active .dv2-stream-controls {
+    pointer-events: auto;
+    opacity: 1;
+    visibility: visible;
+}
+
+.dv2-stream-controls__play,
+.dv2-stream-controls__mute,
+.dv2-stream-fs-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.dv2-stream-controls__play:hover,
+.dv2-stream-controls__mute:hover,
+.dv2-stream-fs-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.dv2-stream-controls__play svg,
+.dv2-stream-controls__mute svg,
+.dv2-stream-fs-btn svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.dv2-stream-controls__volume {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+    max-width: 140px;
+}
+
+.dv2-stream-volume {
+    flex: 1;
+    min-width: 48px;
+    height: 4px;
+    margin: 0;
+    accent-color: #fff;
+    cursor: pointer;
+}
+
+.dv2-stream-controls__icon-pause,
+.dv2-stream-controls__icon-vol-off {
+    display: none;
+}
+
+.dv2-stream-controls:not(.dv2-stream-controls--paused) .dv2-stream-controls__icon-play {
+    display: none;
+}
+
+.dv2-stream-controls:not(.dv2-stream-controls--paused) .dv2-stream-controls__icon-pause {
+    display: block;
+}
+
+.dv2-stream-controls--muted .dv2-stream-controls__icon-vol-on {
+    display: none;
+}
+
+.dv2-stream-controls--muted .dv2-stream-controls__icon-vol-off {
+    display: block;
+}
+
+.dv2-stream-fs-btn {
+    margin-left: auto;
+}
+
+.dv2-stream-fs-btn__shrink {
+    display: none;
+}
+
+.dv2-video-wrapper.dv2-stream-wrapper-fs .dv2-stream-fs-btn__expand {
+    display: none;
+}
+
+.dv2-video-wrapper.dv2-stream-wrapper-fs .dv2-stream-fs-btn__shrink {
+    display: block;
+}
+
+.dv2-stream-fs-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+body.dv2-stream-body-fs {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+}
+
+.dv2-fs-placeholder {
+    width: 100%;
+    pointer-events: none;
+}
+
+.dv2-video-wrapper.dv2-stream-wrapper-fs {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    z-index: 2147483645;
+    margin: 0;
+    background: #000;
+    border-radius: 0;
+    flex: none;
+    display: block;
+    overflow: hidden;
+}
+
+.dv2-video-wrapper.dv2-stream-wrapper-fs .dv2-video-container {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.dv2-video-wrapper.dv2-stream-wrapper-fs .dv2-video-container video,
+.dv2-video-wrapper.dv2-stream-wrapper-fs .dv2-video-container #stream-player,
+.dv2-video-wrapper.dv2-stream-wrapper-fs .dv2-video-container #stream-player video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center center;
+}
+
+.dv2-video-wrapper.dv2-stream-wrapper-fs video,
+.dv2-video-wrapper.dv2-stream-wrapper-fs #stream-player,
+.dv2-video-wrapper.dv2-stream-wrapper-fs #stream-player video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 0;
+}
+
+.dv2-video-wrapper.dv2-stream-wrapper-fs .dv2-stream-chrome {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 12;
+    pointer-events: none;
+}
+
+.dv2-video-wrapper:fullscreen,
+.dv2-video-wrapper:-webkit-full-screen {
+    width: 100%;
+    height: 100%;
+    max-height: 100vh;
+    background: #000;
+    border-radius: 0;
+}
+
+.dv2-video-wrapper:fullscreen video,
+.dv2-video-wrapper:-webkit-full-screen video,
+.dv2-video-wrapper:fullscreen #stream-player,
+.dv2-video-wrapper:-webkit-full-screen #stream-player,
+.dv2-video-wrapper:fullscreen #stream-player video,
+.dv2-video-wrapper:-webkit-full-screen #stream-player video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 0;
+}
+
+.dv2-video-wrapper:fullscreen .dv2-stream-chrome,
+.dv2-video-wrapper:-webkit-full-screen .dv2-stream-chrome {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 12;
+    pointer-events: none;
+}
+
+.dv2-video-wrapper:fullscreen .dv2-stream-controls,
+.dv2-video-wrapper:-webkit-full-screen .dv2-stream-controls,
+.dv2-video-wrapper.dv2-stream-wrapper-fs .dv2-stream-controls,
+.dv2-video-wrapper:fullscreen .dv2-video-container > .dv2-stream-controls,
+.dv2-video-wrapper:-webkit-full-screen .dv2-video-container > .dv2-stream-controls,
+.dv2-video-wrapper.dv2-stream-wrapper-fs .dv2-video-container > .dv2-stream-controls {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2147483646;
+    border-radius: 0;
+    padding: 12px 16px;
+    gap: 10px;
+}
+
+.dv2-video-wrapper:fullscreen .dv2-stream-controls__volume,
+.dv2-video-wrapper:-webkit-full-screen .dv2-stream-controls__volume,
+.dv2-video-wrapper.dv2-stream-wrapper-fs .dv2-stream-controls__volume,
+.dv2-video-wrapper:fullscreen .dv2-video-container > .dv2-stream-controls .dv2-stream-controls__volume,
+.dv2-video-wrapper:-webkit-full-screen .dv2-video-container > .dv2-stream-controls .dv2-stream-controls__volume,
+.dv2-video-wrapper.dv2-stream-wrapper-fs .dv2-video-container > .dv2-stream-controls .dv2-stream-controls__volume {
+    max-width: 180px;
+}
+
+.dv2-stream-chrome-header,
+.dv2-stream-chrome-footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 12;
+}
+
+.dv2-stream-chrome-footer img {
+    width: 100%;
+    height: auto;
+}
+
+.dv2-stream-chrome-header {
+    top: 0;
+    height: auto;
+    overflow: hidden;
+    background: #000;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dv2-stream-chrome-header img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+.dv2-stream-chrome-header ins {
+    display: block;
+    max-width: 100%;
+}
+
+.dv2-stream-chrome-header-link {
+    display: block;
+    height: 100%;
+    pointer-events: auto;
+    text-decoration: none;
+    color: inherit;
+}
+
+.dv2-stream-chrome-right {
+    position: absolute;
+    z-index: 24;
+    top: 5.5%;
+    right: 4%;
+    left: auto;
+    width: 16%;
+    pointer-events: auto;
+}
+
+.dv2-stream-chrome-right-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.dv2-stream-chrome-right-body img,
+.dv2-stream-chrome-right-body ins {
+    display: block;
+    width: 100%;
+    height: auto;
+    line-height: 0;
+}
+
+.dv2-video-wrapper.dv2-stream-chrome-right-closed .dv2-stream-chrome-right,
+.dv2-stream-chrome.dv2-stream-chrome-right-closed .dv2-stream-chrome-right {
+    display: none;
+}
+
+.dv2-stream-chrome-footer {
+    pointer-events: auto;
+}
+
+.dv2-video-wrapper.dv2-full-stream-active .dv2-stream-chrome-footer,
+.dv2-video-wrapper:fullscreen .dv2-stream-chrome-footer,
+.dv2-video-wrapper:-webkit-full-screen .dv2-stream-chrome-footer,
+.dv2-video-wrapper.dv2-stream-wrapper-fs .dv2-stream-chrome-footer {
+    bottom: 0;
+    transition: bottom 0.25s ease;
+}
+
+.dv2-video-wrapper.dv2-full-stream-active.dv2-stream-ui-active:not(.dv2-stream-wrapper-fs):not(:fullscreen):not(:-webkit-full-screen) .dv2-stream-chrome-footer {
+    bottom: 56px;
+}
+
+.dv2-video-wrapper:fullscreen.dv2-stream-ui-active .dv2-stream-chrome-footer,
+.dv2-video-wrapper:-webkit-full-screen.dv2-stream-ui-active .dv2-stream-chrome-footer,
+.dv2-video-wrapper.dv2-stream-wrapper-fs.dv2-stream-ui-active .dv2-stream-chrome-footer {
+    bottom: 90px;
+}
+
+@media (orientation: portrait) {
+    .dv2-video-wrapper.dv2-stream-wrapper-fs.dv2-stream-ui-active .dv2-stream-chrome-footer, .dv2-video-wrapper:-webkit-full-screen.dv2-stream-ui-active .dv2-stream-chrome-footer, .dv2-video-wrapper:fullscreen.dv2-stream-ui-active .dv2-stream-chrome-footer {
+        bottom: 0;
+    }
+}
+
+@media (orientation: landscape) {
+    .dv2-video-wrapper.dv2-stream-wrapper-fs.dv2-stream-ui-active .dv2-stream-chrome-footer, .dv2-video-wrapper:-webkit-full-screen.dv2-stream-ui-active .dv2-stream-chrome-footer, .dv2-video-wrapper:fullscreen.dv2-stream-ui-active .dv2-stream-chrome-footer {
+        bottom: 50px;
+    }
+}
+
+.dv2-video-wrapper.dv2-stream-chrome-footer-closed .dv2-stream-chrome-footer,
+.dv2-stream-chrome.dv2-stream-chrome-footer-closed .dv2-stream-chrome-footer {
+    display: none;
+}
+
+.dv2-stream-chrome-ft-head-peek {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 13;
+    display: none;
+    width: min(512px, 34%);
+    pointer-events: none;
+    transform: translateX(-105%);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.35s ease, opacity 0.35s ease, visibility 0.35s ease, bottom 0.25s ease;
+}
+
+.dv2-video-wrapper.dv2-stream-chrome-footer-closed .dv2-stream-chrome-ft-head-peek,
+.dv2-stream-chrome.dv2-stream-chrome-footer-closed .dv2-stream-chrome-ft-head-peek {
+    display: block;
+}
+
+.dv2-video-wrapper:not(.dv2-full-stream-active) .dv2-stream-chrome-ft-head-peek {
+    display: none !important;
+}
+
+.dv2-stream-chrome-ft-head-peek--visible {
+    transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.dv2-stream-chrome ins img {
+    height: auto !important;
+}
+
+.dv2-stream-chrome-ft-head-peek .dv2-stream-chrome-ft-head {
+    margin-bottom: 0;
+    width: 100%;
+    max-width: none;
+}
+
+.dv2-video-wrapper.dv2-full-stream-active .dv2-stream-chrome-ft-head-peek,
+.dv2-video-wrapper:fullscreen .dv2-stream-chrome-ft-head-peek,
+.dv2-video-wrapper:-webkit-full-screen .dv2-stream-chrome-ft-head-peek,
+.dv2-video-wrapper.dv2-stream-wrapper-fs .dv2-stream-chrome-ft-head-peek {
+    bottom: 0;
+}
+
+.dv2-video-wrapper.dv2-full-stream-active .dv2-stream-chrome-ft-head-peek--visible {
+    bottom: 15px;
+}
+
+.dv2-video-wrapper.dv2-full-stream-active.dv2-stream-ui-active:not(.dv2-stream-wrapper-fs):not(:fullscreen):not(:-webkit-full-screen) .dv2-stream-chrome-ft-head-peek {
+    bottom: 56px;
+}
+
+.dv2-video-wrapper:fullscreen.dv2-stream-ui-active .dv2-stream-chrome-ft-head-peek,
+.dv2-video-wrapper:-webkit-full-screen.dv2-stream-ui-active .dv2-stream-chrome-ft-head-peek,
+.dv2-video-wrapper.dv2-stream-wrapper-fs.dv2-stream-ui-active .dv2-stream-chrome-ft-head-peek {
+    bottom: 90px;
+}
+
+@media (orientation: portrait) {
+    .dv2-video-wrapper.dv2-stream-wrapper-fs.dv2-stream-ui-active .dv2-stream-chrome-ft-head-peek,
+    .dv2-video-wrapper:-webkit-full-screen.dv2-stream-ui-active .dv2-stream-chrome-ft-head-peek,
+    .dv2-video-wrapper:fullscreen.dv2-stream-ui-active .dv2-stream-chrome-ft-head-peek {
+        bottom: 0;
+    }
+}
+
+@media (orientation: landscape) {
+    .dv2-video-wrapper.dv2-stream-wrapper-fs.dv2-stream-ui-active .dv2-stream-chrome-ft-head-peek,
+    .dv2-video-wrapper:-webkit-full-screen.dv2-stream-ui-active .dv2-stream-chrome-ft-head-peek,
+    .dv2-video-wrapper:fullscreen.dv2-stream-ui-active .dv2-stream-chrome-ft-head-peek {
+        bottom: 50px;
+    }
+}
+
+.dv2-stream-chrome-close {
+    position: absolute;
+    top: 0;
+    right: 8px;
+    z-index: 14;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.65);
+    color: #fff;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    min-height: unset;
+}
+
+.dv2-stream-chrome-close:hover {
+    background: red;
+}
+
+.dv2-stream-chrome-footer-body {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: 100%;
+    gap: 10px;
+}
+
+.dv2-stream-chrome-ft-head {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: min(512px, 34%);
+    margin-bottom: -8px;
+    position: relative;
+    z-index: 13;
+    overflow: hidden;
+}
+
+.dv2-stream-chrome-ft-head ins {
+    display: block;
+    width: 100%;
+    line-height: 0;
+}
+
+.dv2-stream-chrome-ft-row {
+    display: flex;
+    width: 100%;
+}
+
+.dv2-stream-chrome-ft-left,
+.dv2-stream-chrome-ft-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    overflow: hidden;
+}
+
+.dv2-stream-chrome-ft-left ins,
+.dv2-stream-chrome-ft-right ins {
+    display: block;
+    width: 100%;
+    line-height: 0;
+}
+
+@media screen and (max-width: 767px) {
+    .dv2-stream-chrome-ft-right {
+        display: none;
+    }
+
+    .dv2-stream-chrome-ft-left {
+        width: 100%;
+    }
+
+    .dv2-stream-chrome-close {
+        font-size: 14px;
+        width: 20px;
+        height: 20px;
+        top: -5px;
+        right: 5px;
+    }
+}
+
+@media screen and (orientation: landscape) and (max-height: 500px) {
+    .dv2-video-wrapper.dv2-full-stream-active:not(.dv2-stream-wrapper-fs):not(:fullscreen):not(:-webkit-full-screen) .dv2-stream-chrome-right-body {
+        max-width: 100px;
+    }
+
+    .dv2-stream-chrome-right-body img,
+    .dv2-stream-chrome-right-body ins {
+        max-width: min(200px, 18vw);
+    }
+}
+
+/* Stream odds panel (HDP / O/U overlay) */
+.dv2-stream-odds-slot {
+    position: absolute;
+    right: 0;
+    bottom: 36%;
+    z-index: 26;
+    pointer-events: none;
+    max-width: 100%;
+}
+
+.dv2-stream-odds-slot > * {
+    pointer-events: auto;
+}
+
+.dv2-stream-odds-panel {
+    position: relative;
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    min-height: var(--dv2-odds-panel-body-height, 148px);
+    --dv2-odds-panel-body-height: 148px;
+    --dv2-odds-body-min-width: 270px;
+    --dv2-odds-body-max-width: 300px;
+    --dv2-odds-body-wrap-open-max-width: 300px;
+    --dv2-odds-brand-row-center: calc(8px + 8px);
+    --dv2-odds-panel-ease: ease-in-out;
+    --dv2-odds-panel-duration: 2s;
+}
+
+.dv2-stream-odds-panel__viewport {
+    overflow: hidden;
+    width: 0;
+    max-width: 0;
+    min-width: 0;
+    transition:
+        width var(--dv2-odds-panel-duration) var(--dv2-odds-panel-ease),
+        max-width var(--dv2-odds-panel-duration) var(--dv2-odds-panel-ease);
+}
+
+.dv2-stream-odds-panel--open .dv2-stream-odds-panel__viewport {
+    width: var(--dv2-odds-body-wrap-open-max-width, 300px);
+    max-width: var(--dv2-odds-body-wrap-open-max-width, 300px);
+}
+
+.dv2-stream-odds-panel__slide {
+    position: relative;
+    width: var(--dv2-odds-body-min-width, 270px);
+    min-width: var(--dv2-odds-body-min-width, 270px);
+    max-width: var(--dv2-odds-body-max-width, 300px);
+    margin-left: auto;
+    transform: translateX(100%);
+    transition: transform var(--dv2-odds-panel-duration) var(--dv2-odds-panel-ease);
+    will-change: transform;
+}
+
+.dv2-stream-odds-panel--open .dv2-stream-odds-panel__slide {
+    transform: translateX(0);
+}
+
+.dv2-stream-odds-panel__body {
+    width: 100%;
+    margin: 0;
+    padding: 15px;
+    border-radius: 10px 0 0 10px;
+    background: rgba(48, 56, 32, 0.88);
+    color: #fff;
+    font-size: 11px;
+    line-height: 1.2;
+    box-shadow: -4px 4px 18px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(2px);
+    text-align: center;
+}
+
+.dv2-stream-odds-panel__toggle-close {
+    position: absolute;
+    z-index: 2;
+    top: calc(var(--dv2-odds-brand-row-center) - 4px);
+    right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    cursor: pointer;
+    line-height: 0;
+    touch-action: manipulation;
+    box-shadow: none;
+    min-height: unset;
+}
+
+.dv2-stream-chrome .dv2-stream-odds-panel__toggle-close:hover {
+    background: transparent !important;
+}
+
+.dv2-stream-chrome .dv2-stream-odds-panel__toggle-close:hover svg path, .dv2-stream-chrome .dv2-stream-odds-panel__toggle-open:hover svg path {
+    fill: red !important;
+}
+
+.dv2-stream-odds-panel__toggle-close svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.dv2-stream-odds-panel__toggle-open {
+    position: absolute;
+    z-index: 4;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 44px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #ffcd08;
+    border-right: none;
+    border-radius: 10px 0 0 10px;
+    background: rgba(12, 20, 38, 0.96);
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.28);
+    cursor: pointer;
+    line-height: 0;
+    touch-action: manipulation;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.24s ease, visibility 0.24s ease;
+    max-width: unset;
+}
+
+.dv2-stream-odds-panel__toggle-open:hover {
+    background: rgba(18, 28, 50, 0.98);
+}
+
+.dv2-stream-odds-panel__toggle-open svg {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+}
+
+.dv2-stream-odds-slot--open .dv2-stream-odds-panel__toggle-open {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+@keyframes dat-cuoc-bounce {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+.dv2-stream-odds-panel__brand {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin: 0 auto 12px;
+    padding: 2px 12px;
+    border: 1px solid #fff;
+    border-radius: 999px;
+    text-decoration: none;
+    color: inherit;
+    pointer-events: auto;
+    background: rgba(0, 0, 0, 0.18);
+    animation: 1s ease-in-out infinite dat-cuoc-bounce;
+}
+
+.dv2-stream-odds-panel__brand-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+}
+
+.dv2-stream-odds-panel__brand img {
+    display: block;
+    max-height: 18px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+.dv2-stream-odds-panel__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 8px;
+    text-align: left;
+}
+
+.dv2-stream-odds-panel__row {
+    display: grid;
+    grid-template-columns: 32px repeat(3, minmax(0, 1fr));
+    align-items: center;
+    gap: 6px;
+}
+
+.dv2-stream-odds-panel__row-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #79c6df;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.dv2-stream-odds-panel__pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-height: 24px;
+    padding: 2px 10px;
+    border-radius: 999px;
+    background: rgba(8, 20, 42, 0.92);
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+}
+
+.dv2-stream-odds-panel__pill--rate {
+    color: #79c6df;
+    font-weight: 700;
+}
+
+
+.dv2-stream-odds-panel__pill--down {
+    color: #f94a4a;
+}
+
+.dv2-stream-odds-panel__pill--up {
+    color: #00c945;
+}
+
+
+.dv2-stream-odds-panel__pill--up svg  path {
+    fill: #00c945;
+}
+
+.dv2-stream-odds-panel__pill svg {
+    flex-shrink: 0;
+}
+
+.dv2-stream-odds-panel__stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+}
+
+.dv2-stream-odds-panel__stat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+}
+
+.dv2-stream-odds-panel__stat-sep {
+    margin: 0 4px;
+    color: rgba(255, 255, 255, 0.45);
+    font-weight: 400;
+}
+
+.dv2-video-wrapper.dv2-full-stream-active:not(.dv2-stream-wrapper-fs):not(:fullscreen):not(:-webkit-full-screen) .dv2-stream-odds-panel__slide {
+    min-width: var(--dv2-odds-body-min-width, 270px);
+    max-width: var(--dv2-odds-body-max-width, 300px);
+}
+
+.dv2-video-wrapper.dv2-full-stream-active:not(.dv2-stream-wrapper-fs):not(:fullscreen):not(:-webkit-full-screen) .dv2-stream-odds-panel--open .dv2-stream-odds-panel__viewport {
+    width: var(--dv2-odds-body-wrap-open-max-width, 300px);
+    max-width: var(--dv2-odds-body-wrap-open-max-width, 300px);
+}
+
+.dv2-video-wrapper.dv2-stream-wrapper-fs .dv2-stream-odds-slot,
+.dv2-video-wrapper:fullscreen .dv2-stream-odds-slot,
+.dv2-video-wrapper:-webkit-full-screen .dv2-stream-odds-slot {
+    bottom: 36%;
+}
+
+@media screen and (max-width: 767px) {
+    .dv2-stream-odds-slot {
+        bottom: 36%;
+    }
+
+    .dv2-stream-odds-panel {
+        --dv2-odds-brand-row-center: calc(7px + 8px);
+        --dv2-odds-panel-body-height: 90px;
+        --dv2-odds-mobile-body-scale: 0.677;
+        --dv2-odds-body-min-width: :170px;
+        --dv2-odds-body-max-width: 200px;
+        --dv2-odds-body-wrap-open-max-width: 248px;
+    }
+
+    .dv2-stream-odds-panel__viewport {
+        height: var(--dv2-odds-panel-body-height);
+    }
+
+    .dv2-stream-odds-panel__slide {
+        position: relative;
+        height: var(--dv2-odds-panel-body-height);
+        overflow: visible;
+    }
+
+    .dv2-stream-odds-panel__body {
+        position: absolute;
+        top: 0;
+        right: 0;
+        box-sizing: border-box;
+        padding: 8px 10px 8px 8px;
+        width: calc(100% / var(--dv2-odds-mobile-body-scale));
+        height: calc(var(--dv2-odds-panel-body-height) / var(--dv2-odds-mobile-body-scale));
+        transform: scale(var(--dv2-odds-mobile-body-scale));
+        transform-origin: top right;
+    }
+
+    .dv2-stream-odds-panel__toggle-close {
+        top: 6px;
+        right: 4px;
+        width: 20px;
+        height: 20px;
+    }
+
+    .dv2-stream-odds-panel__toggle-close svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .dv2-stream-odds-panel__toggle-open {
+        width: 20px;
+        height: 40px;
+        border-width: 2px;
+        border-radius: 12px 0 0 12px;
+    }
+
+    .dv2-stream-odds-panel__toggle-open svg {
+        width: 10px;
+        height: 10px;
+    }
+
+    .dv2-stream-odds-panel__row {
+        grid-template-columns: 28px repeat(3, minmax(0, 1fr));
+        gap: 4px;
+    }
+
+    .dv2-stream-odds-panel__pill {
+        min-height: 22px;
+        padding: 2px 7px;
+        font-size: 11px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dv2-stream-odds-panel,
+    .dv2-stream-odds-panel__viewport,
+    .dv2-stream-odds-panel__slide,
+    .dv2-stream-odds-panel__toggle-open {
+        transition: none !important;
+    }
+
+    .dv2-stream-odds-panel--open .dv2-stream-odds-panel__viewport {
+        width: var(--dv2-odds-body-wrap-open-max-width, 300px);
+        max-width: var(--dv2-odds-body-wrap-open-max-width, 300px);
+    }
+
+    .dv2-stream-odds-panel--open .dv2-stream-odds-panel__slide {
+        transform: none;
+    }
+}

@@ -1,0 +1,263 @@
+/* RESET + THEME */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0a1628;
+    color: #fff;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.dv2-layout-vb.dv2-calendar-matchs {
+    width: 100%;
+    max-width: 1400px;
+    margin: 24px auto;
+}
+
+/* HEADER */
+.dv2-layout-vb.dv2-calendar-matchs .dv2-header {
+    text-align: left;
+    margin-bottom: 24px;
+}
+
+.dv2-layout-vb.dv2-calendar-matchs .dv2-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.dv2-layout-vb.dv2-calendar-matchs #currentDateTime {
+    margin-top: 4px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+}
+
+/* FILTER BUTTONS */
+.dv2-layout-vb.dv2-calendar-matchs .dv2-filter-buttons {
+    display: flex;
+    justify-content: start;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.dv2-layout-vb.dv2-calendar-matchs .dv2-filter-btn {
+    padding: 8px 20px;
+    background: #1a2332;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.dv2-layout-vb.dv2-calendar-matchs .dv2-filter-btn:hover {
+    background: #162e5b;
+}
+
+.dv2-layout-vb.dv2-calendar-matchs .dv2-filter-btn.active {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+/* LEAGUE SECTION */
+.dv2-layout-vb.dv2-calendar-matchs .dv2-league-section {
+    background: #1a2332;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 28px;
+}
+
+.dv2-layout-vb.dv2-calendar-matchs .dv2-league-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    background: #1e242c;
+    border-bottom: .0625rem solid hsla(0, 0%, 100%, .08);
+}
+
+.dv2-layout-vb.dv2-calendar-matchs .dv2-league-logo {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.dv2-layout-vb.dv2-calendar-matchs .dv2-league-title {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* MATCH CARD */
+.dv2-layout-vb.dv2-calendar-matchs .dv2-match-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: #191e23;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background 0.2s ease;
+    cursor: pointer;
+}
+
+.dv2-layout-vb.dv2-calendar-matchs .dv2-match-card:hover {
+    background: #191e23;
+}
+
+.dv2-layout-vb.dv2-calendar-matchs .dv2-match-card:last-child {
+    border-bottom: none;
+}
+
+/* TIME */
+.dv2-layout-vb.dv2-calendar-matchs .dv2-time-col {
+    width: 120px;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 5px;
+    border: 1px solid transparent;
+    background: #152e3e;
+    border-radius: 0.375rem;
+    text-align: center;
+}
+
+/* TEAMS */
+.dv2-layout-vb.dv2-calendar-matchs .dv2-teams-col {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    justify-content: center;
+}
+
+.dv2-layout-vb.dv2-calendar-matchs .dv2-team {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dv2-layout-vb.dv2-calendar-matchs .dv2-team-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.dv2-layout-vb.dv2-calendar-matchs .dv2-team-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.dv2-layout-vb.dv2-calendar-matchs .dv2-team-name {
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 400;
+    width: 150px;
+}
+
+.dv2-layout-vb.dv2-calendar-matchs .dv2-vs {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255, 255, 255);
+    background: linear-gradient(179deg, #12972a 0.68%, #07d88f 135.84%);
+    border-radius: 50%;
+    padding: 6px;
+    box-sizing: border-box;
+    font-family: Oswald, Manrope, sans-serif;
+}
+
+.dv2-layout-vb.dv2-calendar-matchs .dv2-commentators {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding-top: 12px;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 350px;
+}
+
+.dv2-layout-vb.dv2-calendar-matchs .dv2-commentator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 18px;
+    font-size: 12px;
+    transition: all 0.2s ease;
+}
+
+.dv2-layout-vb.dv2-calendar-matchs .dv2-commentator:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+}
+
+.dv2-layout-vb.dv2-calendar-matchs .dv2-commentator-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    overflow: hidden;
+}
+
+.dv2-layout-vb.dv2-calendar-matchs .dv2-commentator-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.dv2-layout-vb.dv2-calendar-matchs .dv2-commentator-name {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+    .dv2-layout-vb.dv2-calendar-matchs .dv2-match-card {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .dv2-layout-vb.dv2-calendar-matchs .dv2-teams-col {
+        justify-content: flex-start;
+    }
+
+    .dv2-layout-vb.dv2-calendar-matchs .dv2-commentator-col {
+        text-align: left;
+    }
+}
+
+@media (max-width: 600px) {
+    .dv2-layout-vb.dv2-calendar-matchs .dv2-time-col {
+        width: 100%;
+        text-align: left;
+    }
+
+    .dv2-layout-vb.dv2-calendar-matchs .dv2-teams-col {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .dv2-layout-vb.dv2-calendar-matchs .dv2-team-name {
+        width: auto;
+    }
+
+}

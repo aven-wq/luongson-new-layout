@@ -1,0 +1,131 @@
+.dv2-layout-ck2 .bg-primary {
+  --tw-bg-opacity: 1;
+  background-color: rgb(247 73 73 / var(--tw-bg-opacity, 1));
+}
+
+.dv2-layout-ck2 .bg-primary-1 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(247 115 73 / var(--tw-bg-opacity, 1));
+}
+
+.dv2-layout-ck2 .bg-stats {
+  background-color: rgba(97, 97, 97, 0.24);
+}
+
+.dv2-layout-ck2 .bg-neutral-2 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(87 95 106 / var(--tw-bg-opacity, 1));
+}
+
+.dv2-layout-ck2 .bg-neutral-3 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(138 151 169 / var(--tw-bg-opacity, 1));
+}
+
+.dv2-layout-ck2.dv2-list-match h3 {
+  font-size: 1.5rem;
+}
+
+
+.dv2-layout-ck2 .style_header-sport-type__QX1EK .dv2-filter-btn {
+  position: relative;
+  display: flex;
+  height: 4rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 1rem;
+  background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 0.2s;
+}
+
+*,
+:after,
+:before {
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+}
+
+.dv2-layout-ck2 .bg-\[\#2E323A\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(46 50 58 / var(--tw-bg-opacity, 1));
+}
+
+.dv2-layout-ck2 .hidden {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+.dv2-layout-ck2 .border-gradient-2 {
+  border-bottom: 1px solid;
+  border-image: linear-gradient(90deg, #2c2c2c, #747474 52%, #2c2c2c) 1;
+}
+
+.dv2-layout-ck2 .border-neutral-3 {
+  --tw-border-opacity: 1;
+  border-color: rgb(138 151 169 / var(--tw-border-opacity, 1));
+}
+
+.dv2-layout-ck2 .text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
+.dv2-layout-ck2 .text-minute {
+  --tw-text-opacity: 1;
+  color: rgb(48 214 36 / var(--tw-text-opacity, 1));
+}
+
+.dv2-layout-ck2 .text-primary {
+  --tw-text-opacity: 1;
+  color: rgb(247 73 73 / var(--tw-text-opacity, 1));
+}
+
+.dv2-layout-ck2 .dv2-filter-btn:hover {
+  --tw-text-opacity: 1;
+  color: rgb(247 115 73 / var(--tw-text-opacity, 1));
+}
+
+.dv2-layout-ck2 .text-neutral-3 {
+  --tw-text-opacity: 1;
+  color: rgb(138 151 169 / var(--tw-text-opacity, 1));
+}
+
+.cakhia-btn-bet:hover, .dv2-ck2-home-featured-streams a.cakhia-btn-bet:hover, .dv2-ck2-home-featured-streams a.cakhia-btn-hover:hover,  a.cakhia-btn-hover:hover {
+    background: #bf0426;
+    color: #fff;
+}
+
+.dv2-layout-ck2 .ck2-list-match-hot {
+  border: 1px solid red;
+  border-radius: 15px;
+}
+@media (min-width: 768px) {
+  .dv2-layout-ck2 .style_header-sport-type__QX1EK {
+    grid-template-columns: repeat(6, minmax(auto, 1fr));
+    padding-top: 1rem;
+  }
+}
+
+@keyframes live {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.dv2-layout-ck2 .live {
+  animation: live 1s linear infinite;
+}

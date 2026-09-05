@@ -1,0 +1,706 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #000;
+    color: #fff;
+    min-height: 100vh;
+}
+
+/* Page Title */
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-page-title {
+    background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+    padding: 16px 20px;
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-page-title .dv2-title-text {
+    font-size: 18px;
+    font-weight: 700;
+    color: #f7c700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Main Content Wrapper */
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* Score Overlay - OUTSIDE and ABOVE video */
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay {
+    background: rgba(0, 0, 0, 0.75);
+    padding: 20px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay .dv2-score-container {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+/* Team section */
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay .dv2-score-container .dv2-overlay-team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay .dv2-score-container .dv2-overlay-team .dv2-overlay-flag {
+    height: 60px;
+    width: 60px;
+    border-radius: 100%;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay .dv2-score-container .dv2-overlay-team .dv2-overlay-flag img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay .dv2-score-container .dv2-overlay-team .dv2-overlay-team-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+    text-align: center;
+    line-height: 1.3;
+}
+
+/* Score display */
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay .dv2-score-container .dv2-overlay-score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay .dv2-score-container .dv2-overlay-score .dv2-overlay-score-main {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay .dv2-score-container .dv2-overlay-score .dv2-overlay-score-pen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.1;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay .dv2-score-container .dv2-overlay-score .dv2-overlay-score-pen .dv2-pen-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.85);
+    white-space: nowrap;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay .dv2-score-container .dv2-overlay-score .dv2-overlay-score-pen .dv2-pen-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #fff;
+    white-space: nowrap;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay .dv2-score-container .dv2-overlay-score .dv2-score-bracket {
+    font-size: 56px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay .dv2-score-container .dv2-overlay-score .dv2-score-number {
+    font-size: 36px;
+    font-weight: bold;
+    padding: 0 15px;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    min-width: 60px;
+    text-align: center;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay .dv2-score-container .dv2-overlay-score .dv2-score-number.dv2-home-score-number {
+    border-left: 4px solid #ff1919;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay .dv2-score-container .dv2-overlay-score .dv2-score-number.dv2-away-score-number {
+    border-right: 4px solid #1952ff;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay .dv2-score-container .dv2-overlay-score .dv2-score-separator {
+    font-size: 48px;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 700;
+}
+
+/* Video Container */
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-video-container {
+    position: relative;
+    width: 100%;
+    background: #000;
+    overflow: hidden;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-video-container .dv2-video-player {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+    display: block;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-thapcam-video .dv2-video-wrapper .dv2-video-container {
+    aspect-ratio: 16 / 9;
+    flex: 0 0 auto;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-thapcam-video .dv2-video-wrapper .dv2-video-container video,
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-thapcam-video .dv2-video-wrapper .dv2-video-container .dv2-video-player {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-thapcam-video .dv2-video-wrapper video::-webkit-media-controls,
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-thapcam-video .dv2-video-wrapper video::-webkit-media-controls-enclosure {
+    display: none !important;
+    -webkit-appearance: none;
+}
+
+.dv2-stream-ads {
+    margin-top: 10px;
+}
+
+/* Match info overlay (stream error / no stream) */
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-loading.dv2-match-overlay,
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-not-loaded.dv2-match-overlay {
+    z-index: 15;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-loading.dv2-match-overlay {
+    background: rgba(0, 0, 0, .65);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .5);
+    color: #fff;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-not-loaded.dv2-match-overlay {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    max-width: calc(100% - 2rem);
+    background: transparent;
+    padding: 0;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-not-loaded.dv2-match-overlay .dv2-no-stream {
+    aspect-ratio: auto;
+    min-height: 0;
+    background: rgba(0, 0, 0, 0.55);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-loading {
+    background: #fff;
+    border-radius: 6px;
+    color: #000;
+    font-size: 16px;
+    left: 50%;
+    padding: 10px 20px;
+    padding-top: 35px;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 15;
+    line-height: 32px;
+    text-align: left;
+    max-width: calc(100% - 2rem);
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-loading .dv2-loading-status {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    font-size: 13px;
+    white-space: nowrap;
+    background: #f8c21b;
+    color: #000;
+    padding: 2px 12px;
+    border-radius: 4px;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-loading .dv2-load-league {
+    margin: 10px 0;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-loading .dv2-load-league img {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    object-fit: contain;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-loading .dv2-load-time {
+    font-size: 14px;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-loading .dv2-load-time .dv2-load-pen {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    margin-left: 4px;
+}
+
+/* Stream loading overlay */
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-stream-loading {
+    position: absolute;
+    inset: 0;
+    z-index: 15;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.55);
+    pointer-events: none;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-stream-loading__panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.72);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-stream-loading__spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: dv2-stream-loading-spin-tc 0.85s linear infinite;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-stream-loading__text {
+    margin: 0;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    text-align: center;
+    white-space: nowrap;
+}
+
+@keyframes dv2-stream-loading-spin-tc {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.dv2-video-wrapper.dv2-tc-stream-fs .dv2-stream-loading,
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-video-wrapper:fullscreen .dv2-stream-loading,
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-video-wrapper:-webkit-full-screen .dv2-stream-loading {
+    border-radius: 0;
+    z-index: 2147483645;
+}
+
+/* No Stream Message */
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-video-container .dv2-no-stream {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    gap: 20px;
+    z-index: 90;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-video-container .dv2-no-stream .dv2-no-stream-icon {
+    font-size: 80px;
+    animation: dv2-float 3s ease-in-out infinite;
+}
+
+@keyframes dv2-float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-video-container .dv2-no-stream .dv2-no-stream-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-video-container .dv2-no-stream .dv2-no-stream-subtitle {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    max-width: 400px;
+    line-height: 1.6;
+}
+
+/* Bottom Info Bar */
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-info-bar {
+    background: #1a1a1a;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-info-bar .dv2-commentator-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 24px;
+    background: #ffa500;
+    border-radius: 25px;
+    font-weight: 700;
+    color: #000;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.dv2-stream-links {
+    position: relative;
+    width: 100%;
+    margin: 10px auto;
+    padding-bottom: 10px;
+    display: flex;
+    gap: 15px;
+}
+
+.dv2-stream-links span {
+    cursor: pointer;
+    display: block;
+    padding: 5px 20px;
+    background: #f8c21b;
+    color: #000;
+    border-radius: 10px;
+    box-shadow: 0.5em 0.5em 0.5em rgba(0, 0, 0, 0.3);
+    transition: all 0.25s ease;
+}
+
+.dv2-stream-links span:hover {
+    background: #BF0426;
+    color: white;
+}
+
+.dv2-thapcam-video {
+    border-radius: 8px;
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.dv2-thapcam-video .dv2-video-wrapper {
+    flex: 7.5;
+    min-width: 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-thapcam-video .dv2-video-wrapper .dv2-stream-odds-slot {
+    z-index: 30;
+}
+
+.dv2-thapcam-video.dv2-tc-stream-parent-fs {
+    overflow: visible;
+}
+
+/*
+ * Thapcam fullscreen — class on wrapper (works after iOS portal to body).
+ * Video container fills viewport and centers stream like cakhia/vebo.
+ */
+.dv2-video-wrapper.dv2-tc-stream-fs {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    z-index: 2147483647;
+    margin: 0;
+    border-radius: 0;
+    overflow: hidden;
+    flex: none;
+    display: block;
+    background: #000;
+}
+
+.dv2-video-wrapper.dv2-tc-stream-fs .dv2-video-container {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.dv2-video-wrapper.dv2-tc-stream-fs .dv2-video-container video,
+.dv2-video-wrapper.dv2-tc-stream-fs .dv2-video-container .dv2-video-player {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center center;
+}
+
+.dv2-video-wrapper.dv2-tc-stream-fs .dv2-stream-controls {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2147483647;
+}
+
+.dv2-video-wrapper.dv2-tc-stream-fs .dv2-stream-loading {
+    border-radius: 0;
+    z-index: 2147483645;
+}
+
+.dv2-thapcam-video .dv2-layout-thapcam-live-chat {
+    flex: 3.5;
+    flex-shrink: 0;
+    min-width: 0;
+    position: relative;
+}
+.dv2-layout-tc.dv2-detail-stream-ctn .dv2-streaming-container {
+    width: 70%;;
+    border-radius: 10px;
+    box-shadow: .2em .2em .2em .2em rgba(0, 0, 0, .3);
+    margin-bottom: 0px;
+    border: 1px solid #374151;
+}
+
+.dv2-layout-tc  .dv2-stream-list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-inline: 10px;
+    gap: 10px;
+   
+}
+.dv2-layout-tc  .dv2-stream-links {
+    flex: 2;
+    flex-wrap: nowrap;
+    max-width: 100%;
+    overflow: auto;
+    padding-bottom: 5px; scrollbar-width: thin;
+    scrollbar-color: #888888 transparent;
+
+}
+.dv2-layout-tc  .dv2-stream-links span {
+    text-wrap-mode: nowrap;
+    box-shadow: .2em .2em .2em rgba(0, 0, 0, .3);
+    padding: 7px 20px;
+}
+.dv2-layout-tc  .dv2-bet-links {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: 10px;
+    width: 100%;
+    overflow: auto;
+    flex: 1;
+    scrollbar-width: thin;
+    scrollbar-color: #888888 transparent;
+}
+.dv2-layout-tc  .dv2-bet-links a,
+.dv2-layout-tc  .dv2-bet-links > ins {
+    flex: 0 0 auto;
+    display: inline-block;
+    text-decoration: none;
+    vertical-align: top;
+}
+.dv2-layout-tc  .dv2-bet-links a img,
+.dv2-layout-tc  .dv2-bet-links ins img {
+    display: block;
+    max-width: none;
+    width: auto;
+    height: 36px;
+}
+.dv2-layout-tc  .dv2-bet-links > *:first-of-type{
+    margin-left: auto;
+}
+/* Responsive */
+@media (max-width: 768px) {
+
+    .dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper {
+        padding: 0;
+    }
+
+    .dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay {
+        padding: 16px 0px;
+    }
+
+    .dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-container {
+        gap: 16px;
+    }
+
+    .dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-overlay-flag {
+        width: 56px;
+        height: 42px;
+    }
+
+    .dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-overlay-team-name {
+        font-size: 13px;
+    }
+
+    .dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-number {
+        font-size: 44px;
+        min-width: 50px;
+    }
+
+    .dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-bracket {
+        font-size: 38px;
+    }
+
+    .dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-separator {
+        font-size: 32px;
+    }
+
+    .dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-page-title {
+        padding: 12px 16px;
+    }
+
+    .dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-title-text {
+        font-size: 13px;
+    }
+
+    .dv2-thapcam-video {
+        flex-direction: column;
+        overflow: visible;
+    }
+    .dv2-thapcam-video .dv2-video-wrapper {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+
+    .dv2-layout-tc.dv2-detail-stream-ctn .dv2-thapcam-video .dv2-video-wrapper .dv2-video-container {
+        aspect-ratio: 16 / 9;
+        flex: 0 0 auto;
+        width: 100%;
+        height: auto;
+    }
+
+    .dv2-thapcam-video .dv2-layout-thapcam-live-chat {
+        flex: 1 1 100%;
+    }
+
+    .dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay .dv2-score-container .dv2-overlay-score .dv2-score-number {
+        font-size: 30px;
+    }
+
+    .dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay .dv2-score-container .dv2-overlay-score .dv2-score-number {
+        min-width: unset;
+        padding: 0 5px;
+    }
+
+    .dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-video-container .dv2-no-stream .dv2-no-stream-title {
+        font-size: 18px;
+    }
+
+    .dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-video-container .dv2-no-stream .dv2-no-stream-icon {
+        font-size: 50px;
+    }
+
+    .dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay .dv2-score-container .dv2-overlay-score {
+       margin: auto;
+    }
+
+    .dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay .dv2-score-container {
+        align-items: start;
+    }
+
+    .dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay .dv2-score-container .dv2-overlay-team .dv2-overlay-flag {
+        width: 45px;
+        height: 45px;
+    }
+    .dv2-layout-tc.dv2-detail-stream-ctn .dv2-content-wrapper .dv2-score-overlay .dv2-score-container .dv2-overlay-team .dv2-overlay-flag img {
+        object-fit: contain;
+    }
+
+    .dv2-layout-tc.dv2-detail-stream-ctn .dv2-loading {
+        font-size: 14px;
+        padding: 8px 16px;
+        padding-top: 30px;
+        width: 85%;
+    }
+    .dv2-layout-tc.dv2-detail-stream-ctn .dv2-streaming-container {
+        width: 100%;
+    }
+    .dv2-layout-tc .dv2-stream-list {
+        flex-direction: column;
+        padding-bottom: 10px;
+    }
+    .dv2-layout-tc .dv2-stream-links {
+        justify-content: center;
+        margin-bottom: 0px;
+    }
+    .dv2-layout-tc .dv2-bet-links {
+        justify-content: center;
+    }
+    .dv2-layout-tc .dv2-bet-links > *:first-of-type{
+        margin-left: 0;
+    }
+}

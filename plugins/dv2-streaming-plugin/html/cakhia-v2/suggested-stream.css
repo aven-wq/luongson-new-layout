@@ -1,0 +1,60 @@
+.hot-match {
+  border: 3px solid red;
+  border-radius: 15px;
+}
+
+#match_list_ck2_container .dv2-blv-dropdown__toggle.ck2-blv-dropdown__toggle--pill {
+  color: #fff;
+  background-color: #4986f7;
+  padding-right: 10px !important;
+}
+
+#match_list_ck2_container .dv2-blv-dropdown__caret {
+  opacity: 0.9;
+  border-top-color: #fff;
+}
+
+#match_list_ck2_container .dv2-blv-dropdown__menu {
+  min-width: 100%;
+  max-width: 220px;
+  background: #1e2433;
+  border-radius: 12px;
+}
+
+#match_list_ck2_container .dv2-blv-dropdown__link:hover {
+  background: rgba(73, 134, 247, 0.25);
+  color: #fff;
+}
+
+#match_list_ck2_container .dv2-blv-dropdown__avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  flex: 0 0 auto;
+  object-fit: cover;
+}
+
+#match_list_ck2_container .dv2-blv-dropdown__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ck2-suggested-streams-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#match_list_ck2_container .dv2-hot-content-ad {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.ck2-suggested-load-more {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 20px;
+  background: #f77348;
+  border-radius: 100px;
+}

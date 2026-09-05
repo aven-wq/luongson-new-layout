@@ -1,0 +1,525 @@
+/* Mobile-first CSS */
+
+.dv2-layout-ck2 .dv2-video-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.dv2-layout-ck2 .dv2-video-wrapper .dv2-stream-odds-slot {
+    z-index: 30;
+}
+
+.dv2-layout-ck2 .player-container {
+    border-radius: 10px;
+    box-shadow: .2rem .2em .2em .2em rgba(0, 0, 0, .3);
+    min-height: 0;
+    padding-top: 10px;
+    border: 1px solid #0000007d;
+}
+
+/* Stream loading overlay */
+.dv2-layout-ck2 .dv2-stream-loading {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.55);
+    pointer-events: none;
+}
+
+.dv2-layout-ck2 .dv2-stream-loading__panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.72);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+.dv2-layout-ck2 .dv2-stream-loading__spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: dv2-stream-loading-spin-ck2 0.85s linear infinite;
+}
+
+.dv2-layout-ck2 .dv2-stream-loading__text {
+    margin: 0;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    text-align: center;
+    white-space: nowrap;
+}
+
+@keyframes dv2-stream-loading-spin-ck2 {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.dv2-layout-ck2 .dv2-video-wrapper.dv2-stream-wrapper-fs .dv2-stream-loading,
+.dv2-layout-ck2 .dv2-video-wrapper:fullscreen .dv2-stream-loading,
+.dv2-layout-ck2 .dv2-video-wrapper:-webkit-full-screen .dv2-stream-loading {
+    border-radius: 0;
+    z-index: 2147483645;
+}
+
+@media screen and (max-width: 767px) {
+    .dv2-layout-ck2 .dv2-stream-loading__text {
+        white-space: normal;
+        max-width: 200px;
+    }
+}
+
+/* Base styles for mobile */
+.dv2-layout-ck2 #simulate-the-match-content-center {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: rgb(0 0 0 / 65%);
+    border-radius: 12px;
+    color: #fff;
+    text-align: center;
+    max-width: 90%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    font-size: 12px;
+    min-width: 150px;
+    min-height: 100px;
+}
+
+.dv2-layout-ck2 .dataBox_pop {
+    display: block;
+    width: 100%;
+}
+
+.dv2-layout-ck2 .dataBox_pop .info {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dv2-layout-ck2 .dataBox_pop .info li {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dv2-layout-ck2 .dataBox_pop h4 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+    color: #febc04;
+}
+
+.dv2-layout-ck2 .match-info__lname {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #fff;
+    background-color: #2b51ac;
+    padding: 2px 10px;
+    border-radius: 0 0 5px 5px;
+    max-width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    line-height: 20px;
+}
+
+.dv2-layout-ck2 .timeBox {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 20px;
+    font-weight: 700;
+    margin: auto;
+}
+
+.dv2-layout-ck2 .dataBox_pop .info .dv2-match-pen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.1;
+    margin-top: 4px;
+    gap: 0;
+}
+
+.dv2-layout-ck2 .dataBox_pop .info .dv2-match-pen .dv2-match-pen-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+}
+
+.dv2-layout-ck2 .dataBox_pop .info .dv2-match-pen .dv2-match-pen-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #fff;
+    white-space: nowrap;
+}
+
+.dv2-layout-ck2 #countdownTimer {
+    color: red;
+    background: #0000009e;
+    padding: 0px 15px;
+    border-radius: 5px;
+    letter-spacing: 3px;
+}
+
+.dv2-layout-ck2 .homeTeam,
+.dv2-layout-ck2 .guestTeam,
+.dv2-layout-ck2 .home-team,
+.dv2-layout-ck2 .guest-team {
+    min-width: 0;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dv2-layout-ck2 .homeTeam,
+.dv2-layout-ck2 .home-team {
+    text-align: right;
+}
+
+.dv2-layout-ck2 .guestTeam,
+.dv2-layout-ck2 .guest-team {
+    text-align: left;
+}
+
+.dv2-layout-ck2 .teams .vs {
+    flex-shrink: 0;
+    font-weight: 700;
+    font-size: 14px;
+    color: #f9af17;
+    line-height: 1;
+    text-align: center;
+}
+
+.dv2-layout-ck2 .teams {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.dv2-layout-ck2 button.active,  .dv2-layout-ck2 button:hover {
+	background: #BF0426;
+    color: white;
+}
+
+.cakhia-btn-bet:hover, .dv2-ck2-home-featured-streams a.cakhia-btn-bet:hover, .dv2-ck2-home-featured-streams a.cakhia-btn-hover:hover {
+    background: #bf0426;
+    color: #fff;
+}
+
+.dv2-layout-ck2 .dv2-stream-list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-inline: 10px;
+    gap: 10px
+}
+.dv2-layout-ck2 .dv2-stream-links-ck2 {
+    flex: 2;
+    flex-wrap: nowrap;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
+    touch-action: pan-x;
+    padding-bottom: 5px;
+}
+
+.dv2-layout-ck2 .dv2-stream-links-ck2::-webkit-scrollbar {
+    height: 3px;
+}
+
+.dv2-layout-ck2 .dv2-stream-links-ck2::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.dv2-layout-ck2 .dv2-stream-links-ck2::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 999px;
+    transition: background 0.2s ease;
+}
+
+.dv2-layout-ck2 .dv2-stream-links-ck2:hover::-webkit-scrollbar-thumb,
+.dv2-layout-ck2 .dv2-stream-links-ck2::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.35);
+}
+.dv2-layout-ck2 .dv2-stream-links-ck2 span {
+    text-wrap-mode: nowrap;
+    padding: 7px 20px;
+}
+.dv2-layout-ck2  .dv2-bet-links {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: 10px;
+    width: 100%;
+    overflow: auto;
+    flex: 1;
+}
+.dv2-layout-ck2 .dv2-bet-links a,
+.dv2-layout-ck2 .dv2-bet-links > ins {
+    flex: 0 0 auto;
+    display: inline-block;
+    text-decoration: none;
+    vertical-align: top;
+}
+.dv2-layout-ck2 .dv2-bet-links a img,
+.dv2-layout-ck2 .dv2-bet-links ins img {
+    display: block;
+    max-width: none;
+    width: auto;
+    height: 36px;
+}
+.dv2-layout-ck2 .dv2-bet-links > *:first-of-type{
+    margin-left: auto;
+}
+.dv2-layout-ck2 .chat-container {
+    height: auto;
+}
+/* Tablet and Desktop overrides */
+@media (min-width: 768px) {
+    .dv2-layout-ck2 #simulate-the-match-content-center {
+        top: 50%;
+        gap: 1rem;
+        padding: 1rem;
+        font-size: 1rem;
+        min-width: 290px;
+        min-height: 200px;
+    }
+
+    .dv2-layout-ck2 .match-info__lname {
+        padding: 4px 12px;
+    }
+
+    /* Chừa khoảng trống phía trên để nhãn giải đấu (absolute, dính mép trên)
+       không đè lên status khi có thêm dòng tỷ số pen */
+    .dv2-layout-ck2 .dataBox_pop .info > li {
+        padding-top: 30px;
+    }
+
+    .dv2-layout-ck2 .teams .vs {
+        font-size: 13px;
+    }
+}
+
+/* Mobile & small tablets only — desktop (>=768px) unchanged above */
+@media (max-width: 767px) {
+    .dv2-layout-ck2.dv2-container,
+    .dv2-layout-ck2 .match-stream,
+    .dv2-layout-ck2 .player-container,
+    .dv2-layout-ck2 .chat-container {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .dv2-layout-ck2 .wrap-link {
+        min-width: 0;
+    }
+
+    .dv2-layout-ck2 .dv2-stream-links-ck2-ck2 {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .dv2-layout-ck2 .match_link--button {
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .dv2-layout-ck2 #stream-player {
+        min-height: clamp(180px, 56vw, 420px);
+    }
+
+    .dv2-layout-ck2 #simulate-the-match-content-center {
+        top: 50%;
+        box-sizing: border-box;
+        width: min(92%, 360px);
+        max-width: calc(100% - 16px);
+        min-width: 0;
+        padding: 0px 10px 10px;
+        gap: 8px;
+        overflow: hidden;
+    }
+
+    .dv2-layout-ck2 .dataBox_pop {
+        min-width: 0;
+    }
+
+    .dv2-layout-ck2 .dataBox_pop .info > li {
+        position: relative;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        min-width: 0;
+        padding: 22px 4px 0;
+        gap: 6px;
+    }
+
+    .dv2-layout-ck2 .dataBox_pop h4 {
+        font-size: 14px;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-top: 10px;
+    }
+
+    .dv2-layout-ck2 .match-info__lname {
+        font-size: 11px;
+        max-width: calc(100% - 12px);
+        padding: 2px 8px;
+        line-height: 18px;
+    }
+
+    .dv2-layout-ck2 .timeBox {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        max-width: 100%;
+        font-size: 13px;
+    }
+
+    .dv2-layout-ck2 .timeBox li {
+        max-width: 100%;
+        min-width: 0;
+        line-height: 1.35;
+        word-break: break-word;
+    }
+
+    .dv2-layout-ck2 .timeBox .dv2-kickoff-countdown {
+        letter-spacing: 1px;
+        white-space: nowrap;
+    }
+
+    .dv2-layout-ck2 .timeBox li img {
+        width: 36px !important;
+        height: 36px !important;
+    }
+
+    .dv2-layout-ck2 #countdownTimer {
+        padding: 0 10px;
+        letter-spacing: 1px;
+    }
+
+    .dv2-layout-ck2 .teams {
+        gap: 6px;
+        margin-top: 4px;
+    }
+
+    .dv2-layout-ck2 .homeTeam,
+    .dv2-layout-ck2 .guestTeam,
+    .dv2-layout-ck2 .home-team,
+    .dv2-layout-ck2 .guest-team {
+        max-width: none;
+        white-space: normal;
+        font-size: 12px;
+        line-height: 1.25;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .dv2-layout-ck2 .homeTeam,
+    .dv2-layout-ck2 .home-team {
+        text-align: right;
+    }
+
+    .dv2-layout-ck2 .guestTeam,
+    .dv2-layout-ck2 .guest-team {
+        text-align: left;
+    }
+
+    .dv2-layout-ck2 .teams .vs {
+        font-size: 12px;
+    }
+    .dv2-layout-ck2 .dv2-stream-list {
+        flex-direction: column;
+        padding-bottom: 10px;
+    }
+    .dv2-layout-ck2 .dv2-stream-links-ck2 {
+        justify-content: center;
+        margin-bottom: 0px;
+    }
+    .dv2-layout-ck2 .dv2-bet-links {
+        justify-content: center;
+    }
+    .dv2-layout-ck2 .dv2-bet-links > *:first-of-type{
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 374px) {
+    .dv2-layout-ck2 #simulate-the-match-content-center {
+        width: calc(100% - 12px);
+        padding: 10px 8px 8px;
+        font-size: 11px;
+    }
+
+    .dv2-layout-ck2 .dataBox_pop h4 {
+        font-size: 13px;
+    }
+
+    .dv2-layout-ck2 .timeBox {
+        font-size: 12px;
+    }
+
+    .dv2-layout-ck2 .timeBox .dv2-kickoff-countdown {
+        letter-spacing: 0;
+    }
+
+    .dv2-layout-ck2 .homeTeam,
+    .dv2-layout-ck2 .guestTeam,
+    .dv2-layout-ck2 .home-team,
+    .dv2-layout-ck2 .guest-team,
+    .dv2-layout-ck2 .teams .vs {
+        font-size: 11px;
+    }
+
+    .dv2-layout-ck2 .teams {
+        gap: 4px;
+    }
+}

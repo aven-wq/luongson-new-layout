@@ -1,0 +1,388 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+    background: #f0f1f6;
+    color: #1a1a1a;
+}
+
+.ck2-highlight-page {
+    margin: 0 auto;
+}
+
+.ck2-highlight-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.ck2-highlight-title {
+    font-size: 1.35rem;
+    font-weight: 600;
+    margin: 0;
+    color: #303030;
+    flex: 1 1 auto;
+    min-width: 0;
+    border-left: 4px solid #dc2626;
+    padding-left: 10px;
+    line-height: 30px;
+    width: auto;
+}
+
+.ck2-highlight-search-wrap {
+    flex: 0 1 280px;
+    min-width: 200px;
+    max-width: 100%;
+}
+
+body .ck2-highlight-page .ck2-highlight-search {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    background: #fff;
+    color: #1a1a1a;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.ck2-highlight-search::placeholder {
+    color: #9ca3af;
+}
+
+.ck2-highlight-search:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+@media (max-width: 600px) {
+    .ck2-highlight-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .ck2-highlight-search-wrap {
+        flex: 1 1 auto;
+    }
+}
+
+.ck2-highlight-error {
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    background: #fee2e2;
+    color: #991b1b;
+    font-size: 0.9rem;
+}
+
+.ck2-highlight-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.ck2-highlight-grid .dv2-highlight-list-ad {
+    grid-column: 1 / -1;
+    width: 100%;
+}
+
+.ck2-highlight-grid .dv2-highlight-list-ad .dv2-qc-match-list-pc,
+.ck2-highlight-grid .dv2-highlight-list-ad .dv2-qc-match-list-mobile {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.ck2-highlight-grid .dv2-highlight-list-ad .dv2-qc-match-list-mobile {
+    display: none;
+}
+
+.ck2-card {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: auto;
+    margin: 0;
+    padding: 0;
+}
+
+.ck2-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.ck2-card:focus {
+    outline: 2px solid #22c55e;
+    outline-offset: 2px;
+}
+
+.ck2-card:focus:not(:focus-visible) {
+    outline: none;
+}
+
+.ck2-card-thumb {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    background: #e5e7eb;
+}
+
+.ck2-card-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 10px 10px 0 0;
+}
+
+.ck2-play {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.ck2-card:hover .ck2-play {
+    background: #bf0426;
+}
+
+.ck2-play::after {
+    content: '';
+    margin-left: 3px;
+    border-style: solid;
+    border-width: 8px 0 8px 12px;
+    border-color: transparent transparent transparent #fff;
+}
+
+.ck2-card-body {
+    padding: 12px 14px 14px;
+}
+
+body .ck2-card .ck2-card-title {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.35;
+    min-height: 2.7em;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    color: black;
+}
+
+.ck2-card:hover .ck2-card-title {
+    color: #bf0426;
+}
+
+.ck2-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    font-size: 0.8rem;
+}
+
+.ck2-card-league {
+    color: #dc2626;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ck2-card-date {
+    color: #6b7280;
+    flex-shrink: 0;
+}
+
+.ck2-highlight-empty {
+    text-align: center;
+    color: #6b7280;
+    margin: 32px 0;
+}
+
+.ck2-highlight-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 28px;
+    gap: 12px;
+}
+
+.ck2-btn-load-more {
+    appearance: none;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    font-family: inherit;
+    color: #fff;
+    background: #f77349;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    line-height: 20px;
+}
+
+.ck2-btn-load-more svg {
+    width: 20px;
+    height: 20px;
+}
+
+.ck2-btn-load-more svg path {
+    fill: #fff;
+}
+
+.ck2-btn-load-more:hover:not(:disabled) {
+    background: #bf0426;
+}
+
+.ck2-btn-load-more:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.ck2-btn-load-more:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.ck2-loading {
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.ck2-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.ck2-modal[hidden] {
+    display: none !important;
+}
+
+.ck2-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.72);
+}
+
+.ck2-modal-dialog {
+    position: relative;
+    z-index: 1;
+    width: min(960px, 100%);
+    max-height: calc(100vh - 32px);
+    overflow: unset;
+    background: #0f172a;
+    border-radius: 12px;
+    padding: 12px 12px 16px;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+}
+
+body .ck2-modal-close {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    z-index: 2;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #fff;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    min-height: auto;
+}
+
+.ck2-modal-close svg {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #bf0426;
+    padding: 8px;
+}
+
+.ck2-modal-close:hover svg {
+    background-color: #ff0505;
+}
+
+.ck2-modal-video-wrap {
+    border-radius: 8px;
+    overflow: hidden;
+    background: #000;
+}
+
+.ck2-modal-video {
+    width: 100%;
+    display: block;
+    min-height: 400px;
+}
+
+.ck2-modal-title {
+    margin: 14px 8px 0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #f1f5f9;
+    line-height: 1.4;
+}
+
+@media (max-width: 1100px) {
+    .ck2-highlight-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .ck2-highlight-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    .ck2-modal-video {
+        min-height: 250px;
+    }
+}
+
+@media (max-width: 420px) {
+    .ck2-highlight-grid {
+        grid-template-columns: 1fr;
+    }
+}

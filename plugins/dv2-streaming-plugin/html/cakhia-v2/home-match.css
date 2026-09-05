@@ -1,0 +1,34 @@
+.dv2-ck2-home-featured-streams .bg-primary {
+  --tw-bg-opacity: 1;
+  background-color: rgb(247 73 73 / var(--tw-bg-opacity, 1));
+}
+
+.dv2-ck2-home-featured-streams .bg-primary-1 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(247 115 73 / var(--tw-bg-opacity, 1));
+}
+
+.dv2-ck2-home-featured-streams .bg-stats {
+  background-color: rgba(97, 97, 97, 0.24);
+}
+
+.dv2-ck2-home-featured-streams .bg-neutral-2 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(87 95 106 / var(--tw-bg-opacity, 1));
+}
+
+.dv2-ck2-home-featured-streams .bg-neutral-3 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(138 151 169 / var(--tw-bg-opacity, 1));
+} 
+
+.cakhia-btn-bet:hover, .dv2-ck2-home-featured-streams a.cakhia-btn-bet:hover, .dv2-ck2-home-featured-streams a.cakhia-btn-hover:hover {
+    background: #bf0426;
+    color: #fff;
+}
+
+.dv2-empty-state {
+  padding-bottom: 24px;
+  text-align: center;
+}
+

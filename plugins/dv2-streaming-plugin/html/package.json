@@ -1,0 +1,17 @@
+{
+  "name": "ui-plugin-bundler",
+  "version": "1.0.0",
+  "description": "Bundle and minify CSS/JS files",
+  "scripts": {
+    "build": "node build.js",
+    "watch": "node watch.js",
+    "dev": "node watch.js --serve"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.29.3",
+    "chokidar": "^3.6.0",
+    "cssnano": "^6.0.1",
+    "postcss": "^8.4.35",
+    "terser": "^5.26.0"
+  }
+}

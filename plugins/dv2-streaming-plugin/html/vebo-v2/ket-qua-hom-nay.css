@@ -1,0 +1,166 @@
+/* =================================================
+   Variables
+   ================================================= */
+:root {
+    --color-primary: #25ff70;
+}
+
+/* =================================================
+   Layout & Container Styles
+   ================================================= */
+.dv2-layout-vb2 .box .box-header {
+    margin-bottom: 1.25rem;
+}
+
+.dv2-layout-vb2 .box-wpd {
+    padding: 20px;
+}
+
+.dv2-layout-vb2 .box-wbg {
+    background: #25272d;
+}
+
+.dv2-layout-vb2 .bg-vebo {
+    background: #8f6fd7 !important;
+    color: #fff !important;
+}
+
+.dv2-layout-vb2 .box-fixtures-max .mb_-header {
+    padding: 1rem;
+}
+
+/* =================================================
+   Date Selector Styles
+   ================================================= */
+.dv2-layout-vb2 .match_date--wrapper {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.dv2-layout-vb2 .match_date--item {
+    float: left;
+    font-size: 14px;
+    background: #2f3137;
+    display: block;
+    padding: 4px 10px;
+    border-radius: 0.25rem;
+    text-align: center;
+    font-weight: 500;
+}
+
+.dv2-layout-vb2 .match_date .match_date--wrapper .match_date--item.active {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+/* =================================================
+   Loading Indicator Styles
+   ================================================= */
+.dv2-layout-vb2 .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    min-height: 200px;
+}
+
+.dv2-layout-vb2 .loading-container > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.dv2-layout-vb2 .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #2f3137;
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+.dv2-layout-vb2 .loading-text {
+    margin-top: 15px;
+    color: #8e8f92;
+    font-size: 14px;
+    text-align: center;
+    width: 100%;
+}
+
+/* =================================================
+   Match Status Styles
+   ================================================= */
+.dv2-layout-vb2 .vitem .vitem-info .match-status {
+    font-size: 12px;
+}
+
+.dv2-layout-vb2 .match-status.finished {
+    color: #de2121;
+}
+
+.vebo2-btn-bet:hover, .vebo2-btn-bet-hover:hover {
+    background-color: #bf0426;
+    color: white;
+    
+}
+/* =================================================
+   Animations
+   ================================================= */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes blind {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+/* =================================================
+   Responsive Styles
+   ================================================= */
+
+/* Mobile (max-width: 479px) */
+@media screen and (max-width: 479px) {
+    .dv2-layout-vb2 .box .box-header .headlineA1 {
+        font-size: 1.2em;
+        font-weight: 700;
+    }
+
+    .dv2-layout-vb2 .box-wpd > p {
+        margin: 0;
+    }
+
+    .dv2-layout-vb2 .match_date--wrapper {
+        gap: 5px;
+    }
+}
+
+/* Small Mobile (max-width: 640px) */
+@media screen and (max-width: 640px) {
+    .dv2-layout-vb2 .match_date .match_date--wrapper {
+        border-radius: 0;
+        background: 0 0;
+    }
+
+    .dv2-layout-vb2 .match_date .match_date--wrapper .match_date--item {
+        min-width: auto;
+        font-weight: 500;
+    }
+}
+
+.dv2-layout-vb2 #match_list_container .dv2-match-schedule-ad {
+    margin: 8px 0;
+    padding: 8px 0;
+}

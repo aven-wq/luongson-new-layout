@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch trực tiếp</title>
+
+    <link rel="stylesheet" href="../dist/dv2-style.css">
+    <script>
+        const DV2_IMAGE_PATH = '../../assets/images/'
+        window.DV2_STREAMING_PRIORITY_COMPETITION_IDS = "kp3glrw7hwqdyjv,gy0or5jh2gqwzv3";
+    </script>
+</head>
+
+<body>
+    <div class="">
+        <div class="dv2-layout-scl dv2-match-wrapper-ctn dv2-layout-match">
+            <div class="dv2-date-list">
+                <ul class="dv2-date-item">
+                    <!-- hiển thị danh sách ngày -->
+                </ul>
+            </div>
+            <div class="dv2-match-box">
+                <div class="match-loading" style="display: none;"><img
+                        src="https://sta.vnres.co/web/assets/soco/img/loading.gif"></div>
+                <div class="match-none" hidden="" style="display: none;"><img
+                        src="https://sta.vnres.co/web/assets/soco/img/none2.png"><br><span>Danh sách trống~</span></div>
+                <div class="dv2-match-data active" data-tag="1">
+                    <!-- Hiển thị list trận đấu -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"></script>
+    <script src="../constants.js"></script>
+    <script src="../dist/dv2-script.min.js"></script>
+</body>
+
+</html>
