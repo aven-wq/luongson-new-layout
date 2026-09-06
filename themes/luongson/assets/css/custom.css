@@ -1,8 +1,6 @@
 .luongson-ambassador-block .framer-s44gus, .framer-1th9ham .framer-s44gus, .framer-s44gus {
-    height: 159px !important;
-}
-
-/* SEO block lists: WP editor newlines + Framer pre-wrap break bullet alignment on mobile */
+    justify-content: start !important;
+}/* SEO block lists: WP editor newlines + Framer pre-wrap break bullet alignment on mobile */
 #luongson-site-root .luongson-seo-block ul.framer-text,
 #luongson-site-root .luongson-seo-block ol.framer-text,
 #luongson-site-root .luongson-seo-block ul.framer-text > li.framer-text,
