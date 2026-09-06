@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LuongSon — Lịch thi đấu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Anton+SC&family=Momo+Trust+Sans:wght@400;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="schedule.css" />
+  <style>
+    body {
+      margin: 0;
+      background: #f5f5f5;
+      padding: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="luongson-schedule">
+    <div class="framer-6nzkg">
+      <div class="ssr-variant">
+        <div class="framer-y7mzqb ls-ltd-s8" data-framer-component-type="RichTextContainer">
+          <p class="framer-text ls-ltd-s46" dir="auto">Lịch thi đấu Bóng Đá hôm nay mới nhất 24h</p>
+        </div>
+      </div>
+      <div class="framer-rtjghz">
+        <button
+          aria-label="Ngày trước"
+          class="framer-1j0wurm"
+          data-border="true"
+          data-framer-name="Previous Day"
+          type="button"
+        >
+          <div class="framer-y4X00 framer-18697ez"></div>
+        </button>
+        <button
+          aria-label="Chọn ngày"
+          class="framer-fxofsc"
+          data-framer-name="Date Picker"
+          type="button"
+        >
+          <div class="framer-deoUy framer-t5wzon"></div>
+          <div class="framer-q65yhr ls-ltd-s8" data-framer-component-type="RichTextContainer">
+            <p class="framer-text ls-ltd-s47 luongson-schedule__date-label" dir="auto">Hôm nay, 31/07</p>
+          </div>
+        </button>
+        <button
+          aria-label="Ngày sau"
+          class="framer-1r6vwl8"
+          data-border="true"
+          data-framer-name="Next Day"
+          type="button"
+        >
+          <div class="framer-Jde4M framer-e8q5vt"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.luongsonSchedule = { imgUrl: 'images/' };
+  </script>
+  <script src="schedule.js"></script>
+</body>
+</html>
