@@ -13,8 +13,8 @@ $author    = get_the_author();
 $image_alt = $title;
 ?>
 <div class="luongson-ads-right-sidebar-page framer-Q1644 ls-blog-s85">
-	<div class="framer-iggz1v">
-		<div class="framer-1um4fyq">
+	<div class="row row-collapse luongson-div-2">
+		<div class="col luongson-div-2-left medium-9 small-12 large-9">
 			<?php
 			echo do_shortcode( '[block id="notice-marquee"]' );
 			echo luongson_render_breadcrumb();
@@ -51,7 +51,7 @@ $image_alt = $title;
 			<?php get_template_part( 'template-parts/luongson/single/related-posts' ); ?>
 		</div>
 
-		<div class="framer-1374ghc hidden-38kgo1 hidden-1j9nxh3 ads-right-sidebar">
+		<div class="col luongson-div-2-right medium-3 small-12 large-3">
 			<?php echo do_shortcode('[block id="du-doan-ty-so"]'); ?>
 		</div>
 	</div>

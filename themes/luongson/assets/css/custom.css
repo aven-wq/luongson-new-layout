@@ -414,17 +414,7 @@ body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongs
     }
 }
 
-@media (max-width: 1300px) {
-    body .luongson-div-2 .luongson-div-2-right {
-        display: none;
-    }
 
-    body .luongson-div-2 .luongson-div-2-left {
-        flex-basis: 100%;
-        max-width: 100%;
-        padding-right: 0 !important;
-    }
-}
 
 @media (min-width: 850px) {
     body .luongson-div-2 .luongson-div-2-left {
@@ -441,6 +431,18 @@ body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongs
 
     body .row.row-collapse {
         max-width: 1480px;
+    }
+}
+
+@media (max-width: 1300px) {
+    body .luongson-div-2 .luongson-div-2-right {
+        display: none;
+    }
+
+    body .luongson-div-2 .luongson-div-2-left {
+        flex-basis: 100%;
+        max-width: 100%;
+        padding-right: 0 !important;
     }
 }
 
