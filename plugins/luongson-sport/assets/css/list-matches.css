@@ -522,6 +522,11 @@
   border-radius: 8px;
   overflow: clip;
   background: rgb(74, 210, 255);
+  transition: transform 0.3s ease;
+}
+
+.luongson-live-ad:hover {
+  transform: scale(1.03);
 }
 
 .luongson-live-ad--wide {
