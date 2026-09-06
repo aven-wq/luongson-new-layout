@@ -1,0 +1,818 @@
+/**
+ * LuongSon Sport — Live matches list ("Đang phát sóng")
+ */
+
+/* -------------------------------------------------------------------------- */
+/* Shell                                                                      */
+/* -------------------------------------------------------------------------- */
+
+.luongson-list-matches {
+  --ls-font: "Momo Trust Sans", "Momo Trust Sans Placeholder", system-ui, sans-serif;
+  --ls-font-display: "Anton SC", "Anton SC Placeholder", Impact, sans-serif;
+  --ls-live: rgb(239, 68, 68);
+  --ls-score: rgb(46, 88, 255);
+  --ls-card-bg: rgb(245, 245, 245);
+  --ls-card-border: #82828252;
+  --ls-commentator: rgb(0, 110, 219);
+  --ls-commentator-hover: rgb(0, 166, 255);
+  --ls-bet-bg: rgb(0, 38, 18);
+  --ls-bet-border: #4aff6b;
+  --ls-odds-home: rgb(0, 153, 46);
+  --ls-odds-away: rgb(255, 0, 0);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  font-family: var(--ls-font);
+}
+
+.luongson-list-matches *,
+.luongson-list-matches *::before,
+.luongson-list-matches *::after {
+  box-sizing: border-box;
+}
+
+.luongson-list-matches p {
+  margin: 0;
+}
+
+.luongson-list-matches [data-border="true"] {
+  position: relative;
+}
+
+.luongson-list-matches [data-border="true"]::after {
+  content: "";
+  border-width: var(--border-top-width, 0) var(--border-right-width, 0)
+    var(--border-bottom-width, 0) var(--border-left-width, 0);
+  border-color: var(--border-color, transparent);
+  border-style: var(--border-style, solid);
+  border-radius: inherit;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+@keyframes luongsonListMatchesPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(1.18);
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Header                                                                     */
+/* -------------------------------------------------------------------------- */
+
+.luongson-list-matches__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 10px 0;
+  margin-bottom: 10px;
+}
+
+.luongson-list-matches__live-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 100px;
+  background: var(--ls-live);
+  flex: none;
+  animation: luongsonListMatchesPulse 1.4s ease-in-out infinite;
+}
+
+.luongson-list-matches__title {
+  margin: 0;
+  font-family: var(--ls-font);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #000;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Grid                                                                       */
+/* -------------------------------------------------------------------------- */
+
+.luongson-live-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(50px, 1fr));
+  gap: 20px;
+  width: 100%;
+  padding: 0 10px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Match card                                                                 */
+/* -------------------------------------------------------------------------- */
+
+.luongson-match-card {
+  --border-top-width: 1px;
+  --border-right-width: 1px;
+  --border-bottom-width: 1px;
+  --border-left-width: 1px;
+  --border-color: var(--ls-card-border);
+  --border-style: solid;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border-radius: 16px;
+  background: var(--ls-card-bg);
+  cursor: pointer;
+  overflow: clip;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.luongson-match-card:hover {
+  background-color: rgb(222, 247, 255);
+  opacity: 1;
+  transform: scale(1.03);
+}
+
+.luongson-match-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+}
+
+.luongson-match-league {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.luongson-match-league p {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  color: #000;
+}
+
+.luongson-match-status-container {
+  flex: none;
+}
+
+.luongson-match-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px;
+  border-radius: 100px;
+  background: var(--ls-live);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.luongson-match-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 100px;
+  background: #fff;
+  opacity: 0.68;
+  flex: none;
+  animation: luongsonListMatchesPulse 1.4s ease-in-out infinite;
+}
+
+.luongson-match-status-text {
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+}
+
+.luongson-match-time-box {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.luongson-match-time,
+.luongson-match-date {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.luongson-match-time {
+  color: rgb(117, 117, 117);
+}
+
+.luongson-match-date {
+  color: #000;
+}
+
+/* Body / teams ------------------------------------------------------------- */
+
+.luongson-match-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  text-decoration: none;
+  color: black;
+}
+
+.luongson-match-team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.luongson-match-team-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 100px;
+  overflow: hidden;
+  flex: none;
+}
+
+.luongson-match-team-logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.luongson-match-team-name {
+  width: 100%;
+  text-align: center;
+}
+
+.luongson-match-team-name p {
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  word-break: break-word;
+}
+
+.luongson-match-score-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+.luongson-match-score-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 76px;
+  padding: 10px;
+  border-radius: 12px;
+  background: var(--ls-score);
+}
+
+.luongson-match-score-text {
+  font-family: var(--ls-font-display);
+  font-size: 24px;
+  line-height: 1;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.luongson-match-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 76px;
+  padding: 0 6px 0 4px;
+}
+
+.luongson-match-stat-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.luongson-match-stat-flag {
+  width: 8px;
+  height: 8px;
+  color: #0051ff;
+  flex: none;
+}
+
+.luongson-match-stat-card {
+  width: 6px;
+  height: 8px;
+  border-radius: 1px;
+  flex: none;
+}
+
+.luongson-match-stat-card.is-yellow {
+  background: rgb(255, 178, 13);
+}
+
+.luongson-match-stat-card.is-red {
+  background: rgb(239, 68, 68);
+}
+
+.luongson-match-stat-text {
+  font-size: 9px;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Footer / commentator / odds ---------------------------------------------- */
+
+.luongson-match-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+  overflow: visible;
+}
+
+.luongson-match-commentator-container {
+  flex: none;
+}
+
+.luongson-match-commentator-trigger {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 140px;
+  height: 28px;
+  padding: 2px 8px 2px 2px;
+  border: 0;
+  border-radius: 18px;
+  background: var(--ls-commentator);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  margin: 0;
+}
+
+.luongson-match-commentator-trigger:hover,
+.luongson-match-commentator-trigger[aria-expanded="true"] {
+  background: var(--ls-commentator-hover);
+}
+
+.luongson-match-commentator-avatar {
+  --border-top-width: 1px;
+  --border-right-width: 1px;
+  --border-bottom-width: 1px;
+  --border-left-width: 1px;
+  --border-color: rgba(255, 255, 255, 0.2);
+  --border-style: solid;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border-radius: 100px;
+  overflow: clip;
+  flex: none;
+}
+
+.luongson-match-commentator-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 45.8% 41%;
+}
+
+.luongson-match-commentator-name {
+  flex: 1 1 0;
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: capitalize;
+}
+
+.luongson-match-commentator-chevron {
+  width: 12px;
+  height: 12px;
+  color: #fff;
+  flex: none;
+}
+
+.luongson-match-odds-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  width: 60%;
+  min-width: 0;
+}
+
+.luongson-match-odds-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 28px;
+  padding: 0 4px;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.luongson-match-odds-type,
+.luongson-match-odds-values {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 100%;
+}
+
+.luongson-match-odds-type span,
+.luongson-match-odds-val {
+  font-size: 9px;
+  line-height: 1;
+  text-align: center;
+}
+
+.luongson-match-odds-val.is-home {
+  font-weight: 700;
+  color: var(--ls-odds-home);
+}
+
+.luongson-match-odds-val.is-away {
+  font-weight: 700;
+  color: var(--ls-odds-away);
+}
+
+.luongson-match-bet-btn {
+  --border-top-width: 1px;
+  --border-right-width: 1px;
+  --border-bottom-width: 1px;
+  --border-left-width: 1px;
+  --border-color: var(--ls-bet-border);
+  --border-style: solid;
+  position: relative;
+  display: block;
+  width: 109px;
+  aspect-ratio: 3.88889 / 1;
+  border-radius: 12px;
+  background: var(--ls-bet-bg);
+  box-shadow: rgba(0, 0, 0, 0.25) 0 1px 2px;
+  overflow: clip;
+  flex: none;
+  text-decoration: none;
+}
+
+.luongson-match-bet-logo {
+  position: absolute;
+  top: 50%;
+  left: 40px;
+  width: 62px;
+  height: auto;
+  transform: translateY(-50%);
+  object-fit: contain;
+}
+
+.luongson-match-bet-text {
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  transform: translateY(-50%);
+  font-family: var(--ls-font-display);
+  font-size: 15px;
+  color: #fff;
+  white-space: nowrap;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Ads row                                                                    */
+/* -------------------------------------------------------------------------- */
+
+.luongson-live-ads {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.luongson-live-ad {
+  position: relative;
+  display: block;
+  flex: 1 1 0;
+  min-width: 0;
+  aspect-ratio: 8.08889 / 1;
+  border-radius: 8px;
+  overflow: clip;
+  background: rgb(74, 210, 255);
+  transition: transform 0.3s ease;
+}
+
+.luongson-live-ad:hover {
+  transform: scale(1.03);
+}
+
+.luongson-live-ad--wide {
+  background: rgb(99, 141, 255);
+}
+
+.luongson-live-ad img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Portals                                                                    */
+/* -------------------------------------------------------------------------- */
+
+.luongson-commentator-portal,
+.luongson-match-modal-portal {
+  position: fixed;
+  z-index: 99999;
+  pointer-events: auto;
+}
+
+.luongson-commentator-portal__panel {
+  --border-top-width: 1px;
+  --border-right-width: 1px;
+  --border-bottom-width: 1px;
+  --border-left-width: 1px;
+  --border-color: rgba(0, 38, 90, 0.14);
+  --border-style: solid;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 170px;
+  padding: 6px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(0, 25, 70, 0.18);
+  box-sizing: border-box;
+}
+
+.luongson-commentator-portal__panel[data-border="true"]::after,
+.luongson-match-modal-portal [data-border="true"]::after {
+  content: "";
+  border-width: var(--border-top-width, 0) var(--border-right-width, 0)
+    var(--border-bottom-width, 0) var(--border-left-width, 0);
+  border-color: var(--border-color, transparent);
+  border-style: var(--border-style, solid);
+  border-radius: inherit;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+.luongson-commentator-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 34px;
+  padding: 5px 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.luongson-commentator-option:hover {
+  background: rgb(232, 245, 255);
+}
+
+.luongson-commentator-option__avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 100px;
+  overflow: hidden;
+  flex: none;
+}
+
+.luongson-commentator-option__avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.luongson-commentator-option__name {
+  flex: 1 1 0;
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgb(16, 39, 70);
+  white-space: nowrap;
+}
+
+.luongson-match-modal-portal__panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 384px;
+  padding: 12px 12px 20px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+.luongson-match-modal-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.luongson-match-modal-tab {
+  --border-top-width: 1px;
+  --border-right-width: 1px;
+  --border-bottom-width: 1px;
+  --border-left-width: 1px;
+  --border-color: rgb(82, 125, 255);
+  --border-style: solid;
+  position: relative;
+  padding: 0px 15px;
+  border: 0;
+  border-radius: 20px;
+  background: transparent;
+  color: #000;
+  font-family: var(--ls-font, "Momo Trust Sans", system-ui, sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 26px;
+  text-transform: capitalize;
+  height: unset;
+  min-height: unset;
+}
+
+.luongson-match-modal-tab.is-active, .luongson-match-modal-tab:hover {
+  background: rgb(82, 125, 255);
+  color: #fff;
+}
+
+.luongson-match-modal-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 360px;
+}
+
+.luongson-match-modal-row__labels {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+}
+
+.luongson-match-modal-row__labels span {
+  font-size: 13px;
+  color: #000;
+}
+
+.luongson-match-modal-row__labels .is-val {
+  flex: 1 1 0;
+  font-weight: 700;
+}
+
+.luongson-match-modal-row__labels .is-val:last-child {
+  text-align: right;
+}
+
+.luongson-match-modal-row__labels .is-label {
+  flex: none;
+  font-weight: 500;
+  text-align: center;
+}
+
+.luongson-match-modal-bars {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.luongson-match-modal-bar {
+  position: relative;
+  flex: 1 1 0;
+  height: 10px;
+  border-radius: 8px;
+  background: rgb(204, 204, 204);
+  overflow: hidden;
+}
+
+.luongson-match-modal-bar > span {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 20px;
+  transition: width 0.3s ease;
+}
+
+.luongson-match-modal-bar.is-home > span {
+  right: 0;
+  background: rgb(0, 128, 255);
+}
+
+.luongson-match-modal-bar.is-away > span {
+  left: 0;
+  background: rgb(240, 36, 36);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Responsive                                                                 */
+/* -------------------------------------------------------------------------- */
+
+@media (min-width: 1440px) {
+  .luongson-live-grid {
+    grid-template-columns: repeat(3, minmax(50px, 1fr));
+    gap: 12px 10px;
+  }
+
+  .luongson-live-ads {
+    gap: 20px;
+  }
+}
+
+@media (min-width: 760px) and (max-width: 1439.98px) {
+  .luongson-live-grid {
+    grid-template-columns: repeat(2, minmax(50px, 1fr));
+    gap: 12px 10px;
+  }
+
+  .luongson-live-ads {
+    gap: 8px;
+  }
+
+  .luongson-live-ad--wide {
+    display: none;
+  }
+}
+
+@media (max-width: 759.98px) {
+  .luongson-live-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .luongson-live-ads {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .luongson-live-ad,
+  .luongson-live-ad--wide {
+    width: 100%;
+    flex: 0 0 auto;
+    display: block;
+  }
+
+  .luongson-live-ad--wide {
+    display: none;
+  }
+
+  .luongson-match-odds-wrapper {
+    width: auto;
+    flex: 1 1 auto;
+  }
+
+  .luongson-match-modal-portal__panel,
+  .luongson-match-modal-row {
+    width: min(384px, calc(100vw - 24px));
+  }
+
+  .luongson-live-grid, .luongson-list-matches__header {
+    padding: 0;
+  }
+
+  .luongson-match-card .luongson-match-footer {
+    gap: 0;
+  }
+}
