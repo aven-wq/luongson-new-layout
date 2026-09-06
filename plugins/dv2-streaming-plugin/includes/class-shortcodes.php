@@ -176,8 +176,8 @@ class DV2_Shortcodes {
     /**
      * Shortcode: [danh_sach_blv_hot count="10" category="" layout="socolive"]
      * Hiện danh sách BLV hot
-     * 
-     * Available layouts: socolive, vebo, thapcam
+     *
+     * Available layouts: socolive, vebo, thapcam, luongson-v2
      */
     public function shortcode_hot_blv_list($atts) {
         $atts = shortcode_atts(array(

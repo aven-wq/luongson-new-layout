@@ -6,8 +6,11 @@
   'use strict';
 
   var MOBILE_MQ = '(max-width: 809.98px)';
-  var COMMENTATORS_API =
-    'https://vsc-apidev.helizones.com/api/admin/streams/commentators';
+  var BASE =
+    typeof window.BASE_API_URL !== 'undefined' && window.BASE_API_URL
+      ? String(window.BASE_API_URL).replace(/\/+$/, '')
+      : 'https://vsc-apidev.helizones.com';
+  var COMMENTATORS_API = BASE + '/api/admin/streams/commentators';
   var FALLBACK_AVATAR =
     'https://sta.vnres.co/file/common/20250410/000bfdfc22afe0f322140fabd2228aec.jpg';
   var CARD_VARIANTS = ['is-blue', 'is-teal', 'is-green'];
