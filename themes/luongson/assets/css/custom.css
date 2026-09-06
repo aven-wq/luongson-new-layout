@@ -406,20 +406,37 @@ body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongs
 }
 
 @media (min-width: 850px) {
+    ai-prediction-widget {
+        min-height: 600px !important;
+        background: white;
+        border-radius: 16px;
+    }
     body .luongson-div-2 .luongson-div-2-left {
-        flex-basis: 80%;
-        max-width: 80%;
+        flex-basis: calc(100% - 280px);
+        max-width: calc(100% - 280px);
         padding-right: 10px !important;
     }
 
     body .luongson-div-2 .luongson-div-2-right {
-        flex-basis: 20%;
-        max-width: 20%;
+        flex-basis: 280px;
+        max-width: 280px;
         padding-left: 10px !important;
     }
 
     body .row.row-collapse {
         max-width: 1480px;
+    }
+}
+
+@media (max-width: 1300px) {
+    body .luongson-div-2 .luongson-div-2-right {
+        display: none;
+    }
+
+    body .luongson-div-2 .luongson-div-2-left {
+        flex-basis: 100%;
+        max-width: 100%;
+        padding-right: 0 !important;
     }
 }
 

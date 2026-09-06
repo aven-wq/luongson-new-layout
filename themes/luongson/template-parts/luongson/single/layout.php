@@ -51,6 +51,8 @@ $image_alt = $title;
 			<?php get_template_part( 'template-parts/luongson/single/related-posts' ); ?>
 		</div>
 
-		<?php get_template_part( 'template-parts/luongson/ads-right-sidebar/sidebar-ads' ); ?>
+		<div class="framer-1374ghc hidden-38kgo1 hidden-1j9nxh3 ads-right-sidebar">
+			<?php echo do_shortcode('[block id="du-doan-ty-so"]'); ?>
+		</div>
 	</div>
 </div>
