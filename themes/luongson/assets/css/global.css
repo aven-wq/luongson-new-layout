@@ -4906,10 +4906,6 @@ body {
   }
 }
 
-[data-framer-component-type] {
-  position: absolute;
-}
-
 [data-framer-component-type="Text"] {
   cursor: inherit;
 }
