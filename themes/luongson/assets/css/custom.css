@@ -192,8 +192,8 @@ body .ck2-play-btn {
     margin-top: 10px;
 }
 
-#luongson-related-posts-heading, .framer-Q1644 .luongson-single-header .ls-blog-s104 {
-    margin-bottom: 10px !important;
+#luongson-related-posts-heading, .framer-Q1644 .luongson-single-header .ls-blog-s104, .framer-Q1644 .luongson-single-header .ls-blog-s104 strong {
+    margin-bottom: 20px !important;
     font-size: 24px !important;
     font-weight: 700 !important;
     font-family: "Momo Trust Sans", sans-serif !important;

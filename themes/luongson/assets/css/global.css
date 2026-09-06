@@ -5139,7 +5139,7 @@ span.framer-text:not([data-text-fill]) {
     var(--framer-text-decoration-skip-ink, initial)
   );
   text-underline-offset: var(--framer-blockquote-text-decoration-offset, var(--framer-text-decoration-offset, initial));
-  line-height: var(--framer-blockquote-line-height, var(--framer-line-height, 1.2em));
+  line-height: 23px;
   text-align: var(--framer-blockquote-text-alignment, var(--framer-text-alignment, start));
   -webkit-text-stroke-width: var(--framer-text-stroke-width, initial);
   -webkit-text-stroke-color: var(--framer-text-stroke-color, initial);
@@ -5268,7 +5268,7 @@ code.framer-text span.framer-text:not([data-text-fill]) {
   color: var(--framer-blockquote-text-color, var(--framer-code-text-color, var(--framer-text-color, #000)));
   font-size: calc(var(--framer-blockquote-font-size, var(--framer-font-size, 16px)) * var(--framer-font-size-scale, 1));
   letter-spacing: var(--framer-blockquote-letter-spacing, var(--framer-letter-spacing, 0));
-  line-height: var(--framer-blockquote-line-height, var(--framer-line-height, 1.2em));
+  line-height: 23px;
 }
 
 @supports not (color: color(display-p3 1 1 1)) {
