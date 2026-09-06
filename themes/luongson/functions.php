@@ -107,6 +107,15 @@ function luongson_enqueue_assets() {
 			'assetBase' => luongson_asset_uri(),
 		)
 	);
+
+	$custom_js_path = get_stylesheet_directory() . '/assets/js/custom.js';
+	wp_enqueue_script(
+		'luongson-custom',
+		luongson_asset_uri( 'js/custom.js' ),
+		array( 'jquery' ),
+		file_exists( $custom_js_path ) ? (string) filemtime( $custom_js_path ) : $theme_ver,
+		true
+	);
 }
 add_action( 'wp_enqueue_scripts', 'luongson_enqueue_assets', 99 );
 
