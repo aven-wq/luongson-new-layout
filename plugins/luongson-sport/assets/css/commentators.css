@@ -283,6 +283,7 @@
     box-shadow 0.18s ease;
   appearance: none;
   -webkit-appearance: none;
+  margin: 0;
 }
 
 .luongson-commentator-follow-btn:hover {

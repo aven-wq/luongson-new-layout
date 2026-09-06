@@ -367,7 +367,7 @@ body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongs
     opacity: 1;
     will-change: transform;
     transform-origin: center center;
-    animation: gwd-icon-pulse 1.2s ease-in-out infinite;
+    animation: gwd-icon-pulse 0.5s ease-in-out infinite;
 }
 
 .gwd-dynamic-html-wrapper ins {
