@@ -44,6 +44,10 @@
   var preMatchCountdownTimer = null;
   var streamPlaybackOk = false;
   var playbackWatchdogTimer = null;
+  var fsTopBarCycleTimer = null;
+  var fsTopBarHideTimer = null;
+  var FS_TOP_BAR_INTERVAL_MS = 60000;
+  var FS_TOP_BAR_VISIBLE_MS = 10000;
   var KICKOFF_COUNTDOWN_MS = 24 * 60 * 60 * 1000;
   var VN_TIMEZONE = 'Asia/Ho_Chi_Minh';
   var LIVE_STATUSES = [
@@ -442,6 +446,70 @@
     }
   }
 
+  function isStageFullscreen() {
+    var stage = $('#luongsonStreamStage').get(0);
+    if (!stage) return false;
+    return (
+      document.fullscreenElement === stage ||
+      document.webkitFullscreenElement === stage
+    );
+  }
+
+  function hideFsTopBar() {
+    $('.luongson-stream-top-bar').removeClass('luongson-stream-top-bar--fs-visible');
+  }
+
+  function showFsTopBar() {
+    if (!isStageFullscreen()) return;
+    $('.luongson-stream-top-bar').addClass('luongson-stream-top-bar--fs-visible');
+
+    if (fsTopBarHideTimer) {
+      clearTimeout(fsTopBarHideTimer);
+    }
+
+    fsTopBarHideTimer = setTimeout(function () {
+      hideFsTopBar();
+      fsTopBarHideTimer = null;
+    }, FS_TOP_BAR_VISIBLE_MS);
+  }
+
+  function stopFsTopBarCycle() {
+    if (fsTopBarCycleTimer) {
+      clearInterval(fsTopBarCycleTimer);
+      fsTopBarCycleTimer = null;
+    }
+    if (fsTopBarHideTimer) {
+      clearTimeout(fsTopBarHideTimer);
+      fsTopBarHideTimer = null;
+    }
+    $('#luongsonStreamStage').removeClass('is-fs-top-bar-cycle');
+    hideFsTopBar();
+  }
+
+  function startFsTopBarCycle() {
+    stopFsTopBarCycle();
+    if (!isStageFullscreen()) return;
+
+    $('#luongsonStreamStage').addClass('is-fs-top-bar-cycle');
+    showFsTopBar();
+
+    fsTopBarCycleTimer = setInterval(function () {
+      if (!isStageFullscreen()) {
+        stopFsTopBarCycle();
+        return;
+      }
+      showFsTopBar();
+    }, FS_TOP_BAR_INTERVAL_MS + FS_TOP_BAR_VISIBLE_MS);
+  }
+
+  function syncFsTopBarCycle() {
+    if (isStageFullscreen()) {
+      startFsTopBarCycle();
+    } else {
+      stopFsTopBarCycle();
+    }
+  }
+
   /** Gắn sự kiện Play, Volume, Fullscreen */
   function initPlayerControls($video) {
     $('#luongsonStreamPlay').off('click').on('click', function () {
@@ -490,6 +558,10 @@
         stage.webkitRequestFullscreen();
       }
     });
+
+    $(document)
+      .off('fullscreenchange.lsStreamTopBar webkitfullscreenchange.lsStreamTopBar')
+      .on('fullscreenchange.lsStreamTopBar webkitfullscreenchange.lsStreamTopBar', syncFsTopBarCycle);
 
     $video.off('play pause volumechange').on('play pause volumechange', function () {
       syncPlayButton($video);

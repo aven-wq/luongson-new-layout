@@ -17435,6 +17435,25 @@ body:has(> .luongson-stream-match:only-child) {
   aspect-ratio: auto;
 }
 
+/* Fullscreen: banner head ẩn mặc định, hiện 10s mỗi 60s */
+.luongson-stream-stage.is-fs-top-bar-cycle .luongson-stream-top-bar {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease,
+    visibility 0.35s ease;
+}
+
+.luongson-stream-stage.is-fs-top-bar-cycle .luongson-stream-top-bar.luongson-stream-top-bar--fs-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
 @media (max-width: 640px) {
   .luongson-stream-top-bar {
     left: 6px;
