@@ -553,6 +553,11 @@
   pointer-events: auto;
 }
 
+.luongson-match-modal-portal {
+  max-width: calc(100vw - 24px);
+  box-sizing: border-box;
+}
+
 .luongson-commentator-portal__panel {
   --border-top-width: 1px;
   --border-right-width: 1px;
@@ -634,18 +639,37 @@
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  width: 384px;
+  width: min(384px, calc(100vw - 24px));
+  max-width: 100%;
   padding: 12px 12px 20px;
   border-radius: 20px;
   background: #fff;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.luongson-match-modal-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-height: min(60vh, 440px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 2px;
   box-sizing: border-box;
 }
 
 .luongson-match-modal-tabs {
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 6px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .luongson-match-modal-tab {
@@ -681,7 +705,9 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  width: 360px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .luongson-match-modal-row__labels {
@@ -689,17 +715,20 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  gap: 8px;
+  gap: 6px;
+  min-width: 0;
 }
 
 .luongson-match-modal-row__labels span {
   font-size: 13px;
   color: #000;
+  min-width: 0;
 }
 
 .luongson-match-modal-row__labels .is-val {
-  flex: 1 1 0;
+  flex: 0 0 auto;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .luongson-match-modal-row__labels .is-val:last-child {
@@ -707,9 +736,12 @@
 }
 
 .luongson-match-modal-row__labels .is-label {
-  flex: none;
+  flex: 1 1 0;
+  min-width: 0;
   font-weight: 500;
   text-align: center;
+  line-height: 1.2;
+  word-break: break-word;
 }
 
 .luongson-match-modal-bars {
@@ -717,11 +749,13 @@
   align-items: center;
   gap: 10px;
   width: 100%;
+  min-width: 0;
 }
 
 .luongson-match-modal-bar {
   position: relative;
   flex: 1 1 0;
+  min-width: 0;
   height: 10px;
   border-radius: 8px;
   background: rgb(204, 204, 204);
@@ -801,11 +835,6 @@
   .luongson-match-odds-wrapper {
     width: auto;
     flex: 1 1 auto;
-  }
-
-  .luongson-match-modal-portal__panel,
-  .luongson-match-modal-row {
-    width: min(384px, calc(100vw - 24px));
   }
 
   .luongson-live-grid, .luongson-list-matches__header {

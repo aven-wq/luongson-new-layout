@@ -1055,6 +1055,16 @@
     });
   }
 
+  /** Gắn hover thống kê trận đấu lên logo cược */
+  function initMatchStatsHover() {
+    var modal = window.LuongsonMatchStatsModal;
+    if (!modal) return;
+
+    modal.bindTriggers(document.querySelector('.luongson-stream-match'), '.luongson-stream-bet-logo', function () {
+      return matchData && matchData.stats ? matchData.stats : null;
+    });
+  }
+
   /** Gắn URL asset tĩnh và link CTA (WordPress / HTML prototype) */
   function initStaticAssets() {
     var headerAds = (
@@ -1082,6 +1092,7 @@
     if (!$('.luongson-stream-match').length) return;
 
     initStaticAssets();
+    initMatchStatsHover();
     $('.luongson-stream-ticker').each(function () {
       createFeaturedAdsTicker(this);
     });
