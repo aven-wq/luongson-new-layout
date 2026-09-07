@@ -258,21 +258,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</a>
 				</div>
 				<div class="framer-1gbdc0z">
-					<div class="framer-ojf97f" data-border="true">
-						<div class="framer-y7i3ij ls-s59" data-framer-component-type="RichTextContainer"><p class="framer-text ls-s60" dir="auto">cược</p></div>
-						<div class="framer-xve6bb" data-framer-name="Logo XO88">
-							<div class="ls-s4" data-framer-background-image-wrapper="true">
-								<img
-									class="ls-s5"
-									alt="XO88"
-									decoding="async"
-									height="159"
-									src="<?php echo esc_url( $img . 'oYBpfSzncJobylw9QX9weLxTiU_57356649.png' ); ?>"
-									width="317"
-								/>
-							</div>
-						</div>
-					</div>
+					<a class="luongson-home-bet-link" id="luongsonHomeBet" href="#" target="_blank" rel="noopener noreferrer">
+						<span class="luongson-home-bet-text">cược</span>
+						<img class="luongson-home-bet-logo" alt="XO88" decoding="async" src="<?php echo esc_url( LUONGSON_SPORT_URL . 'assets/images/luongson-v2/xo88.avif' ); ?>" />
+					</a>
 				</div>
 			</div>
 		</div>

@@ -689,44 +689,44 @@
   position: relative;
 }
 
-.luongson-home-match .framer-ojf97f {
-  --border-bottom-width: 1px;
+/* Bet CTA — cược + xo88 logo */
+.luongson-home-match .luongson-home-bet-link {
   --border-color: #ff7d4a;
-  --border-left-width: 1px;
-  --border-right-width: 1px;
-  --border-style: solid;
-  --border-top-width: 1px;
-  border-radius: calc(16px * 0.796);
-  cursor: pointer;
-  height: 36px;
-  overflow: clip;
-  background-color: rgb(107, 0, 0);
-  flex: 0 0 auto;
-  width: 140px;
   position: relative;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 2px;
+  display: block;
+  flex: none;
+  width: 140px;
+  height: 36px;
+  border-radius: calc(16px * 0.796);
+  background-color: rgb(107, 0, 0);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  overflow: clip;
+  text-decoration: none;
+  cursor: pointer;
 }
 
-.luongson-home-match .framer-y7i3ij {
-  white-space: pre;
-  flex: 0 0 auto;
-  width: auto;
-  height: auto;
+.luongson-home-match .luongson-home-bet-text {
   position: absolute;
   top: 50%;
   left: 8px;
   transform: translateY(-50%);
+  font-family: var(--ls-font-display-snap);
+  font-size: 20px;
+  color: #fff;
+  white-space: pre;
+  line-height: 1;
 }
 
-.luongson-home-match .framer-xve6bb {
-  aspect-ratio: 1.99371 / 1;
-  flex: 0 0 auto;
-  width: auto;
+.luongson-home-match .luongson-home-bet-logo {
   position: absolute;
   top: -8px;
   bottom: -8px;
   right: -3px;
-  overflow: visible;
+  width: auto;
+  height: calc(100% + 16px);
+  aspect-ratio: 1.99371 / 1;
+  object-fit: contain;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -968,17 +968,6 @@
   corner-shape: inherit !important;
   object-position: 47.3% 26.6% !important;
   object-fit: cover !important;
-}
-
-.luongson-home-match .ls-s59 {
-  transform: translateY(-50%) !important;
-}
-
-.luongson-home-match .ls-s60 {
-  --font-selector: R0Y7QW50b24gU0MtcmVndWxhcg== !important;
-  --framer-font-family: var(--ls-font-display-snap) !important;
-  --framer-font-size: 20px !important;
-  --framer-text-color: rgb(255, 255, 255) !important;
 }
 
 /* -------------------------------------------------------------------------- */

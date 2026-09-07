@@ -1,0 +1,660 @@
+/**
+ * LuongSon V2 — Live stream player
+ */
+
+.luongson-stream-match {
+  --ls-font: "Momo Trust Sans", system-ui, sans-serif;
+  --ls-font-display: "Anton SC", Impact, sans-serif;
+  --ls-commentator: rgb(0, 110, 219);
+  --ls-commentator-hover: rgb(0, 166, 255);
+  --ls-odds-home: rgb(0, 153, 46);
+  --ls-odds-away: rgb(255, 0, 0);
+  --ls-odds-down: rgb(255, 0, 0);
+  --ls-odds-up: rgb(0, 153, 46);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  font-family: var(--ls-font);
+}
+
+.luongson-stream-match *,
+.luongson-stream-match *::before,
+.luongson-stream-match *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #0a1628;
+  padding: 16px;
+}
+
+.luongson-stream-stage {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.luongson-stream-video-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #000;
+}
+
+.luongson-stream-player-slot,
+.luongson-stream-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.luongson-stream-player-slot {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Loading */
+.luongson-stream-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+}
+
+.luongson-stream-loading[hidden] {
+  display: none !important;
+}
+
+.luongson-stream-loading__spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: lsStreamSpin 0.8s linear infinite;
+}
+
+@keyframes lsStreamSpin {
+  to { transform: rotate(360deg); }
+}
+
+.luongson-stream-loading__text {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Top ticker bar */
+.luongson-stream-top-bar {
+  --border-top-width: 1px;
+  --border-right-width: 1px;
+  --border-bottom-width: 1px;
+  --border-left-width: 1px;
+  --border-color: #0f30521f;
+  --border-style: solid;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 5px 0 12px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.92);
+  overflow: clip;
+}
+
+.luongson-stream-top-bar[data-border="true"]::after {
+  content: "";
+  border-width: var(--border-top-width) var(--border-right-width) var(--border-bottom-width) var(--border-left-width);
+  border-color: var(--border-color);
+  border-style: var(--border-style);
+  border-radius: inherit;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+.luongson-stream-ticker {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 26px;
+  overflow: hidden;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.luongson-stream-ticker ul {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 26px;
+  width: max-content !important;
+  gap: 12px !important;
+  will-change: transform;
+  user-select: none;
+  cursor: grab;
+}
+
+.luongson-stream-ticker ul:active {
+  cursor: grabbing;
+}
+
+.luongson-stream-ticker :is(.ticker-item, .clone-item) {
+  flex: 0 0 auto;
+}
+
+.luongson-stream-ticker__dot {
+  display: block;
+  width: 4px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.luongson-stream-ticker__text {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  color: rgb(56, 63, 77);
+  white-space: nowrap;
+}
+
+.luongson-stream-ticker img {
+  display: block;
+  height: 26px;
+  width: auto;
+}
+
+.luongson-stream-play-cta {
+  --border-top-width: 0;
+  --border-right-width: 0;
+  --border-bottom-width: 0;
+  --border-left-width: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  height: 30px;
+  padding: 3px 12px 3px 3px;
+  border-radius: 15px;
+  background: rgb(0, 110, 219);
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.luongson-stream-play-cta__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 100px;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.luongson-stream-play-cta__label {
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Bottom bar */
+.luongson-stream-bottom-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 12px 10px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.82) 0%,
+    rgba(0, 0, 0, 0.45) 55%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.luongson-stream-bottom-bar > * {
+  pointer-events: auto;
+}
+
+.luongson-stream-bottom-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  flex: 0 0 auto;
+  padding-bottom: 2px;
+}
+
+.luongson-stream-bottom-right {
+  --stream-right-block-width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  min-width: 0;
+  flex: 0 0 auto;
+}
+
+.luongson-stream-bottom-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+/* Commentator (from list-matches) */
+.luongson-match-commentator-container {
+  flex: none;
+}
+
+.luongson-match-commentator-trigger {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 140px;
+  height: 28px;
+  padding: 2px 8px 2px 2px;
+  border: 0;
+  border-radius: 18px;
+  background: var(--ls-commentator);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  margin: 0;
+}
+
+.luongson-match-commentator-trigger:hover,
+.luongson-match-commentator-trigger[aria-expanded="true"] {
+  background: var(--ls-commentator-hover);
+}
+
+.luongson-match-commentator-avatar {
+  --border-top-width: 1px;
+  --border-right-width: 1px;
+  --border-bottom-width: 1px;
+  --border-left-width: 1px;
+  --border-color: rgba(255, 255, 255, 0.2);
+  --border-style: solid;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border-radius: 100px;
+  overflow: clip;
+  flex: none;
+}
+
+.luongson-match-commentator-avatar[data-border="true"]::after {
+  content: "";
+  border-width: var(--border-top-width) var(--border-right-width) var(--border-bottom-width) var(--border-left-width);
+  border-color: var(--border-color);
+  border-style: var(--border-style);
+  border-radius: inherit;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+.luongson-match-commentator-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.luongson-match-commentator-name {
+  flex: 1 1 0;
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: capitalize;
+}
+
+.luongson-match-commentator-chevron {
+  width: 12px;
+  height: 12px;
+  color: #fff;
+  flex: none;
+}
+
+/* Player controls */
+.luongson-stream-ctrl {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  flex: none;
+}
+
+.luongson-stream-ctrl:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.luongson-stream-ctrl img,
+.luongson-stream-ctrl svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+.luongson-stream-ctrl--play.is-paused .luongson-stream-ctrl__icon-pause {
+  display: none;
+}
+
+.luongson-stream-ctrl--play:not(.is-paused) .luongson-stream-ctrl__icon-play {
+  display: none;
+}
+
+.luongson-stream-volume {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  max-width: 108px;
+}
+
+.luongson-stream-volume__slider {
+  flex: 1;
+  min-width: 48px;
+  height: 4px;
+  margin: 0;
+  accent-color: #fff;
+  cursor: pointer;
+}
+
+.luongson-stream-ctrl--volume.is-muted .luongson-stream-ctrl__icon-vol {
+  opacity: 0.45;
+}
+
+/* Odds panel */
+.luongson-stream-odds-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 2px;
+  width: var(--stream-right-block-width);
+  height: 28px;
+  padding: 0 6px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+}
+
+.luongson-stream-odds-row {
+  display: grid;
+  grid-template-columns: 18px repeat(3, minmax(24px, 1fr));
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+}
+
+.luongson-stream-odds-label {
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1;
+  color: #111;
+  text-align: left;
+}
+
+.luongson-stream-odds-val {
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  color: #111;
+}
+
+.luongson-stream-odds-val.is-rate {
+  font-weight: 800;
+  color: #111;
+}
+
+.luongson-stream-odds-val.is-up {
+  color: var(--ls-odds-up);
+  font-weight: 700;
+}
+
+.luongson-stream-odds-val.is-down {
+  color: var(--ls-odds-away);
+  font-weight: 700;
+}
+
+/* Bet CTA — cược + xo88 logo (same as home-match) */
+.luongson-stream-bet-link {
+  --border-color: #ff7d4a;
+  position: relative;
+  display: block;
+  flex: none;
+  width: var(--stream-right-block-width);
+  height: 36px;
+  border-radius: calc(16px * 0.796);
+  background-color: rgb(107, 0, 0);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  overflow: clip;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.luongson-stream-bet-text {
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  transform: translateY(-50%);
+  font-family: var(--ls-font-display);
+  font-size: 20px;
+  color: #fff;
+  white-space: pre;
+  line-height: 1;
+}
+
+.luongson-stream-bet-logo {
+  position: absolute;
+  top: -8px;
+  bottom: -8px;
+  right: -3px;
+  width: auto;
+  height: calc(100% + 16px);
+  aspect-ratio: 1.99371 / 1;
+  object-fit: contain;
+}
+
+.luongson-stream-ctrl--fs {
+  align-self: center;
+}
+
+/* Commentator portal */
+.luongson-commentator-portal {
+  position: fixed;
+  z-index: 99999;
+  pointer-events: auto;
+}
+
+.luongson-commentator-portal__panel {
+  --border-top-width: 1px;
+  --border-right-width: 1px;
+  --border-bottom-width: 1px;
+  --border-left-width: 1px;
+  --border-color: rgba(0, 38, 90, 0.14);
+  --border-style: solid;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 170px;
+  padding: 6px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(0, 25, 70, 0.18);
+}
+
+.luongson-commentator-portal__panel[data-border="true"]::after {
+  content: "";
+  border-width: var(--border-top-width) var(--border-right-width) var(--border-bottom-width) var(--border-left-width);
+  border-color: var(--border-color);
+  border-style: var(--border-style);
+  border-radius: inherit;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+.luongson-commentator-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 34px;
+  padding: 5px 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.luongson-commentator-option:hover,
+.luongson-commentator-option.is-active {
+  background: rgb(232, 245, 255);
+}
+
+.luongson-commentator-option__avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 100px;
+  overflow: hidden;
+  flex: none;
+}
+
+.luongson-commentator-option__avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.luongson-commentator-option__name {
+  flex: 1 1 0;
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgb(16, 39, 70);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Fullscreen */
+.luongson-stream-stage:fullscreen,
+.luongson-stream-stage:-webkit-full-screen {
+  max-width: none;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+.luongson-stream-stage:fullscreen .luongson-stream-video-wrap,
+.luongson-stream-stage:-webkit-full-screen .luongson-stream-video-wrap {
+  width: 100%;
+  height: 100%;
+  max-height: 100vh;
+  border-radius: 0;
+  aspect-ratio: auto;
+}
+
+@media (max-width: 640px) {
+  .luongson-stream-top-bar {
+    left: 6px;
+    right: 6px;
+    top: 6px;
+    height: 36px;
+    padding-left: 8px;
+  }
+
+  .luongson-stream-play-cta__label {
+    display: none;
+  }
+
+  .luongson-stream-play-cta {
+    padding: 3px;
+  }
+
+  .luongson-match-commentator-trigger {
+    width: 120px;
+  }
+
+  .luongson-stream-bottom-right {
+    --stream-right-block-width: 120px;
+  }
+
+  .luongson-stream-bet-link {
+    height: 30px;
+  }
+
+  .luongson-stream-bet-text {
+    font-size: 16px;
+  }
+
+  .luongson-stream-odds-panel {
+    height: 26px;
+    padding: 0 4px;
+  }
+
+  .luongson-stream-bottom-actions {
+    gap: 4px;
+  }
+
+  .luongson-stream-volume {
+    max-width: 88px;
+  }
+
+  .luongson-stream-volume__slider {
+    min-width: 40px;
+  }
+}

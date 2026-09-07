@@ -1,0 +1,582 @@
+/**
+ * LuongSon V2 — Live stream player (jQuery)
+ * Tải dữ liệu trận, phát HLS, đổi BLV, hiển thị kèo & ticker.
+ */
+(function ($) {
+  'use strict';
+
+  // --- Cấu hình từ WordPress / HTML ---
+  var cfg = window.luongsonStreamMatch || {};
+  var IMG = cfg.imgUrl || 'images/';
+  var ASSETS = cfg.assetsUrl || '../../assets/images/luongson-v2/';
+  var API_BASE = cfg.apiBase || 'https://vsc-apidev.helizones.com/api/data/lives/';
+  var MATCH_ID = cfg.matchId || 'zp5rzghge5n8q82';
+  var POSTER = cfg.posterUrl || ASSETS + 'bg-stream.webp';
+  var FALLBACK_AVATAR = ASSETS + 'svg-blv.svg';
+
+  // --- Biến trạng thái ---
+  var currentHls = null;
+  var playbackGen = 0;
+  var matchData = null;
+  var streamLinks = [];
+  var activeLinkIndex = 0;
+
+  /** Lấy match id từ URL (?match=...) hoặc dùng mặc định */
+  function getMatchId() {
+    var params = new URLSearchParams(window.location.search);
+    return params.get('match') || MATCH_ID;
+  }
+
+  /** Format số kèo: 1.5 → "1.50" */
+  function formatOdd(val) {
+    if (val == null || val === '') return '-';
+    var n = Number(val);
+    return Number.isFinite(n) ? n.toFixed(2) : '-';
+  }
+
+  /** Class CSS theo xu hướng kèo lên/xuống */
+  function trendClass(trend) {
+    if (trend === 'up') return 'is-up';
+    if (trend === 'down') return 'is-down';
+    return '';
+  }
+
+  /** Hiện / ẩn overlay "Đang tải..." */
+  function setLoading(show, message) {
+    var $el = $('#luongsonStreamLoading');
+    if (!$el.length) return;
+    if (show) {
+      $el.removeAttr('hidden');
+      if (message) $el.find('.luongson-stream-loading__text').text(message);
+    } else {
+      $el.attr('hidden', 'hidden');
+    }
+  }
+
+  /** Dừng và giải phóng HLS cũ */
+  function destroyHls() {
+    playbackGen += 1;
+    if (currentHls) {
+      try { currentHls.destroy(); } catch (e) {}
+      currentHls = null;
+    }
+  }
+
+  /** Cập nhật icon nút Play/Pause */
+  function syncPlayButton($video) {
+    var $btn = $('#luongsonStreamPlay');
+    if (!$video.length) return;
+    $btn.toggleClass('is-paused', $video.get(0).paused);
+  }
+
+  /** Cập nhật nút mute và thanh trượt âm lượng */
+  function syncVolumeUi($video) {
+    var $btn = $('#luongsonStreamVolume');
+    var $slider = $('#luongsonStreamVolumeSlider');
+    if (!$video.length || !$btn.length) return;
+
+    var video = $video.get(0);
+    var isMuted = video.muted || video.volume === 0;
+    var displayVol = isMuted ? 0 : video.volume;
+
+    $btn.toggleClass('is-muted', isMuted);
+    $btn.attr({
+      'aria-label': isMuted ? 'Bật tiếng' : 'Tắt tiếng',
+      title: isMuted ? 'Bật tiếng' : 'Tắt tiếng'
+    });
+
+    if ($slider.length) {
+      $slider.val(displayVol);
+    }
+  }
+
+  /** Gắn sự kiện Play, Volume, Fullscreen */
+  function initPlayerControls($video) {
+    $('#luongsonStreamPlay').off('click').on('click', function () {
+      var video = $video.get(0);
+      if (!video) return;
+      if (video.paused) {
+        video.play().catch(function () {});
+      } else {
+        video.pause();
+      }
+      syncPlayButton($video);
+    });
+
+    $('#luongsonStreamVolume').off('click').on('click', function () {
+      var video = $video.get(0);
+      if (!video) return;
+      if (video.muted || video.volume === 0) {
+        video.muted = false;
+        if (video.volume === 0) video.volume = 0.7;
+      } else {
+        video.muted = true;
+      }
+      syncVolumeUi($video);
+    });
+
+    $('#luongsonStreamVolumeSlider').off('input change').on('input change', function (e) {
+      e.stopPropagation();
+      var video = $video.get(0);
+      if (!video) return;
+      var vol = parseFloat(this.value);
+      if (!Number.isFinite(vol)) return;
+      video.volume = vol;
+      video.muted = vol === 0;
+      syncVolumeUi($video);
+    });
+
+    $('#luongsonStreamFs').off('click').on('click', function () {
+      var $stage = $('#luongsonStreamStage');
+      var stage = $stage.get(0);
+      if (!stage) return;
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else if (stage.requestFullscreen) {
+        stage.requestFullscreen();
+      } else if (stage.webkitRequestFullscreen) {
+        stage.webkitRequestFullscreen();
+      }
+    });
+
+    $video.off('play pause volumechange').on('play pause volumechange', function () {
+      syncPlayButton($video);
+      syncVolumeUi($video);
+    });
+  }
+
+  /** Khởi tạo phát HLS (hoặc native Safari) */
+  function initHls(url, $video) {
+    destroyHls();
+    var gen = playbackGen;
+
+    if (!url || !$video.length) {
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true, 'Đang tải luồng phát...');
+    var video = $video.get(0);
+
+    function isStale() {
+      return gen !== playbackGen;
+    }
+
+    function onReady() {
+      if (isStale()) return;
+      setLoading(false);
+      syncPlayButton($video);
+      syncVolumeUi($video);
+      video.muted = true;
+      video.play().catch(function () {});
+    }
+
+    if (window.Hls && Hls.isSupported()) {
+      currentHls = new Hls({
+        maxBufferLength: 10,
+        liveSyncDuration: 3,
+        enableWorker: true,
+        xhrSetup: function (xhr) {
+          xhr.withCredentials = false;
+          xhr.referrerPolicy = 'no-referrer-when-downgrade';
+        }
+      });
+      currentHls.loadSource(url);
+      currentHls.attachMedia(video);
+      currentHls.on(Hls.Events.MANIFEST_PARSED, function () {
+        if (isStale()) return;
+        onReady();
+      });
+      currentHls.on(Hls.Events.ERROR, function (_, data) {
+        if (isStale()) return;
+        if (data && data.fatal) setLoading(false);
+      });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      $video.one('loadedmetadata', function () {
+        if (isStale()) return;
+        onReady();
+      });
+      $video.attr('src', url);
+    } else {
+      setLoading(false);
+    }
+  }
+
+  /** Cập nhật các ô kèo FT / HT */
+  function renderOdds(data) {
+    var hdp = data.hdp || {};
+    var ou = data.ou || {};
+
+    function setVal(key, val, trend) {
+      $('[data-odds="' + key + '"]')
+        .text(formatOdd(val))
+        .removeClass('is-up is-down')
+        .addClass(trendClass(trend));
+    }
+
+    setVal('hdp-home', hdp.home, hdp.homeTrend);
+    setVal('hdp-rate', hdp.rate, hdp.rateTrend);
+    setVal('hdp-away', hdp.away, hdp.awayTrend);
+    setVal('ou-over', ou.over, ou.overTrend);
+    setVal('ou-rate', ou.rate, ou.rateTrend);
+    setVal('ou-under', ou.under, ou.underTrend);
+  }
+
+  /** Sắp xếp link: ưu tiên BLV đang live */
+  function sortLinks(links) {
+    if (!Array.isArray(links)) return [];
+    return links.slice().sort(function (a, b) {
+      return (b.isStreaming ? 1 : 0) - (a.isStreaming ? 1 : 0);
+    });
+  }
+
+  /** Chọn BLV active theo ?liveId= hoặc link đang stream */
+  function resolveActiveIndex(links) {
+    var params = new URLSearchParams(window.location.search);
+    var liveId = params.get('liveId');
+    var idx = -1;
+    var i;
+
+    if (liveId) {
+      for (i = 0; i < links.length; i++) {
+        if (String(links[i].liveId) === String(liveId)) {
+          idx = i;
+          break;
+        }
+      }
+      if (idx >= 0) return idx;
+    }
+
+    for (i = 0; i < links.length; i++) {
+      if (links[i].isStreaming) return i;
+    }
+    return 0;
+  }
+
+  /** Cập nhật tên + avatar BLV trên thanh điều khiển */
+  function updateCommentatorUi(link) {
+    if (!link) return;
+    var name = $.trim(String(link.commentator || '')) || 'BLV';
+    var avatar = link.avatar || FALLBACK_AVATAR;
+
+    $('#luongsonStreamCommentator').attr('data-commentator', name);
+    $('#luongsonCommentatorTrigger .luongson-match-commentator-name').text(name);
+    $('#luongsonCommentatorTrigger .luongson-match-commentator-avatar img').attr({
+      src: avatar,
+      alt: name
+    });
+  }
+
+  /** Chuyển sang luồng BLV khác */
+  function switchStream(index) {
+    if (!streamLinks.length || index < 0 || index >= streamLinks.length) return;
+
+    activeLinkIndex = index;
+    var link = streamLinks[index];
+    updateCommentatorUi(link);
+
+    if (link.liveId) {
+      var params = new URLSearchParams(window.location.search);
+      params.set('liveId', String(link.liveId));
+      var q = params.toString();
+      window.history.replaceState(
+        null,
+        '',
+        window.location.pathname + (q ? '?' + q : '') + window.location.hash
+      );
+    }
+
+    if (link.url) {
+      initHls(link.url, $('#liveVideo'));
+    }
+  }
+
+  /** Dropdown chọn BLV (portal gắn vào body) */
+  function buildCommentatorPortal(links) {
+    var $portal = $('.luongson-stream-commentator-portal');
+
+    if (!$portal.length) {
+      $portal = $('<div>', {
+        class: 'luongson-commentator-portal luongson-stream-commentator-portal',
+        hidden: true
+      }).css({
+        display: 'none',
+        opacity: 0,
+        transform: 'translateY(-4px) scale(0.98)',
+        transition: 'opacity .15s ease, transform .15s cubic-bezier(0,.8,.2,1)',
+        'transform-origin': 'bottom left'
+      });
+      $('body').append($portal);
+    }
+
+    var panelHtml =
+      '<div class="luongson-commentator-portal__panel" data-border="true" role="listbox">';
+
+    $.each(links, function (i, link) {
+      var name = $.trim(String(link.commentator || '')) || 'BLV ' + (i + 1);
+      var avatar = link.avatar || FALLBACK_AVATAR;
+      var activeClass = i === activeLinkIndex ? ' is-active' : '';
+
+      panelHtml +=
+        '<button type="button" class="luongson-commentator-option' + activeClass + '"' +
+        ' role="option" data-index="' + i + '" data-commentator="' + name + '">' +
+        '<span class="luongson-commentator-option__avatar">' +
+        '<img alt="" decoding="async" src="' + avatar + '" />' +
+        '</span>' +
+        '<span class="luongson-commentator-option__name">' + name + '</span>' +
+        '</button>';
+    });
+
+    panelHtml += '</div>';
+    $portal.html(panelHtml);
+
+    var $activeTrigger = null;
+
+    function closeDropdown() {
+      if ($activeTrigger) $activeTrigger.attr('aria-expanded', 'false');
+      $portal.css({ opacity: 0, transform: 'translateY(-4px) scale(0.98)' });
+      setTimeout(function () {
+        if (parseFloat($portal.css('opacity')) === 0) {
+          $portal.hide().attr('hidden', 'hidden');
+          $activeTrigger = null;
+        }
+      }, 150);
+    }
+
+    function openDropdown($trigger) {
+      if ($activeTrigger && $activeTrigger.get(0) === $trigger.get(0) && $portal.is(':visible')) {
+        closeDropdown();
+        return;
+      }
+
+      $activeTrigger = $trigger;
+      $trigger.attr('aria-expanded', 'true');
+      $portal.removeAttr('hidden').show();
+
+      var rect = $trigger.get(0).getBoundingClientRect();
+      var w = 170;
+      var h = $portal.outerHeight() || 120;
+      var left = rect.left;
+
+      if (left + w > $(window).width() - 10) left = $(window).width() - w - 10;
+      if (left < 10) left = 10;
+
+      var top = rect.top - h - 6;
+      if (top < 10) top = rect.bottom + 6;
+
+      $portal.css({ left: left, top: top });
+
+      requestAnimationFrame(function () {
+        $portal.css({ opacity: 1, transform: 'translateY(0) scale(1)' });
+      });
+    }
+
+    $portal.find('.luongson-commentator-option').on('click', function (e) {
+      e.stopPropagation();
+      var $opt = $(this);
+      var idx = parseInt($opt.attr('data-index'), 10);
+
+      $portal.find('.luongson-commentator-option').removeClass('is-active');
+      $opt.addClass('is-active');
+      switchStream(idx);
+      closeDropdown();
+    });
+
+    var $trigger = $('#luongsonCommentatorTrigger');
+    if ($trigger.length && !$trigger.data('lsStreamBound')) {
+      $trigger.data('lsStreamBound', true).on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!links.length) return;
+        openDropdown($trigger);
+      });
+    }
+
+    $(document).off('click.lsStreamPortal').on('click.lsStreamPortal', function (e) {
+      if (
+        $portal.is(':visible') &&
+        !$.contains($portal.get(0), e.target) &&
+        (!$activeTrigger || !$.contains($activeTrigger.get(0), e.target))
+      ) {
+        closeDropdown();
+      }
+    });
+
+    $(document).off('keydown.lsStreamPortal').on('keydown.lsStreamPortal', function (e) {
+      if (e.key === 'Escape' && $portal.is(':visible')) closeDropdown();
+    });
+  }
+
+  /** Ticker quảng cáo chạy ngang (kéo tay được) */
+  function createFeaturedAdsTicker(container) {
+    var $container = $(container);
+    var $track = $container.find('ul').first();
+
+    if (!$track.length || $track.data('lsStreamTickerInit')) return;
+    $track.data('lsStreamTickerInit', true);
+
+    var $originalChildren = $track.children().not('.clone-item');
+    if (!$originalChildren.length) return;
+
+    var speed = 38;
+    var direction = -1;
+    var singleSetWidth = 0;
+    var currentX = 0;
+    var isHovered = false;
+    var isDragging = false;
+    var startX = 0;
+    var dragStartX = 0;
+    var lastTimestamp = null;
+
+    function buildClones() {
+      $track.find('.clone-item').remove();
+
+      var containerWidth = $container.outerWidth() || $(window).width();
+      var gap = 12;
+      var firstEl = $originalChildren.first().get(0);
+      var lastEl = $originalChildren.last().get(0);
+      var firstRect = firstEl.getBoundingClientRect();
+      var lastRect = lastEl.getBoundingClientRect();
+
+      singleSetWidth =
+        lastRect.right - firstRect.left + gap > 0
+          ? lastRect.right - firstRect.left + gap
+          : $originalChildren.toArray().reduce(function (acc, el) {
+              return acc + ($(el).outerWidth() || 80) + gap;
+            }, 0);
+
+      if (singleSetWidth <= 0) return;
+
+      var neededCopies = Math.max(2, Math.ceil((containerWidth * 2) / singleSetWidth) + 1);
+      var i;
+
+      for (i = 0; i < neededCopies; i++) {
+        $originalChildren.each(function () {
+          var $clone = $(this).clone().addClass('clone-item').attr('aria-hidden', 'true');
+          $track.append($clone);
+        });
+      }
+    }
+
+    function setTransform(x) {
+      $track.css('transform', 'translate3d(' + x + 'px, 0, 0)');
+    }
+
+    function animate(timestamp) {
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      var dt = Math.min((timestamp - lastTimestamp) / 1000, 0.1);
+      lastTimestamp = timestamp;
+
+      if (!isHovered && !isDragging && singleSetWidth > 0) {
+        currentX += direction * speed * dt;
+        while (currentX <= -singleSetWidth) currentX += singleSetWidth;
+        setTransform(currentX);
+      }
+      requestAnimationFrame(animate);
+    }
+
+    $container.on('mouseenter', function () { isHovered = true; });
+    $container.on('mouseleave', function () { isHovered = false; lastTimestamp = null; });
+
+    function onPointerDown(e) {
+      isDragging = true;
+      startX = e.type.indexOf('touch') === 0 ? e.originalEvent.touches[0].clientX : e.clientX;
+      dragStartX = currentX;
+    }
+
+    function onPointerMove(e) {
+      if (!isDragging) return;
+      var clientX = e.type.indexOf('touch') === 0 ? e.originalEvent.touches[0].clientX : e.clientX;
+      var dx = clientX - startX;
+      currentX = dragStartX + dx;
+
+      if (singleSetWidth > 0) {
+        while (currentX <= -singleSetWidth) currentX += singleSetWidth;
+        while (currentX > 0) currentX -= singleSetWidth;
+      }
+      setTransform(currentX);
+    }
+
+    function onPointerUp() {
+      isDragging = false;
+      lastTimestamp = null;
+    }
+
+    $track.on('mousedown', onPointerDown);
+    $(window).on('mousemove.lsStreamTicker', onPointerMove);
+    $(window).on('mouseup.lsStreamTicker', onPointerUp);
+
+    buildClones();
+    requestAnimationFrame(animate);
+
+    $(window).on('resize.lsStreamTicker', function () {
+      setTimeout(buildClones, 150);
+    });
+  }
+
+  /** Gọi API lấy dữ liệu trận và bắt đầu phát */
+  function loadMatch() {
+    var matchId = getMatchId();
+    var $video = $('#liveVideo');
+
+    $video.attr('poster', POSTER);
+    initPlayerControls($video);
+    setLoading(true, 'Đang tải thông tin trận đấu...');
+
+    $.ajax({
+      url: API_BASE + matchId,
+      method: 'GET',
+      success: function (res) {
+        var data = res && res.data;
+        if (!data) {
+          setLoading(false);
+          return;
+        }
+
+        matchData = data;
+        renderOdds(data);
+
+        var links = sortLinks(data.livestream && data.livestream.links);
+        streamLinks = links;
+
+        if (!links.length) {
+          setLoading(false);
+          updateCommentatorUi({ commentator: 'Chưa có BLV', avatar: FALLBACK_AVATAR });
+          return;
+        }
+
+        activeLinkIndex = resolveActiveIndex(links);
+        buildCommentatorPortal(links);
+        updateCommentatorUi(links[activeLinkIndex]);
+
+        var activeLink = links[activeLinkIndex];
+        if (activeLink && activeLink.url) {
+          initHls(activeLink.url, $video);
+        } else {
+          setLoading(false);
+        }
+      },
+      error: function () {
+        setLoading(false);
+      }
+    });
+  }
+
+  /** Gắn link CTA từ cấu hình */
+  function initCtaLinks() {
+    if (cfg.playCtaUrl) $('#luongsonPlayCta').attr('href', cfg.playCtaUrl);
+    if (cfg.betUrl) $('#luongsonStreamBet').attr('href', cfg.betUrl);
+    if (cfg.betImageUrl) $('#luongsonStreamBet .luongson-stream-bet-logo').attr('src', cfg.betImageUrl);
+  }
+
+  // --- Khởi chạy khi DOM sẵn sàng ---
+  $(function () {
+    if (!$('.luongson-stream-match').length) return;
+
+    initCtaLinks();
+    $('.luongson-stream-ticker').each(function () {
+      createFeaturedAdsTicker(this);
+    });
+    loadMatch();
+  });
+})(jQuery.noConflict());
