@@ -17606,6 +17606,23 @@ function showError(message) {
   var matchData = null;
   var streamLinks = [];
   var activeLinkIndex = 0;
+  var preMatchCountdownTimer = null;
+  var streamPlaybackOk = false;
+  var playbackWatchdogTimer = null;
+  var KICKOFF_COUNTDOWN_MS = 24 * 60 * 60 * 1000;
+  var LIVE_STATUSES = [
+    'first half',
+    'second half',
+    'half-time',
+    'half time',
+    'halftime',
+    'ht',
+    'overtime',
+    'overtime(deprecated)',
+    'penalty shoot-out',
+    'penalty',
+    'live'
+  ];
 
   /** Lấy match id từ ?match=, DV2_MATCH_ID (/streams/{id}), hoặc mặc định */
   function getMatchId() {
@@ -17637,6 +17654,222 @@ function showError(message) {
     return '';
   }
 
+  function normalizeStatus(status) {
+    return String(status || '').toLowerCase().trim();
+  }
+
+  /** API detail trả kickoff/status trong matchInfo hoặc root */
+  function getMatchKickoff(data) {
+    if (!data) return '';
+    return (data.matchInfo && data.matchInfo.kickoff) || data.kickoff || '';
+  }
+
+  function getMatchStatus(data) {
+    if (!data) return '';
+    return (data.matchInfo && data.matchInfo.status) || data.status || '';
+  }
+
+  function isFinishedStatus(status) {
+    var s = normalizeStatus(status);
+    return s === 'finished' || s === 'ft' || s === 'end';
+  }
+
+  function isNotStartedStatus(status) {
+    var s = normalizeStatus(status);
+    return s === 'not started' || s === 'ns' || s === '';
+  }
+
+  function isMatchLive(data, activeLink) {
+    if (activeLink && activeLink.isStreaming) return true;
+    if (!data) return false;
+    return LIVE_STATUSES.indexOf(normalizeStatus(getMatchStatus(data))) !== -1;
+  }
+
+  function formatStatusText(data) {
+    if (!data) return 'Chưa diễn ra';
+
+    var status = normalizeStatus(getMatchStatus(data));
+
+    if (LIVE_STATUSES.indexOf(status) !== -1) {
+      if (status === 'half-time' || status === 'halftime' || status === 'ht' || status === 'half time') {
+        return 'Giữa hiệp';
+      }
+      if (status === 'first half') return 'Hiệp 1';
+      if (status === 'second half') return 'Hiệp 2';
+      if (status === 'overtime' || status === 'overtime(deprecated)') return 'Hiệp phụ';
+      if (status === 'penalty shoot-out' || status === 'penalty') return 'Penalty';
+      if (data.currentMinutes != null && data.currentMinutes !== '') {
+        return String(data.currentMinutes) + "'";
+      }
+      return 'Trực tiếp';
+    }
+
+    if (isFinishedStatus(status)) return 'Kết thúc';
+    if (isNotStartedStatus(status)) return 'Chưa diễn ra';
+    if (status === 'delay') return 'Hoãn';
+    if (status === 'interrupt') return 'Tạm dừng';
+    if (status === 'cancel' || status === 'cancelled') return 'Hủy';
+
+    return getMatchStatus(data) || 'Chưa diễn ra';
+  }
+
+  function getStatusBadgeClass(data) {
+    if (!data) return 'is-upcoming';
+    var status = normalizeStatus(getMatchStatus(data));
+    if (isFinishedStatus(status)) return 'is-finished';
+    if (status === 'delay' || status === 'interrupt') return 'is-delay';
+    return 'is-upcoming';
+  }
+
+  function getKickoffDiffMs(kickoff) {
+    if (!kickoff) return null;
+    var kickoffTime = new Date(kickoff);
+    if (Number.isNaN(kickoffTime.getTime())) return null;
+    return kickoffTime.getTime() - Date.now();
+  }
+
+  function shouldShowCountdown(kickoff) {
+    var diffMs = getKickoffDiffMs(kickoff);
+    return diffMs !== null && diffMs > 0 && diffMs < KICKOFF_COUNTDOWN_MS;
+  }
+
+  function formatCountdownParts(kickoff) {
+    var diffMs = getKickoffDiffMs(kickoff);
+    if (diffMs === null || diffMs <= 0) {
+      return { h: '00', m: '00', s: '00' };
+    }
+
+    var hours = Math.floor(diffMs / (1000 * 60 * 60));
+    var minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+    return {
+      h: String(hours).padStart(2, '0'),
+      m: String(minutes).padStart(2, '0'),
+      s: String(seconds).padStart(2, '0')
+    };
+  }
+
+  function formatKickoffDateTime(kickoff) {
+    if (!kickoff) return '—';
+    var date = new Date(kickoff);
+    if (Number.isNaN(date.getTime())) return '—';
+
+    var day = String(date.getDate()).padStart(2, '0');
+    var month = String(date.getMonth() + 1).padStart(2, '0');
+    var year = date.getFullYear();
+    var hours = String(date.getHours()).padStart(2, '0');
+    var minutes = String(date.getMinutes()).padStart(2, '0');
+
+    return day + '/' + month + '/' + year + ' ' + hours + ':' + minutes;
+  }
+
+  function stopPreMatchCountdown() {
+    if (preMatchCountdownTimer) {
+      clearInterval(preMatchCountdownTimer);
+      preMatchCountdownTimer = null;
+    }
+  }
+
+  function updateCountdownDisplay(kickoff) {
+    var parts = formatCountdownParts(kickoff);
+    $('#luongsonPreMatchCdH').text(parts.h);
+    $('#luongsonPreMatchCdM').text(parts.m);
+    $('#luongsonPreMatchCdS').text(parts.s);
+  }
+
+  function startPreMatchCountdown(kickoff) {
+    stopPreMatchCountdown();
+    if (!shouldShowCountdown(kickoff)) return;
+
+    updateCountdownDisplay(kickoff);
+    preMatchCountdownTimer = setInterval(function () {
+      if (!shouldShowCountdown(kickoff)) {
+        stopPreMatchCountdown();
+        if (matchData) updatePreMatchOverlay(matchData, streamLinks[activeLinkIndex] || null);
+        return;
+      }
+      updateCountdownDisplay(kickoff);
+    }, 1000);
+  }
+
+  function setPreMatchCenterMode(mode) {
+    $('#luongsonPreMatchCountdown').prop('hidden', mode !== 'countdown');
+    $('#luongsonPreMatchDatetime').prop('hidden', mode !== 'datetime');
+    $('#luongsonPreMatchScore').prop('hidden', mode !== 'score');
+  }
+
+  function shouldHidePreMatchOverlay(data, activeLink) {
+    return isMatchLive(data, activeLink) && streamPlaybackOk;
+  }
+
+  function updatePreMatchOverlay(data, activeLink) {
+    var $overlay = $('#luongsonStreamPreMatch');
+    if (!$overlay.length || !data) return;
+
+    if (shouldHidePreMatchOverlay(data, activeLink)) {
+      hidePreMatchOverlay();
+      return;
+    }
+
+    var teams = data.teams || {};
+    var league = data.league || {};
+    var home = teams.home || {};
+    var away = teams.away || {};
+    var kickoff = getMatchKickoff(data);
+    var matchStatus = getMatchStatus(data);
+    var statusText = formatStatusText(data);
+    var finished = isFinishedStatus(matchStatus);
+    var live = isMatchLive(data, activeLink);
+    var score = data.score && data.score.fulltime ? data.score.fulltime : null;
+
+    $('#luongsonPreMatchLeague').text(league.name || '—');
+    $('#luongsonPreMatchStatusText').text(statusText);
+    $('#luongsonPreMatchStatus')
+      .removeClass('is-upcoming is-finished is-delay')
+      .addClass(getStatusBadgeClass(data));
+
+    if (league.logo) {
+      $('#luongsonPreMatchLeagueLogo').attr({ src: league.logo, alt: league.name || '' }).removeAttr('hidden');
+    } else {
+      $('#luongsonPreMatchLeagueLogo').attr('hidden', 'hidden');
+    }
+
+    $('#luongsonPreMatchHomeName').text(home.name || '—');
+    $('#luongsonPreMatchAwayName').text(away.name || '—');
+    $('#luongsonPreMatchHomeLogo').attr({
+      src: home.logo || '',
+      alt: home.name || ''
+    });
+    $('#luongsonPreMatchAwayLogo').attr({
+      src: away.logo || '',
+      alt: away.name || ''
+    });
+
+    stopPreMatchCountdown();
+
+    if ((finished || live) && score) {
+      setPreMatchCenterMode('score');
+      $('#luongsonPreMatchScoreVal').text(
+        (score.home != null ? score.home : 0) + ' - ' + (score.away != null ? score.away : 0)
+      );
+    } else if (shouldShowCountdown(kickoff)) {
+      setPreMatchCenterMode('countdown');
+      updateCountdownDisplay(kickoff);
+      startPreMatchCountdown(kickoff);
+    } else {
+      setPreMatchCenterMode('datetime');
+      $('#luongsonPreMatchDatetimeVal').text(formatKickoffDateTime(kickoff));
+    }
+
+    $overlay.removeAttr('hidden');
+  }
+
+  function hidePreMatchOverlay() {
+    stopPreMatchCountdown();
+    $('#luongsonStreamPreMatch').attr('hidden', 'hidden');
+  }
+
   /** Hiện / ẩn overlay "Đang tải..." */
   function setLoading(show, message) {
     var $el = $('#luongsonStreamLoading');
@@ -17652,10 +17885,57 @@ function showError(message) {
   /** Dừng và giải phóng HLS cũ */
   function destroyHls() {
     playbackGen += 1;
+    clearPlaybackWatchdog();
+    streamPlaybackOk = false;
     if (currentHls) {
       try { currentHls.destroy(); } catch (e) {}
       currentHls = null;
     }
+  }
+
+  function clearPlaybackWatchdog() {
+    if (playbackWatchdogTimer) {
+      clearTimeout(playbackWatchdogTimer);
+      playbackWatchdogTimer = null;
+    }
+  }
+
+  function startPlaybackWatchdog(gen) {
+    clearPlaybackWatchdog();
+    playbackWatchdogTimer = setTimeout(function () {
+      if (gen !== playbackGen || streamPlaybackOk) return;
+      setLoading(false);
+      if (matchData) {
+        updatePreMatchOverlay(matchData, streamLinks[activeLinkIndex] || null);
+      }
+    }, 15000);
+  }
+
+  function onStreamPlaybackFailed(gen) {
+    if (gen !== playbackGen) return;
+    streamPlaybackOk = false;
+    clearPlaybackWatchdog();
+    setLoading(false);
+
+    var $video = $('#liveVideo');
+    var video = $video.get(0);
+    if (video) {
+      video.pause();
+    }
+
+    if (matchData) {
+      updatePreMatchOverlay(matchData, streamLinks[activeLinkIndex] || null);
+    }
+  }
+
+  function onStreamPlaybackReady(gen, $video) {
+    if (gen !== playbackGen) return;
+    streamPlaybackOk = true;
+    clearPlaybackWatchdog();
+    setLoading(false);
+    syncPlayButton($video);
+    syncVolumeUi($video);
+    hidePreMatchOverlay();
   }
 
   /** Cập nhật icon nút Play/Pause */
@@ -17748,10 +18028,12 @@ function showError(message) {
 
     if (!url || !$video.length) {
       setLoading(false);
+      if (matchData) updatePreMatchOverlay(matchData, streamLinks[activeLinkIndex] || null);
       return;
     }
 
     setLoading(true, 'Đang tải luồng phát...');
+    startPlaybackWatchdog(gen);
     var video = $video.get(0);
 
     function isStale() {
@@ -17760,12 +18042,18 @@ function showError(message) {
 
     function onReady() {
       if (isStale()) return;
-      setLoading(false);
-      syncPlayButton($video);
-      syncVolumeUi($video);
       video.muted = true;
-      video.play().catch(function () {});
+      video.play().then(function () {
+        onStreamPlaybackReady(gen, $video);
+      }).catch(function () {
+        onStreamPlaybackFailed(gen);
+      });
     }
+
+    $video.off('error.lsStreamPlayback').on('error.lsStreamPlayback', function () {
+      if (isStale()) return;
+      onStreamPlaybackFailed(gen);
+    });
 
     if (window.Hls && Hls.isSupported()) {
       currentHls = new Hls({
@@ -17785,16 +18073,16 @@ function showError(message) {
       });
       currentHls.on(Hls.Events.ERROR, function (_, data) {
         if (isStale()) return;
-        if (data && data.fatal) setLoading(false);
+        if (data && data.fatal) onStreamPlaybackFailed(gen);
       });
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      $video.one('loadedmetadata', function () {
+      $video.off('loadedmetadata.lsStreamPlayback').one('loadedmetadata.lsStreamPlayback', function () {
         if (isStale()) return;
         onReady();
       });
       $video.attr('src', url);
     } else {
-      setLoading(false);
+      onStreamPlaybackFailed(gen);
     }
   }
 
@@ -17883,7 +18171,18 @@ function showError(message) {
     }
 
     if (link.url) {
-      initHls(link.url, $('#liveVideo'));
+      if (isMatchLive(matchData, link)) {
+        initHls(link.url, $('#liveVideo'));
+      } else {
+        destroyHls();
+        var $video = $('#liveVideo');
+        var video = $video.get(0);
+        if (video) {
+          video.pause();
+          try { video.removeAttribute('src'); video.load(); } catch (e) {}
+        }
+        if (matchData) updatePreMatchOverlay(matchData, link);
+      }
     }
   }
 
@@ -18138,6 +18437,7 @@ function showError(message) {
         if (!links.length) {
           setLoading(false);
           updateCommentatorUi({ commentator: 'Chưa có BLV', avatar: FALLBACK_AVATAR });
+          updatePreMatchOverlay(data, null);
           return;
         }
 
@@ -18146,10 +18446,23 @@ function showError(message) {
         updateCommentatorUi(links[activeLinkIndex]);
 
         var activeLink = links[activeLinkIndex];
-        if (activeLink && activeLink.url) {
-          initHls(activeLink.url, $video);
+
+        if (isMatchLive(data, activeLink)) {
+          if (activeLink && activeLink.url) {
+            initHls(activeLink.url, $video);
+          } else {
+            setLoading(false);
+            updatePreMatchOverlay(data, activeLink);
+          }
         } else {
+          destroyHls();
+          var video = $video.get(0);
+          if (video) {
+            video.pause();
+            try { video.removeAttribute('src'); video.load(); } catch (e) {}
+          }
           setLoading(false);
+          updatePreMatchOverlay(data, activeLink);
         }
       },
       error: function () {

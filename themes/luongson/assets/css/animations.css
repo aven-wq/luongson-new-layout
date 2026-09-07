@@ -278,6 +278,7 @@
 .luongson-footer-sponsors .clone-item {
   flex-shrink: 0 !important;
   flex-grow: 0 !important;
+  margin: 0;
 }
 
 /* Commentators List Track */

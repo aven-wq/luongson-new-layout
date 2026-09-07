@@ -23,6 +23,7 @@
 
 .luongson-notice {
     width: 100% !important;
+    min-width: 0 !important;
 }
 
 .luongson-notice .gwd_notification {
@@ -41,16 +42,43 @@
     gap: 20px !important;
     max-width: 100% !important;
     height: 32px !important;
-    padding: 0px 10px !important;
+    padding: 0 36px 0 10px !important;
     display: flex !important;
     position: relative !important;
     box-sizing: border-box !important;
     border: 1px solid #fff;
     margin-bottom: 0;
+    overflow: hidden !important;
+}
+
+.luongson-notice .gwd-dynamic-html-container {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    gap: 8px !important;
+}
+
+.luongson-notice .gwd-dynamic-html-wrapper {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+}
+
+.luongson-notice .gwd-fixed-img {
+    flex: 0 0 auto !important;
+    margin-right: 0 !important;
 }
 
 .luongson-notice .notification-banner-close {
     background-color: white;
+    position: absolute !important;
+    right: 4px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 28px !important;
+    height: 28px !important;
+    flex: 0 0 auto !important;
+    z-index: 2 !important;
 }
 
 .image-hover-scale-up,
@@ -452,6 +480,16 @@ body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongs
 }
 
 @media (max-width: 768px) {
+    .luongson-notice .gwd_notification {
+        gap: 8px !important;
+        padding: 0 32px 0 8px !important;
+    }
+
+    .luongson-notice .gwd-fixed-img {
+        width: 18px !important;
+        height: 18px !important;
+    }
+
     .banner-blv  .text-inner h1 {
         font-size: 1.4rem;
     }

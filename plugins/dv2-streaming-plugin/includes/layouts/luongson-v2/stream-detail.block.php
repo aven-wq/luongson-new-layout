@@ -30,6 +30,64 @@ if (!defined('ABSPATH')) {
                 <p class="luongson-stream-loading__text">Đang tải luồng phát...</p>
             </div>
 
+            <div class="luongson-stream-prematch" id="luongsonStreamPreMatch" hidden aria-live="polite">
+                <div class="luongson-stream-prematch__backdrop" aria-hidden="true"></div>
+                <div class="luongson-stream-prematch__content">
+                    <div class="luongson-stream-prematch__league">
+                        <img
+                            class="luongson-stream-prematch__league-logo"
+                            id="luongsonPreMatchLeagueLogo"
+                            alt=""
+                            decoding="async"
+                            hidden
+                        />
+                        <span class="luongson-stream-prematch__league-name" id="luongsonPreMatchLeague">—</span>
+                    </div>
+
+                    <div class="luongson-stream-prematch__status" id="luongsonPreMatchStatus">
+                        <span class="luongson-stream-prematch__status-dot" aria-hidden="true"></span>
+                        <span class="luongson-stream-prematch__status-text" id="luongsonPreMatchStatusText">Chưa diễn ra</span>
+                    </div>
+
+                    <div class="luongson-stream-prematch__teams">
+                        <div class="luongson-stream-prematch__team luongson-stream-prematch__team--home">
+                            <div class="luongson-stream-prematch__team-logo">
+                                <img id="luongsonPreMatchHomeLogo" alt="" decoding="async" />
+                            </div>
+                            <p class="luongson-stream-prematch__team-name" id="luongsonPreMatchHomeName">—</p>
+                        </div>
+
+                        <div class="luongson-stream-prematch__center" id="luongsonPreMatchCenter">
+                            <div class="luongson-stream-prematch__countdown" id="luongsonPreMatchCountdown" hidden>
+                                <span class="luongson-stream-prematch__countdown-label">Bắt đầu sau</span>
+                                <div class="luongson-stream-prematch__countdown-digits" aria-live="polite">
+                                    <span class="luongson-stream-prematch__digit" id="luongsonPreMatchCdH">00</span>
+                                    <span class="luongson-stream-prematch__digit-sep" aria-hidden="true">:</span>
+                                    <span class="luongson-stream-prematch__digit" id="luongsonPreMatchCdM">00</span>
+                                    <span class="luongson-stream-prematch__digit-sep" aria-hidden="true">:</span>
+                                    <span class="luongson-stream-prematch__digit" id="luongsonPreMatchCdS">00</span>
+                                </div>
+                            </div>
+
+                            <div class="luongson-stream-prematch__datetime" id="luongsonPreMatchDatetime" hidden>
+                                <span class="luongson-stream-prematch__datetime-value" id="luongsonPreMatchDatetimeVal">—</span>
+                            </div>
+
+                            <div class="luongson-stream-prematch__score" id="luongsonPreMatchScore" hidden>
+                                <span class="luongson-stream-prematch__score-value" id="luongsonPreMatchScoreVal">0 - 0</span>
+                            </div>
+                        </div>
+
+                        <div class="luongson-stream-prematch__team luongson-stream-prematch__team--away">
+                            <div class="luongson-stream-prematch__team-logo">
+                                <img id="luongsonPreMatchAwayLogo" alt="" decoding="async" />
+                            </div>
+                            <p class="luongson-stream-prematch__team-name" id="luongsonPreMatchAwayName">—</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="luongson-stream-top-bar" data-border="true">
                 <div class="luongson-stream-ticker luongson-featured-ads-ticker">
                     <ul>
