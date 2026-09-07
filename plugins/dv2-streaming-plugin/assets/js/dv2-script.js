@@ -17862,6 +17862,21 @@ function showError(message) {
     $('#luongsonStreamPreMatch').attr('hidden', 'hidden');
   }
 
+  /** Container gắn overlay TVC pre-roll (giống .dv2-video-wrapper ở vebo/cakhia) */
+  function getTvcContainer() {
+    return $('.luongson-stream-video-wrap').first();
+  }
+
+  /** Phát TVC trước khi hiển thị stream / prematch (bỏ qua nếu chưa cấu hình) */
+  function playBeforeStreamWithTvc(onDone) {
+    var $container = getTvcContainer();
+    if (window.DV2StreamTvc && typeof window.DV2StreamTvc.playBeforeStream === 'function') {
+      window.DV2StreamTvc.playBeforeStream($container, onDone);
+      return;
+    }
+    if (typeof onDone === 'function') onDone();
+  }
+
   /** Hiện / ẩn overlay "Đang tải..." */
   function setLoading(show, message) {
     var $el = $('#luongsonStreamLoading');
@@ -18495,9 +18510,11 @@ function showError(message) {
         streamLinks = links;
 
         if (!links.length) {
-          setLoading(false);
           updateCommentatorUi({ commentator: 'Chưa có BLV', avatar: FALLBACK_AVATAR });
-          updatePreMatchOverlay(data, null);
+          playBeforeStreamWithTvc(function () {
+            setLoading(false);
+            updatePreMatchOverlay(data, null);
+          });
           return;
         }
 
@@ -18507,14 +18524,13 @@ function showError(message) {
 
         var activeLink = links[activeLinkIndex];
 
-        if (isMatchLive(data, activeLink)) {
-          if (activeLink && activeLink.url) {
-            initHls(activeLink.url, $video);
-          } else {
-            setLoading(false);
-            updatePreMatchOverlay(data, activeLink);
-          }
-        } else {
+        if (isFinishedStatus(getMatchStatus(data))) {
+          setLoading(false);
+          updatePreMatchOverlay(data, activeLink);
+          return;
+        }
+
+        function showPreMatchState() {
           destroyHls();
           var video = $video.get(0);
           if (video) {
@@ -18523,6 +18539,20 @@ function showError(message) {
           }
           setLoading(false);
           updatePreMatchOverlay(data, activeLink);
+        }
+
+        function startLivePlayback() {
+          if (activeLink && activeLink.url) {
+            initHls(activeLink.url, $video);
+          } else {
+            showPreMatchState();
+          }
+        }
+
+        if (isMatchLive(data, activeLink)) {
+          playBeforeStreamWithTvc(startLivePlayback);
+        } else {
+          playBeforeStreamWithTvc(showPreMatchState);
         }
       },
       error: function () {
