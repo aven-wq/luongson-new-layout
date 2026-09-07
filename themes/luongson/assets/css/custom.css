@@ -36,10 +36,11 @@
     background-color: rgb(255, 255, 255) !important;
     border-radius: 20px !important;
     flex-flow: row !important;
-    flex: 0 0 auto !important;
+    flex: 1 1 auto !important;
     place-content: center flex-start !important;
     align-items: center !important;
     gap: 20px !important;
+    width: 100% !important;
     max-width: 100% !important;
     height: 32px !important;
     padding: 0 36px 0 10px !important;
@@ -52,16 +53,69 @@
 }
 
 .luongson-notice .gwd-dynamic-html-container {
+    display: flex !important;
     flex: 1 1 auto !important;
+    align-items: center !important;
     min-width: 0 !important;
+    max-width: 100% !important;
     width: 100% !important;
     gap: 8px !important;
+    overflow: hidden !important;
 }
 
 .luongson-notice .gwd-dynamic-html-wrapper {
-    flex: 1 1 auto !important;
+    flex: 1 1 0 !important;
     min-width: 0 !important;
+    max-width: 100% !important;
     overflow: hidden !important;
+    position: relative !important;
+    display: block !important;
+}
+
+.luongson-notice .gwd-marquee-track {
+    display: inline-flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    width: max-content !important;
+    animation: luongson-notice-marquee 40s linear infinite !important;
+    will-change: transform;
+}
+
+.luongson-notice .gwd-dynamic-html-wrapper:hover .gwd-marquee-track {
+    animation-play-state: paused !important;
+}
+
+.luongson-notice .gwd-marquee-track ins,
+.luongson-notice .gwd-dynamic-html-wrapper > ins {
+    display: inline-block !important;
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    animation: none !important;
+    transform: none !important;
+    padding: 0 50px 0 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+}
+
+.luongson-notice .gwd-marquee-track ins:nth-child(2),
+.luongson-notice .gwd-dynamic-html-wrapper > ins:nth-child(2) {
+    position: static !important;
+    left: auto !important;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+}
+
+@keyframes luongson-notice-marquee {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
 }
 
 .luongson-notice .gwd-fixed-img {
@@ -419,6 +473,12 @@ body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongs
 
 .framer-wh6HR .framer-1lxno9o:hover {
     background-color: rgb(66, 0, 94);
+}
+
+.luongson-div-2-right-chat .col-inner {
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 @keyframes gwd-icon-pulse {

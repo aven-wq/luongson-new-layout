@@ -45,6 +45,7 @@
   var streamPlaybackOk = false;
   var playbackWatchdogTimer = null;
   var KICKOFF_COUNTDOWN_MS = 24 * 60 * 60 * 1000;
+  var VN_TIMEZONE = 'Asia/Ho_Chi_Minh';
   var LIVE_STATUSES = [
     'first half',
     'second half',
@@ -156,10 +157,54 @@
     return 'is-upcoming';
   }
 
-  function getKickoffDiffMs(kickoff) {
+  /** Parse kickoff ISO; chuỗi không có offset được coi là giờ UTC+7 */
+  function parseKickoffDate(kickoff) {
     if (!kickoff) return null;
-    var kickoffTime = new Date(kickoff);
-    if (Number.isNaN(kickoffTime.getTime())) return null;
+    if (kickoff instanceof Date) {
+      return Number.isNaN(kickoff.getTime()) ? null : kickoff;
+    }
+
+    var str = String(kickoff).trim();
+    if (!str) return null;
+
+    if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(str) && !/[zZ]|[+-]\d{2}:\d{2}$/.test(str)) {
+      str += '+07:00';
+    }
+
+    var date = new Date(str);
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+
+  /** Lấy ngày/giờ theo múi giờ Việt Nam (UTC+7) */
+  function getVnDateParts(date) {
+    if (!date) return null;
+
+    var formatter = new Intl.DateTimeFormat('en-GB', {
+      timeZone: VN_TIMEZONE,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+    var parts = {};
+    var i;
+    var part;
+    var formatted = formatter.formatToParts(date);
+
+    for (i = 0; i < formatted.length; i++) {
+      part = formatted[i];
+      if (part.type !== 'literal') parts[part.type] = part.value;
+    }
+
+    if (parts.hour === '24') parts.hour = '00';
+    return parts;
+  }
+
+  function getKickoffDiffMs(kickoff) {
+    var kickoffTime = parseKickoffDate(kickoff);
+    if (!kickoffTime) return null;
     return kickoffTime.getTime() - Date.now();
   }
 
@@ -186,17 +231,13 @@
   }
 
   function formatKickoffDateTime(kickoff) {
-    if (!kickoff) return '—';
-    var date = new Date(kickoff);
-    if (Number.isNaN(date.getTime())) return '—';
+    var date = parseKickoffDate(kickoff);
+    if (!date) return '—';
 
-    var day = String(date.getDate()).padStart(2, '0');
-    var month = String(date.getMonth() + 1).padStart(2, '0');
-    var year = date.getFullYear();
-    var hours = String(date.getHours()).padStart(2, '0');
-    var minutes = String(date.getMinutes()).padStart(2, '0');
+    var parts = getVnDateParts(date);
+    if (!parts) return '—';
 
-    return day + '/' + month + '/' + year + ' ' + hours + ':' + minutes;
+    return parts.day + '/' + parts.month + '/' + parts.year + ' ' + parts.hour + ':' + parts.minute;
   }
 
   function stopPreMatchCountdown() {
