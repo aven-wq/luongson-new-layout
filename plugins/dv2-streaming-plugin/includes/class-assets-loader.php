@@ -366,6 +366,10 @@ class DV2_Assets_Loader {
             );
             $config['socoliveStreamBetButtons'] = DV2_Settings::get_socolive_stream_bet_buttons_html();
             $config['tvcVideos'] = DV2_Settings::get_tvc_videos_for_player();
+            $config['luongsonHeaderAdsAnimation'] = array(
+                'url'   => DV2_Settings::get_luongson_header_ads_animation_url(),
+                'items' => DV2_Settings::get_luongson_header_ads_animation_items_for_js(),
+            );
         }
 
         $js  = 'window.DV2_STREAMING_PLUGIN_URL=' . wp_json_encode($config['pluginUrl']) . ';';
@@ -394,6 +398,7 @@ class DV2_Assets_Loader {
             $js .= 'window.DV2_STREAM_ODDS_PANEL=' . wp_json_encode($config['streamOddsPanel']) . ';';
             $js .= 'window.DV2_SOCOLIVE_STREAM_BET_BUTTONS_HTML=' . wp_json_encode($config['socoliveStreamBetButtons']) . ';';
             $js .= 'window.DV2_TVC_VIDEOS=' . wp_json_encode($config['tvcVideos']) . ';';
+            $js .= 'window.DV2_LUONGSON_HEADER_ADS_ANIMATION=' . wp_json_encode($config['luongsonHeaderAdsAnimation']) . ';';
             $js .= 'if(typeof dv2Streaming!=="undefined"){dv2Streaming.tvcVideos=window.DV2_TVC_VIDEOS;}';
         }
 

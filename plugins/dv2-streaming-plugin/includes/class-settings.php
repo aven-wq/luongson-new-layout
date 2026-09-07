@@ -250,6 +250,29 @@ class DV2_Settings {
         );
 
         add_settings_section(
+            'dv2_luongson_settings',
+            __('Lương Sơn setting', 'dv2-streaming'),
+            array($this, 'render_section_luongson'),
+            'dv2-streaming'
+        );
+
+        add_settings_field(
+            'luongson_header_ads_animation_url',
+            __('Link ticker & Chơi ngay', 'dv2-streaming'),
+            array($this, 'render_field_luongson_header_ads_animation_url'),
+            'dv2-streaming',
+            'dv2_luongson_settings'
+        );
+
+        add_settings_field(
+            'luongson_header_ads_animation',
+            __('Luongson header ads animation', 'dv2-streaming'),
+            array($this, 'render_field_luongson_header_ads_animation'),
+            'dv2-streaming',
+            'dv2_luongson_settings'
+        );
+
+        add_settings_section(
             'dv2_ads_match_list_settings',
             __('Ads Match List', 'dv2-streaming'),
             array($this, 'render_section_ads_match_list'),
@@ -376,13 +399,193 @@ class DV2_Settings {
         echo '<p>' . esc_html__('Cấu hình nút cược trên trang chi tiết livestream Socolive.', 'dv2-streaming') . '</p>';
     }
 
+    public function render_section_luongson() {
+        echo '<p>' . esc_html__('Cấu hình ticker quảng cáo header và nút Chơi ngay trên trang livestream Lương Sơn V2.', 'dv2-streaming') . '</p>';
+    }
+
     public function render_section_ads_match_list() {
         echo '<p>' . esc_html__('Cấu hình các block ads đan xen trong match list hot-live. Mỗi block có HTML desktop, HTML mobile và số lượng item trước khi chèn ads.', 'dv2-streaming') . '</p>';
     }
 
     /**
-     * @return array<int, string>
+     * @return array<int, array{text: string, image_id: int, image_url: string}>
      */
+    public static function get_luongson_header_ads_animation_default_items() {
+        return array();
+    }
+
+    /**
+     * @param array<int, mixed> $raw
+     * @return array<int, array{text: string, image_id: int, image_url: string}>
+     */
+    private static function normalize_luongson_header_ads_animation_items(array $raw) {
+        $normalized = array();
+        $pending_image = null;
+
+        foreach ($raw as $item) {
+            if (!is_array($item)) {
+                continue;
+            }
+
+            $type = isset($item['type']) ? sanitize_key((string) $item['type']) : '';
+
+            if ($type === 'image' || $type === 'text') {
+                if ($type === 'image') {
+                    $image_id = isset($item['image_id']) ? absint($item['image_id']) : 0;
+                    $image_url = isset($item['image_url']) ? trim((string) $item['image_url']) : '';
+
+                    if ($image_url === '' && $image_id > 0) {
+                        $image_url = (string) wp_get_attachment_image_url($image_id, 'full');
+                        if ($image_url === '') {
+                            $image_url = (string) wp_get_attachment_url($image_id);
+                        }
+                    }
+
+                    if ($pending_image !== null) {
+                        $normalized[] = $pending_image;
+                    }
+
+                    $pending_image = array(
+                        'text'      => '',
+                        'image_id'  => $image_id,
+                        'image_url' => $image_url,
+                    );
+                    continue;
+                }
+
+                $text = isset($item['text']) ? trim((string) $item['text']) : '';
+                if ($pending_image !== null) {
+                    $pending_image['text'] = $text;
+                    $normalized[] = $pending_image;
+                    $pending_image = null;
+                    continue;
+                }
+
+                if ($text !== '') {
+                    $normalized[] = array(
+                        'text'      => $text,
+                        'image_id'  => 0,
+                        'image_url' => '',
+                    );
+                }
+                continue;
+            }
+
+            $text = isset($item['text']) ? trim((string) $item['text']) : '';
+            $image_id = isset($item['image_id']) ? absint($item['image_id']) : 0;
+            $image_url = isset($item['image_url']) ? trim((string) $item['image_url']) : '';
+
+            if ($image_url === '' && $image_id > 0) {
+                $image_url = (string) wp_get_attachment_image_url($image_id, 'full');
+                if ($image_url === '') {
+                    $image_url = (string) wp_get_attachment_url($image_id);
+                }
+            }
+
+            $normalized[] = array(
+                'text'      => $text,
+                'image_id'  => $image_id,
+                'image_url' => $image_url,
+            );
+        }
+
+        if ($pending_image !== null) {
+            $normalized[] = $pending_image;
+        }
+
+        return $normalized;
+    }
+
+    /**
+     * @return array<int, array{text: string, image_id: int, image_url: string}>
+     */
+    public static function get_luongson_header_ads_animation_items() {
+        $options = get_option('dv2_streaming_options', array());
+        $raw = isset($options['luongson_header_ads_animation_items']) ? $options['luongson_header_ads_animation_items'] : null;
+
+        if (!is_array($raw) || $raw === array()) {
+            return array();
+        }
+
+        return self::normalize_luongson_header_ads_animation_items($raw);
+    }
+
+    /**
+     * @return array<int, array{text: string, image_url: string}>
+     */
+    public static function get_luongson_header_ads_animation_items_for_render() {
+        $items = self::get_luongson_header_ads_animation_items();
+        $resolved = array();
+
+        foreach ($items as $item) {
+            if (!is_array($item)) {
+                continue;
+            }
+
+            $text = isset($item['text']) ? trim((string) $item['text']) : '';
+            $image_id = isset($item['image_id']) ? absint($item['image_id']) : 0;
+            $image_url = isset($item['image_url']) ? trim((string) $item['image_url']) : '';
+
+            if ($image_url === '' && $image_id > 0) {
+                $image_url = (string) wp_get_attachment_image_url($image_id, 'full');
+                if ($image_url === '') {
+                    $image_url = (string) wp_get_attachment_url($image_id);
+                }
+            }
+
+            if ($image_url === '' && $text === '') {
+                continue;
+            }
+
+            $resolved[] = array(
+                'text'      => $text,
+                'image_url' => $image_url,
+            );
+        }
+
+        return $resolved;
+    }
+
+    /**
+     * @return array<int, array{text?: string, imageUrl?: string}>
+     */
+    public static function get_luongson_header_ads_animation_items_for_js() {
+        $items = self::get_luongson_header_ads_animation_items_for_render();
+        $js_items = array();
+
+        foreach ($items as $item) {
+            $js_item = array();
+
+            if ($item['image_url'] !== '') {
+                $js_item['imageUrl'] = $item['image_url'];
+            }
+
+            if ($item['text'] !== '') {
+                $js_item['text'] = $item['text'];
+            }
+
+            if ($js_item !== array()) {
+                $js_items[] = $js_item;
+            }
+        }
+
+        return $js_items;
+    }
+
+    public static function get_luongson_header_ads_animation_url() {
+        $url = trim((string) self::get_option('luongson_header_ads_animation_url', ''));
+        if ($url !== '') {
+            return $url;
+        }
+
+        $bet_url = trim((string) self::get_option('dv2_link_bet', ''));
+        return $bet_url !== '' ? $bet_url : '#';
+    }
+
+    public static function get_luongson_stream_play_cta_url() {
+        return self::get_luongson_header_ads_animation_url();
+    }
+
     public static function get_socolive_home_bet_button_items() {
         $options = get_option('dv2_streaming_options', array());
 
@@ -1449,6 +1652,113 @@ class DV2_Settings {
         <?php
     }
 
+    public function render_field_luongson_header_ads_animation_url() {
+        $options = get_option($this->option_name, array());
+        $value = isset($options['luongson_header_ads_animation_url']) ? (string) $options['luongson_header_ads_animation_url'] : '';
+        ?>
+        <input type="text"
+               id="luongson_header_ads_animation_url"
+               name="<?php echo esc_attr($this->option_name); ?>[luongson_header_ads_animation_url]"
+               value="<?php echo esc_attr($value); ?>"
+               class="regular-text"
+               placeholder="#" />
+        <p class="description">
+            <?php echo esc_html__('URL dùng cho ticker header và nút Chơi ngay. Để trống sẽ dùng Link đặt cược (cài đặt chung).', 'dv2-streaming'); ?>
+        </p>
+        <?php
+    }
+
+    public function render_field_luongson_header_ads_animation() {
+        $stored = get_option($this->option_name, array());
+        $has_saved_items = isset($stored['luongson_header_ads_animation_items']) && is_array($stored['luongson_header_ads_animation_items']);
+        $items = $has_saved_items
+            ? self::normalize_luongson_header_ads_animation_items($stored['luongson_header_ads_animation_items'])
+            : array(array('text' => '', 'image_id' => 0, 'image_url' => ''));
+        if ($items === array()) {
+            $items = array(array('text' => '', 'image_id' => 0, 'image_url' => ''));
+        }
+        ?>
+        <input type="hidden" name="<?php echo esc_attr($this->option_name); ?>[luongson_header_ads_animation_present]" value="1" />
+        <div class="dv2-luongson-ticker-field" id="dv2-luongson-ticker-field">
+            <div class="dv2-luongson-ticker-list">
+                <?php foreach ($items as $item) : ?>
+                    <?php
+                    $text = is_array($item) && isset($item['text']) ? (string) $item['text'] : '';
+                    $image_id = is_array($item) && isset($item['image_id']) ? absint($item['image_id']) : 0;
+                    $image_url = is_array($item) && isset($item['image_url']) ? (string) $item['image_url'] : '';
+                    $this->render_luongson_header_ads_animation_row($text, $image_id, $image_url);
+                    ?>
+                <?php endforeach; ?>
+            </div>
+            <p>
+                <button type="button" class="button button-secondary dv2-luongson-ticker-add">
+                    <?php echo esc_html__('+ Thêm item', 'dv2-streaming'); ?>
+                </button>
+            </p>
+            <p class="description">
+                <?php echo esc_html__('Mỗi item gồm 1 ảnh và 1 text đi kèm. Để trống cả hai sẽ không hiển thị trên frontend. Dấu chấm phân cách được thêm tự động trước mỗi item.', 'dv2-streaming'); ?>
+            </p>
+        </div>
+        <script type="text/template" id="dv2-luongson-ticker-row-template">
+            <?php $this->render_luongson_header_ads_animation_row('', 0, ''); ?>
+        </script>
+        <?php
+    }
+
+    /**
+     * @param string $text
+     * @param int    $image_id
+     * @param string $image_url
+     */
+    private function render_luongson_header_ads_animation_row($text = '', $image_id = 0, $image_url = '') {
+        $image_id = absint($image_id);
+        if ($image_url === '' && $image_id > 0) {
+            $image_url = (string) wp_get_attachment_image_url($image_id, 'full');
+            if ($image_url === '') {
+                $image_url = (string) wp_get_attachment_url($image_id);
+            }
+        }
+        $has_image = $image_url !== '';
+        ?>
+        <div class="dv2-luongson-ticker-row"<?php echo ($text === '' && !$has_image) ? ' data-template="1"' : ''; ?>>
+            <div class="dv2-luongson-ticker-fields">
+                <div class="dv2-luongson-ticker-field dv2-luongson-ticker-field--text">
+                    <label class="dv2-luongson-ticker-label"><?php echo esc_html__('Text', 'dv2-streaming'); ?></label>
+                    <input type="text"
+                           class="regular-text dv2-luongson-ticker-text"
+                           name="<?php echo esc_attr($this->option_name); ?>[luongson_header_ads_animation_items][text][]"
+                           value="<?php echo esc_attr($text); ?>"
+                           placeholder="<?php echo esc_attr__('Nội dung ticker...', 'dv2-streaming'); ?>" />
+                </div>
+                <div class="dv2-luongson-ticker-field dv2-luongson-ticker-field--image">
+                    <label class="dv2-luongson-ticker-label"><?php echo esc_html__('Ảnh', 'dv2-streaming'); ?></label>
+                    <div class="dv2-media-upload-field">
+                        <input type="hidden"
+                               name="<?php echo esc_attr($this->option_name); ?>[luongson_header_ads_animation_items][image_id][]"
+                               value="<?php echo esc_attr($image_id); ?>" />
+                        <input type="hidden"
+                               class="dv2-luongson-ticker-image-url"
+                               name="<?php echo esc_attr($this->option_name); ?>[luongson_header_ads_animation_items][image_url][]"
+                               value="<?php echo esc_attr($image_url); ?>" />
+                        <div class="dv2-media-preview"<?php echo $has_image ? '' : ' style="display:none;"'; ?>>
+                            <img src="<?php echo esc_url($image_url); ?>" alt="" />
+                        </div>
+                        <button type="button" class="button dv2-media-upload-btn">
+                            <?php echo esc_html__('Chọn ảnh', 'dv2-streaming'); ?>
+                        </button>
+                        <button type="button" class="button dv2-media-remove-btn"<?php echo $has_image ? '' : ' style="display:none;"'; ?>>
+                            <?php echo esc_html__('Xóa ảnh', 'dv2-streaming'); ?>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="dv2-luongson-ticker-actions">
+                <button type="button" class="button dv2-luongson-ticker-remove" aria-label="<?php echo esc_attr__('Xóa item', 'dv2-streaming'); ?>">−</button>
+            </div>
+        </div>
+        <?php
+    }
+
     public function render_field_socolive_match_list_ads_mobile_breakpoint() {
         $value = self::get_socolive_match_list_ads_mobile_breakpoint();
         ?>
@@ -2026,6 +2336,49 @@ class DV2_Settings {
                     continue;
                 }
                 $sanitized['socolive_stream_bet_button_list'][] = wp_kses($html, $allowed_html);
+            }
+        }
+
+        if (isset($input['luongson_header_ads_animation_url'])) {
+            $sanitized['luongson_header_ads_animation_url'] = sanitize_text_field(
+                trim((string) wp_unslash($input['luongson_header_ads_animation_url']))
+            );
+        }
+
+        if (!empty($input['luongson_header_ads_animation_present'])) {
+            $sanitized['luongson_header_ads_animation_items'] = array();
+            $raw_items = isset($input['luongson_header_ads_animation_items']) && is_array($input['luongson_header_ads_animation_items'])
+                ? $input['luongson_header_ads_animation_items']
+                : array();
+            $texts = isset($raw_items['text']) && is_array($raw_items['text']) ? $raw_items['text'] : array();
+            $image_ids = isset($raw_items['image_id']) && is_array($raw_items['image_id']) ? $raw_items['image_id'] : array();
+            $image_urls = isset($raw_items['image_url']) && is_array($raw_items['image_url']) ? $raw_items['image_url'] : array();
+            $total_items = max(count($texts), count($image_ids), count($image_urls));
+
+            for ($index = 0; $index < $total_items; $index++) {
+                $text = isset($texts[$index]) ? trim((string) wp_unslash($texts[$index])) : '';
+                $image_id = isset($image_ids[$index]) ? absint($image_ids[$index]) : 0;
+                $image_url = isset($image_urls[$index]) ? trim((string) wp_unslash($image_urls[$index])) : '';
+
+                if ($image_id > 0) {
+                    $attachment_url = wp_get_attachment_image_url($image_id, 'full');
+                    if (!$attachment_url) {
+                        $attachment_url = wp_get_attachment_url($image_id);
+                    }
+                    if ($attachment_url) {
+                        $image_url = $attachment_url;
+                    }
+                }
+
+                if ($image_url === '' && $text === '') {
+                    continue;
+                }
+
+                $sanitized['luongson_header_ads_animation_items'][] = array(
+                    'text'      => sanitize_text_field($text),
+                    'image_id'  => $image_id,
+                    'image_url' => sanitize_text_field($image_url),
+                );
             }
         }
 
@@ -2620,6 +2973,54 @@ class DV2_Settings {
                 line-height: 1;
             }
 
+            .dv2-luongson-ticker-list {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                margin-bottom: 12px;
+            }
+
+            .dv2-luongson-ticker-row {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+                padding: 12px;
+                background: #f6f7f7;
+                border: 1px solid #dcdcde;
+                border-radius: 4px;
+            }
+
+            .dv2-luongson-ticker-fields {
+                display: flex;
+                flex: 1;
+                flex-wrap: wrap;
+                gap: 12px;
+                min-width: 0;
+            }
+
+            .dv2-luongson-ticker-field {
+                flex: 1 1 180px;
+                min-width: 0;
+            }
+
+            .dv2-luongson-ticker-label {
+                display: block;
+                margin-bottom: 6px;
+                font-weight: 600;
+            }
+
+            .dv2-luongson-ticker-actions {
+                flex-shrink: 0;
+            }
+
+            .dv2-luongson-ticker-remove {
+                min-width: 36px;
+                padding-left: 0;
+                padding-right: 0;
+                font-size: 18px;
+                line-height: 1;
+            }
+
             .dv2-match-list-ads-list {
                 display: flex;
                 flex-direction: column;
@@ -2769,8 +3170,12 @@ class DV2_Settings {
                     }
                 });
 
-                $(".dv2-media-upload-field").each(function() {
-                    var $field = $(this);
+                function initDv2MediaUploadField($field) {
+                    if (!$field.length || $field.data("dv2MediaInit")) {
+                        return;
+                    }
+
+                    $field.data("dv2MediaInit", true);
                     var $input = $field.find("input[type=hidden]");
                     var $preview = $field.find(".dv2-media-preview");
                     var $img = $preview.find("img");
@@ -2796,6 +3201,7 @@ class DV2_Settings {
                             var attachment = frame.state().get("selection").first().toJSON();
                             $input.val(attachment.id);
                             $img.attr("src", attachment.url);
+                            $field.closest(".dv2-luongson-ticker-row").find(".dv2-luongson-ticker-image-url").val(attachment.url);
                             $preview.show();
                             $removeBtn.show();
                         });
@@ -2807,9 +3213,14 @@ class DV2_Settings {
                         e.preventDefault();
                         $input.val("");
                         $img.attr("src", "");
+                        $field.closest(".dv2-luongson-ticker-row").find(".dv2-luongson-ticker-image-url").val("");
                         $preview.hide();
                         $removeBtn.hide();
                     });
+                }
+
+                $(".dv2-media-upload-field").each(function() {
+                    initDv2MediaUploadField($(this));
                 });
 
                 var $tvcField = $("#dv2-tvc-videos-field");
@@ -3000,6 +3411,35 @@ class DV2_Settings {
                         $(this).closest(".dv2-scl-bet-btn-row").remove();
                     });
                 });
+
+                var $luongsonTickerField = $("#dv2-luongson-ticker-field");
+                if ($luongsonTickerField.length) {
+                    var $luongsonTickerList = $luongsonTickerField.find(".dv2-luongson-ticker-list");
+                    var luongsonTickerRowTemplate = $("#dv2-luongson-ticker-row-template").html() || "";
+
+                    function createLuongsonTickerRow() {
+                        return $("<div>").html(luongsonTickerRowTemplate).find(".dv2-luongson-ticker-row").first().clone();
+                    }
+
+                    $luongsonTickerField.on("click", ".dv2-luongson-ticker-add", function(e) {
+                        e.preventDefault();
+                        var $row = createLuongsonTickerRow();
+                        $row.removeAttr("data-template");
+                        $row.find(".dv2-luongson-ticker-text").val("");
+                        $row.find("input[type=hidden]").val("");
+                        $row.find(".dv2-luongson-ticker-image-url").val("");
+                        $row.find(".dv2-media-preview").hide();
+                        $row.find(".dv2-media-remove-btn").hide();
+                        $row.find(".dv2-media-preview img").attr("src", "");
+                        $luongsonTickerList.append($row);
+                        initDv2MediaUploadField($row.find(".dv2-media-upload-field"));
+                    });
+
+                    $luongsonTickerField.on("click", ".dv2-luongson-ticker-remove", function(e) {
+                        e.preventDefault();
+                        $(this).closest(".dv2-luongson-ticker-row").remove();
+                    });
+                }
 
                 var $matchListAdsField = $("#dv2-match-list-ads-field");
                 if ($matchListAdsField.length) {

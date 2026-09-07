@@ -11,6 +11,9 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+
+$luongson_header_link = DV2_Settings::get_luongson_header_ads_animation_url();
+$luongson_ticker_items = DV2_Settings::get_luongson_header_ads_animation_items_for_render();
 ?>
 <div class="luongson-stream-match">
     <div class="luongson-stream-stage" id="luongsonStreamStage">
@@ -89,27 +92,29 @@ if (!defined('ABSPATH')) {
             </div>
 
             <div class="luongson-stream-top-bar" data-border="true">
+                <?php if (!empty($luongson_ticker_items)) : ?>
                 <div class="luongson-stream-ticker luongson-featured-ads-ticker">
-                    <ul>
-                        <li class="ticker-item"><span class="luongson-stream-ticker__dot"></span></li>
-                        <li class="ticker-item">
-                            <img alt="" decoding="async" height="26" />
-                        </li>
-                        <li class="ticker-item"><span class="luongson-stream-ticker__dot"></span></li>
-                        <li class="ticker-item">
-                            <p class="luongson-stream-ticker__text">⚽️ Kèo thơm mỗi ngày • Nhận ưu đãi thành viên mới</p>
-                        </li>
-                        <li class="ticker-item"><span class="luongson-stream-ticker__dot"></span></li>
-                        <li class="ticker-item">
-                            <img alt="" decoding="async" height="26" />
-                        </li>
-                        <li class="ticker-item"><span class="luongson-stream-ticker__dot"></span></li>
-                        <li class="ticker-item">
-                            <p class="luongson-stream-ticker__text">• Soi kèo nhanh, tỷ lệ chuẩn • Tham gia ngay hôm nay 🔥</p>
-                        </li>
-                    </ul>
+                    <a href="<?php echo esc_attr($luongson_header_link); ?>" target="_blank" rel="noopener noreferrer">
+                        <ul>
+                            <?php foreach ($luongson_ticker_items as $luongson_ticker_item) : ?>
+                                <?php if ($luongson_ticker_item['image_url'] !== '') : ?>
+                                    <li class="ticker-item"><span class="luongson-stream-ticker__dot"></span></li>
+                                    <li class="ticker-item">
+                                        <img alt="" decoding="async" height="26" src="<?php echo esc_url($luongson_ticker_item['image_url']); ?>" />
+                                    </li>
+                                <?php endif; ?>
+                                <?php if ($luongson_ticker_item['text'] !== '') : ?>
+                                    <li class="ticker-item"><span class="luongson-stream-ticker__dot"></span></li>
+                                    <li class="ticker-item">
+                                        <p class="luongson-stream-ticker__text"><?php echo esc_html($luongson_ticker_item['text']); ?></p>
+                                    </li>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </ul>
+                    </a>
                 </div>
-                <a class="luongson-stream-play-cta" id="luongsonPlayCta" href="#" data-border="true">
+                <?php endif; ?>
+                <a class="luongson-stream-play-cta" id="luongsonPlayCta" href="<?php echo esc_attr($luongson_header_link); ?>" data-border="true" target="_blank" rel="noopener noreferrer">
                     <span class="luongson-stream-play-cta__icon" aria-hidden="true">
                         <img alt="" width="11" height="13" />
                     </span>

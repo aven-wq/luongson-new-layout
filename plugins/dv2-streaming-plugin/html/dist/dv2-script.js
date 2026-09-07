@@ -18512,16 +18512,55 @@ function showError(message) {
     });
   }
 
+  /** Áp nội dung ticker từ cấu hình admin (ảnh + text theo cặp, render tách riêng như HTML gốc) */
+  function applyHeaderAdsTickerContent(headerAds) {
+    var items = headerAds && headerAds.items;
+    if (!Array.isArray(items) || !items.length) return;
+
+    var $contentItems = $('.luongson-stream-ticker > a > ul > li.ticker-item').filter(function () {
+      return !$(this).hasClass('clone-item') && $(this).find('img, .luongson-stream-ticker__text').length;
+    });
+
+    var contentIndex = 0;
+    items.forEach(function (item) {
+      if (!item) return;
+
+      var imageUrl = item.imageUrl || item.image_url || '';
+      if (imageUrl) {
+        if (imageUrl.indexOf('http') !== 0 && imageUrl.indexOf('/') !== 0 && imageUrl.indexOf('data:') !== 0) {
+          imageUrl = IMG + imageUrl.replace(/^images\//, '');
+        }
+        var $imageRow = $contentItems.eq(contentIndex);
+        if ($imageRow.length) {
+          $imageRow.find('img').attr('src', imageUrl);
+          contentIndex++;
+        }
+      }
+
+      var text = item.text || '';
+      if (text) {
+        var $textRow = $contentItems.eq(contentIndex);
+        if ($textRow.length) {
+          $textRow.find('.luongson-stream-ticker__text').text(text);
+          contentIndex++;
+        }
+      }
+    });
+  }
+
   /** Gắn URL asset tĩnh và link CTA (WordPress / HTML prototype) */
   function initStaticAssets() {
-    var tickerImg = IMG + 'PUSEI2ZAlkDV8Tn0LUSpOKWlJMU_d2f4ba6f.png';
+    var headerAds = (
+      typeof window.DV2_LUONGSON_HEADER_ADS_ANIMATION !== 'undefined' && window.DV2_LUONGSON_HEADER_ADS_ANIMATION
+    ) || cfg.headerAdsAnimation || {};
     var betLogo = cfg.betImageUrl || ASSETS + 'xo88.avif';
     var betUrl = BET_URL || '#';
-    var playUrl = cfg.playCtaUrl || betUrl;
+    var headerLinkUrl = headerAds.url || cfg.playCtaUrl || betUrl;
 
     $('#liveVideo').attr('poster', POSTER);
-    $('.luongson-stream-ticker img').attr('src', tickerImg);
-    $('#luongsonPlayCta').attr('href', playUrl);
+    $('.luongson-stream-ticker > a').attr('href', headerLinkUrl);
+    applyHeaderAdsTickerContent(headerAds);
+    $('#luongsonPlayCta').attr('href', headerLinkUrl);
     $('#luongsonPlayCta img').attr('src', ASSETS + 'icon-play.svg');
     $('#luongsonCommentatorTrigger .luongson-match-commentator-avatar img').attr('src', FALLBACK_AVATAR);
     $('#luongsonStreamPlay .luongson-stream-ctrl__icon-play').attr('src', ASSETS + 'icon-play.svg');
