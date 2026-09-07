@@ -14384,44 +14384,44 @@ body .ck2-modal-close {
   position: relative;
 }
 
-.luongson-home-match .framer-ojf97f {
-  --border-bottom-width: 1px;
+/* Bet CTA — cược + xo88 logo */
+.luongson-home-match .luongson-home-bet-link {
   --border-color: #ff7d4a;
-  --border-left-width: 1px;
-  --border-right-width: 1px;
-  --border-style: solid;
-  --border-top-width: 1px;
-  border-radius: calc(16px * 0.796);
-  cursor: pointer;
-  height: 36px;
-  overflow: clip;
-  background-color: rgb(107, 0, 0);
-  flex: 0 0 auto;
-  width: 140px;
   position: relative;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 2px;
+  display: block;
+  flex: none;
+  width: 140px;
+  height: 36px;
+  border-radius: calc(16px * 0.796);
+  background-color: rgb(107, 0, 0);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  overflow: clip;
+  text-decoration: none;
+  cursor: pointer;
 }
 
-.luongson-home-match .framer-y7i3ij {
-  white-space: pre;
-  flex: 0 0 auto;
-  width: auto;
-  height: auto;
+.luongson-home-match .luongson-home-bet-text {
   position: absolute;
   top: 50%;
   left: 8px;
   transform: translateY(-50%);
+  font-family: var(--ls-font-display-snap);
+  font-size: 20px;
+  color: #fff;
+  white-space: pre;
+  line-height: 1;
 }
 
-.luongson-home-match .framer-xve6bb {
-  aspect-ratio: 1.99371 / 1;
-  flex: 0 0 auto;
-  width: auto;
+.luongson-home-match .luongson-home-bet-logo {
   position: absolute;
   top: -8px;
   bottom: -8px;
   right: -3px;
-  overflow: visible;
+  width: auto;
+  height: calc(100% + 16px);
+  aspect-ratio: 1.99371 / 1;
+  object-fit: contain;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -14665,17 +14665,6 @@ body .ck2-modal-close {
   object-fit: cover !important;
 }
 
-.luongson-home-match .ls-s59 {
-  transform: translateY(-50%) !important;
-}
-
-.luongson-home-match .ls-s60 {
-  --font-selector: R0Y7QW50b24gU0MtcmVndWxhcg== !important;
-  --framer-font-family: var(--ls-font-display-snap) !important;
-  --framer-font-size: 20px !important;
-  --framer-text-color: rgb(255, 255, 255) !important;
-}
-
 /* -------------------------------------------------------------------------- */
 /* Responsive                                                                 */
 /* -------------------------------------------------------------------------- */
@@ -14717,6 +14706,2525 @@ body .ck2-modal-close {
 
   .luongson-home-match .framer-woxy63 {
     width: 210px;
+  }
+}
+
+
+/* list-matches.css */
+/**
+ * LuongSon Sport — Live matches list ("Đang phát sóng")
+ */
+
+/* -------------------------------------------------------------------------- */
+/* Shell                                                                      */
+/* -------------------------------------------------------------------------- */
+
+.luongson-list-matches {
+  --ls-font: "Momo Trust Sans", "Momo Trust Sans Placeholder", system-ui, sans-serif;
+  --ls-font-display: "Anton SC", "Anton SC Placeholder", Impact, sans-serif;
+  --ls-live: rgb(239, 68, 68);
+  --ls-score: rgb(46, 88, 255);
+  --ls-card-bg: rgb(245, 245, 245);
+  --ls-card-border: #82828252;
+  --ls-commentator: rgb(0, 110, 219);
+  --ls-commentator-hover: rgb(0, 166, 255);
+  --ls-bet-bg: rgb(0, 38, 18);
+  --ls-bet-border: #4aff6b;
+  --ls-odds-home: rgb(0, 153, 46);
+  --ls-odds-away: rgb(255, 0, 0);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  font-family: var(--ls-font);
+}
+
+.luongson-list-matches *,
+.luongson-list-matches *::before,
+.luongson-list-matches *::after {
+  box-sizing: border-box;
+}
+
+.luongson-list-matches p {
+  margin: 0;
+}
+
+.luongson-list-matches [data-border="true"] {
+  position: relative;
+}
+
+.luongson-list-matches [data-border="true"]::after {
+  content: "";
+  border-width: var(--border-top-width, 0) var(--border-right-width, 0)
+    var(--border-bottom-width, 0) var(--border-left-width, 0);
+  border-color: var(--border-color, transparent);
+  border-style: var(--border-style, solid);
+  border-radius: inherit;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+@keyframes luongsonListMatchesPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(1.18);
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Header                                                                     */
+/* -------------------------------------------------------------------------- */
+
+.luongson-list-matches__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 10px 0;
+  margin-bottom: 10px;
+}
+
+.luongson-list-matches__live-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 100px;
+  background: var(--ls-live);
+  flex: none;
+  animation: luongsonListMatchesPulse 1.4s ease-in-out infinite;
+}
+
+.luongson-list-matches__title {
+  margin: 0;
+  font-family: var(--ls-font);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #000;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Grid                                                                       */
+/* -------------------------------------------------------------------------- */
+
+.luongson-live-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(50px, 1fr));
+  gap: 20px;
+  width: 100%;
+  padding: 0 10px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Match card                                                                 */
+/* -------------------------------------------------------------------------- */
+
+.luongson-match-card {
+  --border-top-width: 1px;
+  --border-right-width: 1px;
+  --border-bottom-width: 1px;
+  --border-left-width: 1px;
+  --border-color: var(--ls-card-border);
+  --border-style: solid;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border-radius: 16px;
+  background: var(--ls-card-bg);
+  cursor: pointer;
+  overflow: clip;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.luongson-match-card:hover {
+  background-color: rgb(222, 247, 255);
+  opacity: 1;
+  transform: scale(1.03);
+}
+
+.luongson-match-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+}
+
+.luongson-match-league {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.luongson-match-league p {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  color: #000;
+}
+
+.luongson-match-status-container {
+  flex: none;
+}
+
+.luongson-match-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px;
+  border-radius: 100px;
+  background: var(--ls-live);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.luongson-match-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 100px;
+  background: #fff;
+  opacity: 0.68;
+  flex: none;
+  animation: luongsonListMatchesPulse 1.4s ease-in-out infinite;
+}
+
+.luongson-match-status-text {
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+}
+
+.luongson-match-time-box {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.luongson-match-time,
+.luongson-match-date {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.luongson-match-time {
+  color: rgb(117, 117, 117);
+}
+
+.luongson-match-date {
+  color: #000;
+}
+
+/* Body / teams ------------------------------------------------------------- */
+
+.luongson-match-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  text-decoration: none;
+  color: black;
+}
+
+.luongson-match-team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.luongson-match-team-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 100px;
+  overflow: hidden;
+  flex: none;
+}
+
+.luongson-match-team-logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.luongson-match-team-name {
+  width: 100%;
+  text-align: center;
+}
+
+.luongson-match-team-name p {
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  word-break: break-word;
+}
+
+.luongson-match-score-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+.luongson-match-score-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 76px;
+  padding: 10px;
+  border-radius: 12px;
+  background: var(--ls-score);
+}
+
+.luongson-match-score-text {
+  font-family: var(--ls-font-display);
+  font-size: 24px;
+  line-height: 1;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.luongson-match-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 76px;
+  padding: 0 6px 0 4px;
+}
+
+.luongson-match-stat-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.luongson-match-stat-flag {
+  width: 8px;
+  height: 8px;
+  color: #0051ff;
+  flex: none;
+}
+
+.luongson-match-stat-card {
+  width: 6px;
+  height: 8px;
+  border-radius: 1px;
+  flex: none;
+}
+
+.luongson-match-stat-card.is-yellow {
+  background: rgb(255, 178, 13);
+}
+
+.luongson-match-stat-card.is-red {
+  background: rgb(239, 68, 68);
+}
+
+.luongson-match-stat-text {
+  font-size: 9px;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Footer / commentator / odds ---------------------------------------------- */
+
+.luongson-match-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+  overflow: visible;
+}
+
+.luongson-match-commentator-container {
+  flex: none;
+}
+
+.luongson-match-commentator-trigger {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 140px;
+  height: 28px;
+  padding: 2px 8px 2px 2px;
+  border: 0;
+  border-radius: 18px;
+  background: var(--ls-commentator);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  margin: 0;
+}
+
+.luongson-match-commentator-trigger:hover,
+.luongson-match-commentator-trigger[aria-expanded="true"] {
+  background: var(--ls-commentator-hover);
+}
+
+.luongson-match-commentator-avatar {
+  --border-top-width: 1px;
+  --border-right-width: 1px;
+  --border-bottom-width: 1px;
+  --border-left-width: 1px;
+  --border-color: rgba(255, 255, 255, 0.2);
+  --border-style: solid;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border-radius: 100px;
+  overflow: clip;
+  flex: none;
+}
+
+.luongson-match-commentator-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 45.8% 41%;
+}
+
+.luongson-match-commentator-name {
+  flex: 1 1 0;
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: capitalize;
+}
+
+.luongson-match-commentator-chevron {
+  width: 12px;
+  height: 12px;
+  color: #fff;
+  flex: none;
+}
+
+.luongson-match-odds-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  width: 60%;
+  min-width: 0;
+}
+
+.luongson-match-odds-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 28px;
+  padding: 0 4px;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.luongson-match-odds-type,
+.luongson-match-odds-values {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 100%;
+}
+
+.luongson-match-odds-type span,
+.luongson-match-odds-val {
+  font-size: 9px;
+  line-height: 1;
+  text-align: center;
+}
+
+.luongson-match-odds-val.is-home {
+  font-weight: 700;
+  color: var(--ls-odds-home);
+}
+
+.luongson-match-odds-val.is-away {
+  font-weight: 700;
+  color: var(--ls-odds-away);
+}
+
+.luongson-match-bet-btn {
+  --border-top-width: 1px;
+  --border-right-width: 1px;
+  --border-bottom-width: 1px;
+  --border-left-width: 1px;
+  --border-color: var(--ls-bet-border);
+  --border-style: solid;
+  position: relative;
+  display: block;
+  width: 109px;
+  aspect-ratio: 3.88889 / 1;
+  border-radius: 12px;
+  background: var(--ls-bet-bg);
+  box-shadow: rgba(0, 0, 0, 0.25) 0 1px 2px;
+  overflow: clip;
+  flex: none;
+  text-decoration: none;
+}
+
+.luongson-match-bet-logo {
+  position: absolute;
+  top: 50%;
+  left: 40px;
+  width: 62px;
+  height: auto;
+  transform: translateY(-50%);
+  object-fit: contain;
+}
+
+.luongson-match-bet-text {
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  transform: translateY(-50%);
+  font-family: var(--ls-font-display);
+  font-size: 15px;
+  color: #fff;
+  white-space: nowrap;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Ads row                                                                    */
+/* -------------------------------------------------------------------------- */
+
+.luongson-live-ads {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.luongson-live-ad {
+  position: relative;
+  display: block;
+  flex: 1 1 0;
+  min-width: 0;
+  aspect-ratio: 8.08889 / 1;
+  border-radius: 8px;
+  overflow: clip;
+  background: rgb(74, 210, 255);
+  transition: transform 0.3s ease;
+}
+
+.luongson-live-ad:hover {
+  transform: scale(1.03);
+}
+
+.luongson-live-ad--wide {
+  background: rgb(99, 141, 255);
+}
+
+.luongson-live-ad img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Portals                                                                    */
+/* -------------------------------------------------------------------------- */
+
+.luongson-commentator-portal,
+.luongson-match-modal-portal {
+  position: fixed;
+  z-index: 99999;
+  pointer-events: auto;
+}
+
+.luongson-commentator-portal__panel {
+  --border-top-width: 1px;
+  --border-right-width: 1px;
+  --border-bottom-width: 1px;
+  --border-left-width: 1px;
+  --border-color: rgba(0, 38, 90, 0.14);
+  --border-style: solid;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 170px;
+  padding: 6px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(0, 25, 70, 0.18);
+  box-sizing: border-box;
+}
+
+.luongson-commentator-portal__panel[data-border="true"]::after,
+.luongson-match-modal-portal [data-border="true"]::after {
+  content: "";
+  border-width: var(--border-top-width, 0) var(--border-right-width, 0)
+    var(--border-bottom-width, 0) var(--border-left-width, 0);
+  border-color: var(--border-color, transparent);
+  border-style: var(--border-style, solid);
+  border-radius: inherit;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+.luongson-commentator-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 34px;
+  padding: 5px 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.luongson-commentator-option:hover {
+  background: rgb(232, 245, 255);
+}
+
+.luongson-commentator-option__avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 100px;
+  overflow: hidden;
+  flex: none;
+}
+
+.luongson-commentator-option__avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.luongson-commentator-option__name {
+  flex: 1 1 0;
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgb(16, 39, 70);
+  white-space: nowrap;
+}
+
+.luongson-match-modal-portal__panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 384px;
+  padding: 12px 12px 20px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+.luongson-match-modal-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.luongson-match-modal-tab {
+  --border-top-width: 1px;
+  --border-right-width: 1px;
+  --border-bottom-width: 1px;
+  --border-left-width: 1px;
+  --border-color: rgb(82, 125, 255);
+  --border-style: solid;
+  position: relative;
+  padding: 0px 15px;
+  border: 0;
+  border-radius: 20px;
+  background: transparent;
+  color: #000;
+  font-family: var(--ls-font, "Momo Trust Sans", system-ui, sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 26px;
+  text-transform: capitalize;
+  height: unset;
+  min-height: unset;
+}
+
+.luongson-match-modal-tab.is-active, .luongson-match-modal-tab:hover {
+  background: rgb(82, 125, 255);
+  color: #fff;
+}
+
+.luongson-match-modal-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 360px;
+}
+
+.luongson-match-modal-row__labels {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+}
+
+.luongson-match-modal-row__labels span {
+  font-size: 13px;
+  color: #000;
+}
+
+.luongson-match-modal-row__labels .is-val {
+  flex: 1 1 0;
+  font-weight: 700;
+}
+
+.luongson-match-modal-row__labels .is-val:last-child {
+  text-align: right;
+}
+
+.luongson-match-modal-row__labels .is-label {
+  flex: none;
+  font-weight: 500;
+  text-align: center;
+}
+
+.luongson-match-modal-bars {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.luongson-match-modal-bar {
+  position: relative;
+  flex: 1 1 0;
+  height: 10px;
+  border-radius: 8px;
+  background: rgb(204, 204, 204);
+  overflow: hidden;
+}
+
+.luongson-match-modal-bar > span {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 20px;
+  transition: width 0.3s ease;
+}
+
+.luongson-match-modal-bar.is-home > span {
+  right: 0;
+  background: rgb(0, 128, 255);
+}
+
+.luongson-match-modal-bar.is-away > span {
+  left: 0;
+  background: rgb(240, 36, 36);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Responsive                                                                 */
+/* -------------------------------------------------------------------------- */
+
+@media (min-width: 1440px) {
+  .luongson-live-grid {
+    grid-template-columns: repeat(3, minmax(50px, 1fr));
+    gap: 12px 10px;
+  }
+
+  .luongson-live-ads {
+    gap: 20px;
+  }
+}
+
+@media (min-width: 760px) and (max-width: 1439.98px) {
+  .luongson-live-grid {
+    grid-template-columns: repeat(2, minmax(50px, 1fr));
+    gap: 12px 10px;
+  }
+
+  .luongson-live-ads {
+    gap: 8px;
+  }
+
+  .luongson-live-ad--wide {
+    display: none;
+  }
+}
+
+@media (max-width: 759.98px) {
+  .luongson-live-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .luongson-live-ads {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .luongson-live-ad,
+  .luongson-live-ad--wide {
+    width: 100%;
+    flex: 0 0 auto;
+    display: block;
+  }
+
+  .luongson-live-ad--wide {
+    display: none;
+  }
+
+  .luongson-match-odds-wrapper {
+    width: auto;
+    flex: 1 1 auto;
+  }
+
+  .luongson-match-modal-portal__panel,
+  .luongson-match-modal-row {
+    width: min(384px, calc(100vw - 24px));
+  }
+
+  .luongson-live-grid, .luongson-list-matches__header {
+    padding: 0;
+  }
+
+  .luongson-match-card .luongson-match-footer {
+    gap: 0;
+  }
+}
+
+
+/* schedule.css */
+/**
+ * LuongSon Sport — Match schedule ("Lịch thi đấu")
+ * Scoped under .luongson-schedule; Framer classnames kept for markup compat.
+ */
+
+/* -------------------------------------------------------------------------- */
+/* Shell                                                                      */
+/* -------------------------------------------------------------------------- */
+
+.luongson-schedule {
+  --ls-font: "Momo Trust Sans", "Momo Trust Sans Placeholder", system-ui, sans-serif;
+  --ls-font-display: "Anton SC", "Anton SC Placeholder", Impact, sans-serif;
+  --overflow-clip-fallback: clip;
+  --one-if-corner-shape-supported: 0;
+  --ls-radius-sm: 8px;
+  --ls-radius-md: 12px;
+  --ls-radius-lg: 16px;
+  --ls-radius-pill: 100px;
+  --ls-blue: rgb(46, 88, 255);
+  --ls-live: rgb(239, 68, 68);
+  --ls-score: rgb(12, 0, 247);
+  --ls-odds-home: rgb(0, 153, 46);
+  --ls-odds-away: rgb(255, 0, 0);
+  --ls-bet-bg: rgb(0, 38, 18);
+  --ls-bet-border: #4aff6b;
+  --ls-card-bg: rgb(245, 245, 245);
+  --ls-muted: rgb(117, 117, 117);
+  --ls-corner: calc(12px * var(--one-if-corner-shape-supported, var(--corner-shape-fallback, 1)));
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  position: relative;
+  font-family: var(--ls-font);
+}
+
+.luongson-schedule *,
+.luongson-schedule *::before,
+.luongson-schedule *::after {
+  box-sizing: border-box;
+}
+
+.luongson-schedule p {
+  margin: 0;
+}
+
+.luongson-schedule .ssr-variant {
+  display: contents;
+}
+
+.luongson-schedule .framer-text {
+  margin: 0;
+  font-family: var(--framer-font-family, var(--ls-font));
+  font-style: var(--framer-font-style, normal);
+  font-weight: var(--framer-font-weight, 400);
+  color: var(--framer-text-color, #000);
+  font-size: var(--framer-font-size, 16px);
+  letter-spacing: var(--framer-letter-spacing, 0);
+  text-align: var(--framer-text-alignment, start);
+  line-height: var(--framer-line-height, 1.2em);
+  text-transform: var(--framer-text-transform, none);
+}
+
+.luongson-schedule a.framer-text,
+.luongson-schedule a.framer-styles-preset-1kr0omk {
+  color: inherit;
+  text-decoration: none;
+}
+
+.luongson-schedule a.framer-text:hover {
+  text-decoration: underline;
+}
+
+.luongson-schedule [data-border="true"] {
+  position: relative;
+}
+
+.luongson-schedule [data-border="true"]::after {
+  content: "";
+  border-width: var(--border-top-width, 0) var(--border-right-width, 0)
+    var(--border-bottom-width, 0) var(--border-left-width, 0);
+  border-color: var(--border-color, transparent);
+  border-style: var(--border-style, solid);
+  border-radius: inherit;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+@keyframes luongsonScheduleLivePulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(1.18);
+  }
+}
+
+/* Shared layout primitives */
+.luongson-schedule :is(
+  .framer-6nzkg,
+  .framer-rtjghz,
+  .framer-1j0wurm,
+  .framer-1r6vwl8,
+  .framer-fxofsc,
+  .framer-w4nh6l,
+  .framer-10q8rqr,
+  .framer-1s265wr,
+  .framer-6y1vgx,
+  .framer-f916c2,
+  .framer-14yunt6,
+  .framer-k4r736,
+  .framer-rnop1x,
+  .framer-1qcymno,
+  .framer-1nt9csj,
+  .framer-1n2kznj,
+  .framer-1l567ap,
+  .framer-1gv02xo,
+  .framer-1er19rb,
+  .framer-nkqsx9,
+  .framer-1rwoktm,
+  .framer-kvg3eg,
+  .framer-1fh56dl,
+  .framer-1fj6fv7,
+  .framer-11m1cm9,
+  .framer-hewvbf,
+  .framer-130lxau,
+  .framer-9iptzt,
+  .framer-iz7ZB.framer-3i8edo
+) {
+  display: flex;
+  position: relative;
+}
+
+.luongson-schedule :is(
+  .framer-q65yhr,
+  .framer-ptrkjg,
+  .framer-wjt7qo,
+  .framer-1vimra6,
+  .framer-jj8xat,
+  .framer-10qz6z5,
+  .framer-1dcwg5u,
+  .framer-1qkfb9p,
+  .framer-y7mzqb,
+  .framer-oy32wj
+) {
+  white-space: pre;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  position: relative;
+}
+
+/* Single-line truncate: avoid -webkit-box/line-clamp on RichTextContainer
+   (nested p/a collapses to "..." only). Ellipsis on the text node instead. */
+.luongson-schedule :is(.framer-fo8uj4, .framer-lpvq2y, .framer-pvvwao, .framer-12jd5dg, .framer-167qswu) {
+  height: auto;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.luongson-schedule :is(.framer-fo8uj4, .framer-lpvq2y, .framer-pvvwao, .framer-12jd5dg, .framer-167qswu) > .framer-text,
+.luongson-schedule :is(.framer-fo8uj4, .framer-lpvq2y, .framer-pvvwao, .framer-12jd5dg, .framer-167qswu) > .framer-text > a.framer-text {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.luongson-schedule :is(
+  .framer-45zk6d,
+  .framer-lgis4k,
+  .framer-7ilrx5,
+  .framer-ya78b,
+  .framer-7rm2ei,
+  .framer-16mpmbs,
+  .framer-1nam7at,
+  .framer-5l2cc9,
+  .framer-vvlwst,
+  .framer-1yur8au,
+  .framer-g7imbk,
+  .framer-1nuh4c9,
+  .framer-h0x5kk,
+  .framer-rbcqob,
+  .framer-1xvm2dx,
+  .framer-xs9xlf
+) {
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  height: auto;
+  position: relative;
+}
+
+.luongson-schedule :is(.framer-kvg3eg, .framer-1fh56dl, .framer-1k1h91o, .framer-3xtg2y) {
+  --corner-shape-fallback: 0.796;
+  border-radius: var(--ls-corner);
+  corner-shape: superellipse(1.4);
+}
+
+.luongson-schedule :is(.framer-y4X00, .framer-Jde4M, .framer-deoUy) {
+  aspect-ratio: 1 / 1;
+  background-color: var(--szd5nr, #0f3052);
+  width: 24px;
+}
+
+.luongson-schedule :is(.framer-18697ez, .framer-e8q5vt, .framer-t5wzon) {
+  flex: 0 0 auto;
+  width: 14px;
+  height: auto;
+  position: relative;
+}
+
+.luongson-schedule :is(.framer-14v5o2a, .framer-4svd1w, .framer-lrcy3t, .framer-1b7t7uc) {
+  flex: 0 0 auto;
+  height: auto;
+  overflow: visible;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Header + date picker                                                       */
+/* -------------------------------------------------------------------------- */
+
+.luongson-schedule button.framer-1j0wurm,
+.luongson-schedule button.framer-1r6vwl8,
+.luongson-schedule button.framer-fxofsc {
+  appearance: none;
+  border: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+
+.luongson-schedule .framer-6nzkg {
+  height: min-content;
+  overflow: var(--overflow-clip-fallback, clip);
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px 10px 0;
+}
+
+.luongson-schedule .framer-y7mzqb {
+  --framer-link-text-color: #09f;
+  --framer-link-text-decoration: underline;
+}
+
+.luongson-schedule .framer-rtjghz {
+  height: min-content;
+  overflow: var(--overflow-clip-fallback, clip);
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center;
+  align-items: center;
+  gap: 6px;
+  width: min-content;
+  padding: 0;
+}
+
+.luongson-schedule :is(.framer-1j0wurm, .framer-1r6vwl8) {
+  --border-bottom-width: 1px;
+  --border-color: #0f30521f;
+  --border-left-width: 1px;
+  --border-right-width: 1px;
+  --border-style: solid;
+  --border-top-width: 1px;
+  cursor: pointer;
+  background-color: #fff;
+  border-radius: var(--ls-radius-sm);
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center;
+  align-items: center;
+  width: min-content;
+  height: min-content;
+  padding: 5px;
+}
+
+.luongson-schedule .framer-fxofsc {
+  cursor: pointer;
+  background-color: var(--ls-blue);
+  border-radius: var(--ls-radius-sm);
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center;
+  align-items: center;
+  gap: 5px;
+  width: min-content;
+  height: min-content;
+  padding: 5px 9px;
+}
+
+.luongson-schedule .framer-18697ez,
+.luongson-schedule .framer-e8q5vt {
+  --szd5nr: #2a3341;
+}
+
+.luongson-schedule .framer-t5wzon {
+  --szd5nr: #fff;
+}
+
+.luongson-schedule .framer-y4X00 {
+  mask:
+    url('data:image/svg+xml,<svg display="block" role="presentation" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M 15 6.75 L 0 6.75 M 0 6.75 L 6.75 13.5 M 0 6.75 L 6.75 0" fill="transparent" height="13.5px" stroke-dasharray="" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" stroke="var(--szd5nr, black)" transform="translate(4.5 5.25)" width="15px"/></svg>')
+    alpha no-repeat center / auto var(--framer-icon-mask-mode, add),
+    var(--framer-icon-mask, none);
+}
+
+.luongson-schedule .framer-Jde4M {
+  mask:
+    url('data:image/svg+xml,<svg display="block" role="presentation" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M 0 6.75 L 15 6.75 M 15 6.75 L 8.25 0 M 15 6.75 L 8.25 13.5" fill="transparent" height="13.5px" stroke-dasharray="" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" stroke="var(--szd5nr, black)" transform="translate(4.5 5.25)" width="15px"/></svg>')
+    alpha no-repeat center / auto var(--framer-icon-mask-mode, add),
+    var(--framer-icon-mask, none);
+}
+
+.luongson-schedule .framer-deoUy {
+  mask:
+    url('data:image/svg+xml,<svg display="block" role="presentation" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M 3.75 0 L 3.75 2.25 M 14.25 0 L 14.25 2.25 M 0 15.75 L 0 4.5 C 0 3.257 1.007 2.25 2.25 2.25 L 15.75 2.25 C 16.993 2.25 18 3.257 18 4.5 L 18 15.75 M 0 15.75 C 0 16.993 1.007 18 2.25 18 L 15.75 18 C 16.993 18 18 16.993 18 15.75 M 0 15.75 L 0 8.25 C 0 7.007 1.007 6 2.25 6 L 15.75 6 C 16.993 6 18 7.007 18 8.25 L 18 15.75" fill="transparent" height="18px" stroke-dasharray="" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" stroke="var(--szd5nr, black)" transform="translate(3 3)" width="18px"/></svg>')
+    alpha no-repeat center / auto var(--framer-icon-mask-mode, add),
+    var(--framer-icon-mask, none);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Match row                                                                  */
+/* -------------------------------------------------------------------------- */
+
+.luongson-schedule .framer-w4nh6l {
+  height: 76px;
+  overflow: var(--overflow-clip-fallback, clip);
+  background-color: var(--ls-card-bg);
+  border-radius: var(--ls-radius-lg);
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center flex-start;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px;
+}
+
+.luongson-schedule .framer-10q8rqr {
+  flex-flow: column;
+  flex: 0 0 auto;
+  place-content: flex-start space-between;
+  align-items: flex-start;
+  width: min-content;
+  height: 100%;
+  padding: 0;
+}
+
+.luongson-schedule .framer-1u3bdzr-container {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  position: relative;
+}
+
+.luongson-schedule .framer-iz7ZB.framer-3i8edo {
+  cursor: pointer;
+  flex-flow: row;
+  place-content: center;
+  align-items: center;
+  gap: 4px;
+  width: min-content;
+  height: min-content;
+  padding: 3px 6px;
+}
+
+.luongson-schedule .framer-9wekp1 {
+  aspect-ratio: 1 / 1;
+  flex: 0 0 auto;
+  width: 8px;
+  height: auto;
+  position: relative;
+  animation: luongsonScheduleLivePulse 1.4s ease-in-out infinite;
+}
+
+.luongson-schedule .framer-fo8uj4 {
+  flex: 0 0 auto;
+  width: 180px;
+}
+
+.luongson-schedule .framer-1s265wr {
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center flex-end;
+  align-items: center;
+  gap: 4px;
+  width: min-content;
+  height: min-content;
+  padding: 0;
+}
+
+.luongson-schedule .framer-1fb9lh6 {
+  width: 1px;
+  height: 48px;
+  position: relative;
+}
+
+.luongson-schedule .framer-6y1vgx {
+  min-width: 220px;
+  height: 60px;
+  overflow: var(--overflow-clip-fallback, clip);
+  flex-flow: column;
+  flex: 1 0 0;
+  place-content: center space-between;
+  align-items: center;
+  width: 1px;
+  padding: 0;
+}
+
+.luongson-schedule :is(.framer-f916c2, .framer-14yunt6) {
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center flex-start;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: min-content;
+  padding: 0;
+}
+
+.luongson-schedule :is(.framer-lpvq2y, .framer-pvvwao) {
+  flex: 0 0 auto;
+  width: 17px;
+}
+
+.luongson-schedule :is(.framer-k4r736, .framer-rnop1x) {
+  aspect-ratio: 1 / 1;
+  border-radius: var(--ls-radius-pill);
+  flex-flow: column;
+  flex: 0 0 auto;
+  place-content: center;
+  align-items: center;
+  width: 28px;
+  height: auto;
+  padding: 0;
+}
+
+.luongson-schedule .framer-14v5o2a {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  position: relative;
+}
+
+.luongson-schedule .framer-4svd1w {
+  aspect-ratio: 0.941538 / 1;
+  width: 100%;
+  position: relative;
+}
+
+.luongson-schedule :is(.framer-12jd5dg, .framer-167qswu) {
+  flex: 1 0 0;
+  width: 1px;
+  min-width: 0;
+}
+
+.luongson-schedule :is(.framer-1qcymno, .framer-1nt9csj) {
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center space-between;
+  align-items: center;
+  width: 60px;
+  height: min-content;
+  padding: 0 6px 0 4px;
+}
+
+.luongson-schedule :is(
+  .framer-1n2kznj,
+  .framer-1l567ap,
+  .framer-1gv02xo,
+  .framer-1er19rb,
+  .framer-nkqsx9
+) {
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center;
+  align-items: center;
+  gap: 2px;
+  width: min-content;
+  height: min-content;
+  padding: 0;
+  overflow: visible;
+}
+
+.luongson-schedule :is(.framer-lwakex, .framer-bgyb85) {
+  --21h8s6: #0051ff;
+  aspect-ratio: 1 / 1;
+  flex: 0 0 auto;
+  width: 8px;
+  height: auto;
+  position: relative;
+}
+
+.luongson-schedule svg.framer-bSUln {
+  color: var(--21h8s6, currentColor);
+  aspect-ratio: 1 / 1;
+  width: 8px;
+  display: block;
+}
+
+.luongson-schedule :is(.framer-16c3b9w, .framer-1naohdo, .framer-1ctyskl) {
+  width: 6px;
+  height: 8px;
+  position: relative;
+}
+
+/* Odds panels */
+.luongson-schedule .framer-1rwoktm {
+  height: 60px;
+  overflow: var(--overflow-clip-fallback, clip);
+  flex-flow: column;
+  flex: 0 0 auto;
+  place-content: center flex-start;
+  align-items: center;
+  gap: 4px;
+  width: min-content;
+  padding: 0;
+}
+
+.luongson-schedule :is(.framer-kvg3eg, .framer-1fh56dl) {
+  background-color: #fff;
+  flex-flow: column;
+  flex: 1 0 0;
+  place-content: center;
+  align-items: center;
+  gap: 2px;
+  width: 140px;
+  height: 1px;
+  padding: 0 4px;
+  border-radius: 8px;
+}
+
+.luongson-schedule :is(.framer-1fj6fv7, .framer-11m1cm9, .framer-hewvbf, .framer-130lxau) {
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+  height: min-content;
+  padding: 0;
+  overflow: visible;
+}
+
+.luongson-schedule :is(.framer-45zk6d, .framer-lgis4k, .framer-7ilrx5, .framer-ya78b) {
+  flex: 0 0 auto;
+  width: 16px;
+}
+
+.luongson-schedule :is(
+  .framer-7rm2ei,
+  .framer-16mpmbs,
+  .framer-1nam7at,
+  .framer-5l2cc9,
+  .framer-vvlwst,
+  .framer-1yur8au,
+  .framer-g7imbk,
+  .framer-1nuh4c9,
+  .framer-h0x5kk,
+  .framer-rbcqob,
+  .framer-1xvm2dx,
+  .framer-xs9xlf
+) {
+  flex: 1 0 0;
+  width: 1px;
+}
+
+/* Bet CTAs */
+.luongson-schedule .framer-9iptzt {
+  flex-flow: column;
+  flex: 0 0 auto;
+  place-content: center space-between;
+  align-items: center;
+  width: min-content;
+  height: 60px;
+  padding: 0;
+  overflow: visible;
+}
+
+.luongson-schedule :is(.framer-1k1h91o, .framer-3xtg2y) {
+  --border-bottom-width: 1px;
+  --border-color: var(--ls-bet-border);
+  --border-left-width: 1px;
+  --border-right-width: 1px;
+  --border-style: solid;
+  --border-top-width: 1px;
+  aspect-ratio: 3.88889 / 1;
+  cursor: pointer;
+  height: auto;
+  overflow: var(--overflow-clip-fallback, clip);
+  background-color: var(--ls-bet-bg);
+  flex: 0 0 auto;
+  width: 109px;
+  position: relative;
+  border-radius: 8px;
+}
+
+.luongson-schedule .framer-lrcy3t {
+  aspect-ratio: 2 / 1;
+  width: 56px;
+  position: absolute;
+  bottom: 0;
+  left: 44px;
+}
+
+.luongson-schedule .framer-1b7t7uc {
+  aspect-ratio: 4.11765 / 1;
+  width: 62px;
+  position: absolute;
+  top: 50%;
+  left: 40px;
+  transform: translateY(-50%);
+}
+
+.luongson-schedule :is(.framer-uwn2lx, .framer-iwh02n) {
+  --framer-link-text-color: #09f;
+  --framer-link-text-decoration: underline;
+  white-space: pre;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  transform: translateY(-50%);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Typography + image utilities (ls-ltd-*)                                    */
+/* -------------------------------------------------------------------------- */
+
+.luongson-schedule .ls-ltd-s3 {
+  position: absolute;
+  border-radius: inherit;
+  corner-shape: inherit;
+  inset: 0;
+}
+
+.luongson-schedule .ls-ltd-s4 {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  corner-shape: inherit;
+  object-position: center;
+  object-fit: cover;
+}
+
+.luongson-schedule .ls-ltd-s8 {
+  transform: none;
+}
+
+.luongson-schedule :is(
+  .ls-ltd-s46,
+  .ls-ltd-s47,
+  .ls-ltd-s51,
+  .ls-ltd-s52,
+  .ls-ltd-s53,
+  .ls-ltd-s55,
+  .ls-ltd-s56,
+  .ls-ltd-s57,
+  .ls-ltd-s59,
+  .ls-ltd-s60,
+  .ls-ltd-s61,
+  .ls-ltd-s62
+) {
+  --framer-font-family: var(--ls-font);
+}
+
+.luongson-schedule .ls-ltd-s46 {
+  --framer-font-size: 24px;
+  --framer-font-weight: 700;
+  --framer-text-alignment: center;
+}
+
+.luongson-schedule .ls-ltd-s47 {
+  --framer-font-size: 12px;
+  --framer-font-weight: 600;
+  --framer-line-height: 1em;
+  --framer-text-color: #fff;
+}
+
+.luongson-schedule .ls-ltd-s48 {
+  background-color: var(--ls-live);
+  border-radius: var(--ls-radius-pill);
+}
+
+.luongson-schedule .ls-ltd-s49 {
+  background-color: #fff;
+  border-radius: var(--ls-radius-pill);
+  opacity: 0.32;
+  will-change: transform;
+}
+
+.luongson-schedule .ls-ltd-s50 {
+  --extracted-r6o4lv: #fff;
+  transform: none;
+}
+
+.luongson-schedule .ls-ltd-s51 {
+  --framer-font-size: 11px;
+  --framer-font-weight: 700;
+  --framer-line-height: 1em;
+  --framer-text-color: var(--extracted-r6o4lv, #fff);
+}
+
+.luongson-schedule :is(.ls-ltd-s52, .ls-ltd-s53) {
+  --framer-font-size: 11px;
+  --framer-font-weight: 600;
+  --framer-line-height: 1em;
+}
+
+.luongson-schedule .ls-ltd-s53 {
+  --framer-text-color: var(--ls-muted);
+}
+
+.luongson-schedule :is(.ls-ltd-s54, .ls-ltd-s58, .ls-ltd-s65) {
+  image-rendering: pixelated;
+  flex-shrink: 0;
+  background-size: 100% 100%;
+}
+
+.luongson-schedule .ls-ltd-s54 {
+  background-image: url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1 48%22 overflow=%22visible%22><path d=%22M 0 0.499 C 0 0.224 0.224 0 0.499 0 C 0.5 0 0.5 0 0.5 0 C 0.776 0 1 0.224 1 0.5 C 1 5.271 1 42.726 1 47.5 C 1 47.776 0.776 48 0.5 48 C 0.5 48 0.499 48 0.499 48 C 0.223 48 0 47.777 0 47.501 C 0 42.732 0 5.272 0 0.499 Z%22 fill=%22rgb(224, 224, 224)%22></path></svg>");
+}
+
+.luongson-schedule :is(.ls-ltd-s55, .ls-ltd-s56) {
+  --framer-font-size: 14px;
+  --framer-font-weight: 700;
+}
+
+.luongson-schedule .ls-ltd-s55 {
+  --framer-text-alignment: center;
+  --framer-text-color: var(--ls-score);
+}
+
+.luongson-schedule .ls-ltd-s57 {
+  --framer-font-size: 9px;
+  --framer-text-alignment: center;
+}
+
+.luongson-schedule .ls-ltd-s58 {
+  background-image: url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 6 8%22 overflow=%22visible%22><path d=%22M 0 1 C 0 0.448 0.448 0 1 0 C 2.11 0 3.89 0 5 0 C 5.552 0 6 0.448 6 1 C 6 2.537 6 5.463 6 7 C 6 7.552 5.552 8 5 8 C 3.89 8 2.11 8 1 8 C 0.448 8 0 7.552 0 7 C 0 5.463 0 2.537 0 1 Z%22 fill=%22rgb(255, 178, 13)%22></path></svg>");
+}
+
+.luongson-schedule :is(.ls-ltd-s59, .ls-ltd-s60, .ls-ltd-s61, .ls-ltd-s62) {
+  --framer-font-size: 9px;
+  --framer-line-height: 1em;
+  --framer-text-alignment: center;
+}
+
+.luongson-schedule .ls-ltd-s60 {
+  --framer-font-weight: 700;
+  --framer-text-color: var(--ls-odds-home);
+}
+
+.luongson-schedule .ls-ltd-s61 {
+  --framer-font-weight: 700;
+  --framer-text-color: var(--ls-odds-away);
+}
+
+.luongson-schedule .ls-ltd-s62 {
+  --framer-font-weight: 800;
+}
+
+.luongson-schedule .ls-ltd-s63 {
+  transform: translateY(-50%);
+}
+
+.luongson-schedule .ls-ltd-s64 {
+  --framer-font-family: var(--ls-font-display);
+  --framer-font-size: 15px;
+  --framer-text-color: #fff;
+}
+
+.luongson-schedule .ls-ltd-s65 {
+  background-image: url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 6 8%22 overflow=%22visible%22><path d=%22M 0 1 C 0 0.448 0.448 0 1 0 C 2.11 0 3.89 0 5 0 C 5.552 0 6 0.448 6 1 C 6 2.537 6 5.463 6 7 C 6 7.552 5.552 8 5 8 C 3.89 8 2.11 8 1 8 C 0.448 8 0 7.552 0 7 C 0 5.463 0 2.537 0 1 Z%22 fill=%22rgb(255, 13, 13)%22></path></svg>");
+}
+
+/* -------------------------------------------------------------------------- */
+/* Responsive                                                                 */
+/* -------------------------------------------------------------------------- */
+
+@media (min-width: 1280px) and (max-width: 1439.98px) {
+  .luongson-schedule :is(.framer-10q8rqr, .framer-lgis4k, .framer-ya78b) {
+    order: 0;
+  }
+
+  .luongson-schedule .framer-1fb9lh6 {
+    order: 1;
+  }
+
+  .luongson-schedule .framer-6y1vgx {
+    order: 2;
+  }
+
+  .luongson-schedule .framer-1rwoktm {
+    order: 3;
+  }
+
+  .luongson-schedule .framer-9iptzt {
+    order: 4;
+  }
+
+  .luongson-schedule :is(
+    .framer-5l2cc9,
+    .framer-vvlwst,
+    .framer-1yur8au,
+    .framer-rbcqob,
+    .framer-1xvm2dx,
+    .framer-xs9xlf
+  ) {
+    order: 5;
+  }
+}
+
+@media (max-width: 759.98px) {
+  .luongson-schedule .framer-6nzkg {
+    flex-direction: column;
+    place-content: flex-start;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 0 10px;
+  }
+
+  .luongson-schedule .framer-y7mzqb {
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    width: 100%;
+  }
+
+  .luongson-schedule .framer-w4nh6l {
+    flex-wrap: wrap;
+    height: min-content;
+  }
+
+  .luongson-schedule .framer-10q8rqr {
+    flex-direction: row;
+    flex: 1 0 0;
+    order: 0;
+    align-content: center;
+    align-items: center;
+    width: 1px;
+    min-width: 300px;
+    height: 17px;
+  }
+
+  .luongson-schedule .framer-6y1vgx {
+    order: 1;
+  }
+
+  .luongson-schedule .framer-1rwoktm {
+    flex: 1 0 0;
+    order: 2;
+    width: 1px;
+    min-width: 140px;
+  }
+
+  .luongson-schedule .framer-1fb9lh6 {
+    order: 3;
+  }
+
+  .luongson-schedule .framer-9iptzt {
+    order: 4;
+  }
+
+  .luongson-schedule :is(.framer-kvg3eg, .framer-1fh56dl) {
+    width: 100%;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Match status hover modal (shared portal markup with list-matches)          */
+/* -------------------------------------------------------------------------- */
+
+.luongson-match-modal-portal {
+  position: fixed;
+  z-index: 99999;
+  pointer-events: auto;
+}
+
+.luongson-match-modal-portal [data-border="true"]::after {
+  content: "";
+  border-width: var(--border-top-width, 0) var(--border-right-width, 0)
+    var(--border-bottom-width, 0) var(--border-left-width, 0);
+  border-color: var(--border-color, transparent);
+  border-style: var(--border-style, solid);
+  border-radius: inherit;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+.luongson-match-modal-portal__panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 384px;
+  padding: 12px 12px 20px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+.luongson-match-modal-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.luongson-match-modal-tab {
+  --border-top-width: 1px;
+  --border-right-width: 1px;
+  --border-bottom-width: 1px;
+  --border-left-width: 1px;
+  --border-color: rgb(82, 125, 255);
+  --border-style: solid;
+  position: relative;
+  padding: 0 15px;
+  border: 0;
+  border-radius: 20px;
+  background: transparent;
+  color: #000;
+  font-family: var(--ls-font, "Momo Trust Sans", system-ui, sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 26px;
+  text-transform: capitalize;
+  height: unset;
+  min-height: unset;
+}
+
+.luongson-match-modal-tab.is-active,
+.luongson-match-modal-tab:hover {
+  background: rgb(82, 125, 255);
+  color: #fff;
+}
+
+.luongson-match-modal-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 360px;
+}
+
+.luongson-match-modal-row__labels {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+}
+
+.luongson-match-modal-row__labels span {
+  font-size: 13px;
+  color: #000;
+}
+
+.luongson-match-modal-row__labels .is-val {
+  flex: 1 1 0;
+  font-weight: 700;
+}
+
+.luongson-match-modal-row__labels .is-val:last-child {
+  text-align: right;
+}
+
+.luongson-match-modal-row__labels .is-label {
+  flex: none;
+  font-weight: 500;
+  text-align: center;
+}
+
+.luongson-match-modal-bars {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.luongson-match-modal-bar {
+  position: relative;
+  flex: 1 1 0;
+  height: 10px;
+  border-radius: 8px;
+  background: rgb(204, 204, 204);
+  overflow: hidden;
+}
+
+.luongson-match-modal-bar > span {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 20px;
+  transition: width 0.3s ease;
+}
+
+.luongson-match-modal-bar.is-home > span {
+  right: 0;
+  background: rgb(0, 128, 255);
+}
+
+.luongson-match-modal-bar.is-away > span {
+  left: 0;
+  background: rgb(240, 36, 36);
+}
+
+@media (max-width: 759.98px) {
+  .luongson-match-modal-portal__panel,
+  .luongson-match-modal-row {
+    width: min(384px, calc(100vw - 24px));
+  }
+}
+
+
+
+/* stream-match.css */
+/**
+ * LuongSon V2 — Live stream player
+ */
+
+.luongson-stream-match {
+  --ls-font: "Momo Trust Sans", system-ui, sans-serif;
+  --ls-font-display: "Anton SC", Impact, sans-serif;
+  --ls-commentator: rgb(0, 110, 219);
+  --ls-commentator-hover: rgb(0, 166, 255);
+  --ls-odds-home: rgb(0, 153, 46);
+  --ls-odds-away: rgb(255, 0, 0);
+  --ls-odds-down: rgb(255, 0, 0);
+  --ls-odds-up: rgb(0, 153, 46);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  font-family: var(--ls-font);
+}
+
+.luongson-stream-match *,
+.luongson-stream-match *::before,
+.luongson-stream-match *::after {
+  box-sizing: border-box;
+}
+
+/* Standalone HTML preview only — avoid affecting WordPress page body */
+body:has(> .luongson-stream-match:only-child) {
+  margin: 0;
+  background: #0a1628;
+  padding: 16px;
+}
+
+.luongson-stream-stage {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.luongson-stream-video-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #000;
+}
+
+.luongson-stream-player-slot,
+.luongson-stream-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.luongson-stream-player-slot {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Loading */
+.luongson-stream-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+}
+
+.luongson-stream-loading[hidden] {
+  display: none !important;
+}
+
+.luongson-stream-loading__spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: lsStreamSpin 0.8s linear infinite;
+}
+
+@keyframes lsStreamSpin {
+  to { transform: rotate(360deg); }
+}
+
+.luongson-stream-loading__text {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Top ticker bar */
+.luongson-stream-top-bar {
+  --border-top-width: 1px;
+  --border-right-width: 1px;
+  --border-bottom-width: 1px;
+  --border-left-width: 1px;
+  --border-color: #0f30521f;
+  --border-style: solid;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 5px 0 12px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.92);
+  overflow: clip;
+}
+
+.luongson-stream-top-bar[data-border="true"]::after {
+  content: "";
+  border-width: var(--border-top-width) var(--border-right-width) var(--border-bottom-width) var(--border-left-width);
+  border-color: var(--border-color);
+  border-style: var(--border-style);
+  border-radius: inherit;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+.luongson-stream-ticker {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 26px;
+  overflow: hidden;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.luongson-stream-ticker ul {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 26px;
+  width: max-content !important;
+  gap: 12px !important;
+  will-change: transform;
+  user-select: none;
+  cursor: grab;
+}
+
+.luongson-stream-ticker ul:active {
+  cursor: grabbing;
+}
+
+.luongson-stream-ticker :is(.ticker-item, .clone-item) {
+  flex: 0 0 auto;
+}
+
+.luongson-stream-ticker__dot {
+  display: block;
+  width: 4px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.luongson-stream-ticker__text {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  color: rgb(56, 63, 77);
+  white-space: nowrap;
+}
+
+.luongson-stream-ticker img {
+  display: block;
+  height: 26px;
+  width: auto;
+}
+
+.luongson-stream-play-cta {
+  --border-top-width: 0;
+  --border-right-width: 0;
+  --border-bottom-width: 0;
+  --border-left-width: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  height: 30px;
+  padding: 3px 12px 3px 3px;
+  border-radius: 15px;
+  background: rgb(0, 110, 219);
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.luongson-stream-play-cta__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 100px;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.luongson-stream-play-cta__label {
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Bottom bar */
+.luongson-stream-bottom-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 12px 10px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.82) 0%,
+    rgba(0, 0, 0, 0.45) 55%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.luongson-stream-bottom-bar > * {
+  pointer-events: auto;
+}
+
+.luongson-stream-bottom-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  flex: 0 0 auto;
+  padding-bottom: 2px;
+}
+
+.luongson-stream-bottom-right {
+  --stream-right-block-width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  min-width: 0;
+  flex: 0 0 auto;
+}
+
+.luongson-stream-bottom-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+/* Commentator (from list-matches) */
+.luongson-match-commentator-container {
+  flex: none;
+}
+
+.luongson-match-commentator-trigger {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 140px;
+  height: 28px;
+  padding: 2px 8px 2px 2px;
+  border: 0;
+  border-radius: 18px;
+  background: var(--ls-commentator);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  margin: 0;
+}
+
+.luongson-match-commentator-trigger:hover,
+.luongson-match-commentator-trigger[aria-expanded="true"] {
+  background: var(--ls-commentator-hover);
+}
+
+.luongson-match-commentator-avatar {
+  --border-top-width: 1px;
+  --border-right-width: 1px;
+  --border-bottom-width: 1px;
+  --border-left-width: 1px;
+  --border-color: rgba(255, 255, 255, 0.2);
+  --border-style: solid;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border-radius: 100px;
+  overflow: clip;
+  flex: none;
+}
+
+.luongson-match-commentator-avatar[data-border="true"]::after {
+  content: "";
+  border-width: var(--border-top-width) var(--border-right-width) var(--border-bottom-width) var(--border-left-width);
+  border-color: var(--border-color);
+  border-style: var(--border-style);
+  border-radius: inherit;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+.luongson-match-commentator-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.luongson-match-commentator-name {
+  flex: 1 1 0;
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: capitalize;
+}
+
+.luongson-match-commentator-chevron {
+  width: 12px;
+  height: 12px;
+  color: #fff;
+  flex: none;
+}
+
+/* Player controls */
+.luongson-stream-ctrl {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  flex: none;
+}
+
+.luongson-stream-ctrl:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.luongson-stream-ctrl img,
+.luongson-stream-ctrl svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+.luongson-stream-ctrl--play.is-paused .luongson-stream-ctrl__icon-pause {
+  display: none;
+}
+
+.luongson-stream-ctrl--play:not(.is-paused) .luongson-stream-ctrl__icon-play {
+  display: none;
+}
+
+.luongson-stream-volume {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  max-width: 108px;
+}
+
+.luongson-stream-volume__slider {
+  flex: 1;
+  min-width: 48px;
+  height: 4px;
+  margin: 0;
+  accent-color: #fff;
+  cursor: pointer;
+}
+
+.luongson-stream-ctrl--volume.is-muted .luongson-stream-ctrl__icon-vol {
+  opacity: 0.45;
+}
+
+/* Odds panel */
+.luongson-stream-odds-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 2px;
+  width: var(--stream-right-block-width);
+  height: 28px;
+  padding: 0 6px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+}
+
+.luongson-stream-odds-row {
+  display: grid;
+  grid-template-columns: 18px repeat(3, minmax(24px, 1fr));
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+}
+
+.luongson-stream-odds-label {
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1;
+  color: #111;
+  text-align: left;
+}
+
+.luongson-stream-odds-val {
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  color: #111;
+}
+
+.luongson-stream-odds-val.is-rate {
+  font-weight: 800;
+  color: #111;
+}
+
+.luongson-stream-odds-val.is-up {
+  color: var(--ls-odds-up);
+  font-weight: 700;
+}
+
+.luongson-stream-odds-val.is-down {
+  color: var(--ls-odds-away);
+  font-weight: 700;
+}
+
+/* Bet CTA — cược + xo88 logo (same as home-match) */
+.luongson-stream-bet-link {
+  --border-color: #ff7d4a;
+  position: relative;
+  display: block;
+  flex: none;
+  width: var(--stream-right-block-width);
+  height: 36px;
+  border-radius: calc(16px * 0.796);
+  background-color: rgb(107, 0, 0);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  overflow: clip;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.luongson-stream-bet-text {
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  transform: translateY(-50%);
+  font-family: var(--ls-font-display);
+  font-size: 20px;
+  color: #fff;
+  white-space: pre;
+  line-height: 1;
+}
+
+.luongson-stream-bet-logo {
+  position: absolute;
+  top: -8px;
+  bottom: -8px;
+  right: -3px;
+  width: auto;
+  height: calc(100% + 16px);
+  aspect-ratio: 1.99371 / 1;
+  object-fit: contain;
+}
+
+.luongson-stream-ctrl--fs {
+  align-self: center;
+}
+
+/* Commentator portal */
+.luongson-commentator-portal {
+  position: fixed;
+  z-index: 99999;
+  pointer-events: auto;
+}
+
+.luongson-commentator-portal__panel {
+  --border-top-width: 1px;
+  --border-right-width: 1px;
+  --border-bottom-width: 1px;
+  --border-left-width: 1px;
+  --border-color: rgba(0, 38, 90, 0.14);
+  --border-style: solid;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 170px;
+  padding: 6px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(0, 25, 70, 0.18);
+}
+
+.luongson-commentator-portal__panel[data-border="true"]::after {
+  content: "";
+  border-width: var(--border-top-width) var(--border-right-width) var(--border-bottom-width) var(--border-left-width);
+  border-color: var(--border-color);
+  border-style: var(--border-style);
+  border-radius: inherit;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+.luongson-commentator-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 34px;
+  padding: 5px 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.luongson-commentator-option:hover,
+.luongson-commentator-option.is-active {
+  background: rgb(232, 245, 255);
+}
+
+.luongson-commentator-option__avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 100px;
+  overflow: hidden;
+  flex: none;
+}
+
+.luongson-commentator-option__avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.luongson-commentator-option__name {
+  flex: 1 1 0;
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgb(16, 39, 70);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: "Momo Trust Sans", system-ui, sans-serif;
+}
+
+/* Fullscreen */
+.luongson-stream-stage:fullscreen,
+.luongson-stream-stage:-webkit-full-screen {
+  max-width: none;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+.luongson-stream-stage:fullscreen .luongson-stream-video-wrap,
+.luongson-stream-stage:-webkit-full-screen .luongson-stream-video-wrap {
+  width: 100%;
+  height: 100%;
+  max-height: 100vh;
+  border-radius: 0;
+  aspect-ratio: auto;
+}
+
+@media (max-width: 640px) {
+  .luongson-stream-top-bar {
+    left: 6px;
+    right: 6px;
+    top: 6px;
+    height: 36px;
+    padding-left: 8px;
+  }
+
+  .luongson-stream-play-cta__label {
+    display: none;
+  }
+
+  .luongson-stream-play-cta {
+    padding: 3px;
+  }
+
+  .luongson-match-commentator-trigger {
+    width: 120px;
+  }
+
+  .luongson-stream-bottom-right {
+    --stream-right-block-width: 120px;
+  }
+
+  .luongson-stream-bet-link {
+    height: 30px;
+  }
+
+  .luongson-stream-bet-text {
+    font-size: 16px;
+  }
+
+  .luongson-stream-odds-panel {
+    height: 26px;
+    padding: 0 4px;
+  }
+
+  .luongson-stream-bottom-actions {
+    gap: 4px;
+  }
+
+  .luongson-stream-volume {
+    max-width: 88px;
+  }
+
+  .luongson-stream-volume__slider {
+    min-width: 40px;
   }
 }
 

@@ -16676,6 +16676,1521 @@ function showError(message) {
 
 })(window, window.jQuery || window.$, window.jQuery || window.$, window.Hls, window.Swiper);
 
+/* list-matches.js */
+(function(window, $, jQuery, Hls, Swiper) {
+/**
+ * LuongSon Sport — Live matches list
+ * Commentator dropdown + match-status hover modal
+ */
+(function () {
+  'use strict';
+
+  var cfg = window.luongsonListMatches || {};
+  var IMG = cfg.imgUrl || '';
+
+  function img(file) {
+    return IMG + file;
+  }
+
+  /* ------------------------------------------------------------------------ */
+  /* Static mock cards (replace with API when ready)                          */
+  /* ------------------------------------------------------------------------ */
+
+  function buildMatchCardHtml() {
+    return (
+      '<div class="luongson-match-card" data-border="true">' +
+      '<div class="luongson-match-header">' +
+      '<div class="luongson-match-league"><p>Premier League</p></div>' +
+      '<div class="luongson-match-status-container">' +
+      '<div class="luongson-match-status" data-highlight="true">' +
+      '<span class="luongson-match-status-dot" aria-hidden="true"></span>' +
+      '<span class="luongson-match-status-text">Hiệp 2 - 72’</span>' +
+      '</div></div>' +
+      '<div class="luongson-match-time-box">' +
+      '<span class="luongson-match-time">15:30</span>' +
+      '<span class="luongson-match-date">15.08</span>' +
+      '</div></div>' +
+      '<a class="luongson-match-body" href="#">' +
+      '<div class="luongson-match-team">' +
+      '<div class="luongson-match-team-logo">' +
+      '<img alt="" decoding="async" height="128" src="' +
+      img('Dq03h2PCDoRXrVQvPC7ywAo9R0_7881bb5a.png') +
+      '" width="128" />' +
+      '</div><div class="luongson-match-team-name"><p>Burnley</p></div></div>' +
+      '<div class="luongson-match-score-center">' +
+      '<div class="luongson-match-score-box"><p class="luongson-match-score-text">2 - 1</p></div>' +
+      '<div class="luongson-match-stats">' +
+      '<div class="luongson-match-stat-item">' +
+      '<svg class="luongson-match-stat-flag" role="presentation" viewBox="0 0 24 24" aria-hidden="true">' +
+      '<path d="M5 21V4m0 0l13 4.5L5 13V4z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />' +
+      '</svg><span class="luongson-match-stat-text">6-8</span></div>' +
+      '<div class="luongson-match-stat-item">' +
+      '<span class="luongson-match-stat-card is-yellow" aria-hidden="true"></span>' +
+      '<span class="luongson-match-stat-text">2-2</span></div>' +
+      '<div class="luongson-match-stat-item">' +
+      '<span class="luongson-match-stat-card is-red" aria-hidden="true"></span>' +
+      '<span class="luongson-match-stat-text">2-0</span></div>' +
+      '</div></div>' +
+      '<div class="luongson-match-team">' +
+      '<div class="luongson-match-team-logo">' +
+      '<img alt="" decoding="async" height="128" src="' +
+      img('U86AWvixUpZ9FQv4FEwV6sRB5Y_59f68630.png') +
+      '" width="128" />' +
+      '</div><div class="luongson-match-team-name"><p>Wolverhampton</p></div></div>' +
+      '</a>' +
+      '<div class="luongson-match-footer">' +
+      '<div class="luongson-match-commentator-container">' +
+      '<div class="luongson-match-commentator" data-commentator="Lưu Bang">' +
+      '<button type="button" class="luongson-match-commentator-trigger" aria-haspopup="listbox" aria-expanded="false">' +
+      '<span class="luongson-match-commentator-avatar" data-border="true">' +
+      '<img alt="" decoding="async" height="472" src="' +
+      img('luu-bang.png') +
+      '" width="400" />' +
+      '</span><span class="luongson-match-commentator-name">Lưu Bang</span>' +
+      '<svg class="luongson-match-commentator-chevron" role="presentation" viewBox="0 0 24 24" aria-hidden="true">' +
+      '<path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />' +
+      '</svg></button></div></div>' +
+      '<div class="luongson-match-odds-wrapper">' +
+      '<div class="luongson-match-odds-box">' +
+      '<div class="luongson-match-odds-type"><span>HDP FT</span></div>' +
+      '<div class="luongson-match-odds-values">' +
+      '<span class="luongson-match-odds-val is-home">0.97</span>' +
+      '<span class="luongson-match-odds-val">2.5</span>' +
+      '<span class="luongson-match-odds-val is-away">0.83</span>' +
+      '</div></div>' +
+      '<a class="luongson-match-bet-btn" href="#" data-border="true">' +
+      '<img class="luongson-match-bet-logo" alt="" decoding="async" height="68" loading="lazy" src="' +
+      img('KB717wZbU63tSAHyTm9pLUqxM_b79bb177.png') +
+      '" width="280" />' +
+      '<span class="luongson-match-bet-text">cược</span></a>' +
+      '</div></div></div>'
+    );
+  }
+
+  function renderStaticMockCards(root) {
+    var grid = root.querySelector('.luongson-live-grid');
+    var ads = grid && grid.querySelector('.luongson-live-ads');
+    if (!grid || !ads || grid.dataset.staticRendered) return;
+
+    grid.dataset.staticRendered = '1';
+    var cardHtml = buildMatchCardHtml();
+    var i;
+
+    for (i = 0; i < 6; i++) {
+      ads.insertAdjacentHTML('beforebegin', cardHtml);
+    }
+    for (i = 0; i < 6; i++) {
+      ads.insertAdjacentHTML('afterend', cardHtml);
+    }
+  }
+
+  /* ------------------------------------------------------------------------ */
+  /* Commentator dropdown                                                     */
+  /* ------------------------------------------------------------------------ */
+
+  function initCommentatorDropdown(root) {
+    var portal = document.querySelector('.luongson-commentator-portal');
+    if (!portal) {
+      portal = document.createElement('div');
+      portal.className = 'luongson-commentator-portal';
+      portal.hidden = true;
+      portal.style.cssText =
+        'display:none;opacity:0;transform:translateY(-4px) scale(0.98);transition:opacity .15s ease,transform .15s cubic-bezier(0,.8,.2,1);transform-origin:top left;';
+      portal.innerHTML =
+        '<div class="luongson-commentator-portal__panel" data-border="true" role="listbox">' +
+        optionHtml('Lưu Bang', 'luu-bang.png', '45.8% 41%') +
+        optionHtml('Gia Cát Lượng', 'gia-cat-luong.png', '47.6% 11.9%') +
+        optionHtml('Shelby', 'shelby.jpg', '47.3% 26.6%') +
+        '</div>';
+      document.body.appendChild(portal);
+    }
+
+    function optionHtml(name, file, pos) {
+      return (
+        '<button type="button" class="luongson-commentator-option" role="option" data-commentator="' +
+        name +
+        '" data-avatar="' +
+        img(file) +
+        '">' +
+        '<span class="luongson-commentator-option__avatar">' +
+        '<img alt="" decoding="async" src="' +
+        img(file) +
+        '" style="object-position:' +
+        pos +
+        '" />' +
+        '</span>' +
+        '<span class="luongson-commentator-option__name">' +
+        name +
+        '</span>' +
+        '</button>'
+      );
+    }
+
+    var activeTrigger = null;
+
+    function openDropdown(trigger) {
+      if (activeTrigger === trigger && portal.style.display !== 'none') {
+        closeDropdown();
+        return;
+      }
+
+      activeTrigger = trigger;
+      trigger.setAttribute('aria-expanded', 'true');
+      portal.hidden = false;
+      portal.style.display = 'block';
+
+      var rect = trigger.getBoundingClientRect();
+      var w = 170;
+      var h = portal.offsetHeight || 120;
+      var left = rect.left;
+      if (left + w > window.innerWidth - 10) left = window.innerWidth - w - 10;
+      if (left < 10) left = 10;
+
+      var top = rect.bottom + 6;
+      if (top + h > window.innerHeight - 10 && rect.top - h - 6 > 0) {
+        top = rect.top - h - 6;
+      }
+
+      portal.style.left = left + 'px';
+      portal.style.top = top + 'px';
+
+      requestAnimationFrame(function () {
+        portal.style.opacity = '1';
+        portal.style.transform = 'translateY(0) scale(1)';
+      });
+    }
+
+    function closeDropdown() {
+      if (activeTrigger) activeTrigger.setAttribute('aria-expanded', 'false');
+      portal.style.opacity = '0';
+      portal.style.transform = 'translateY(-4px) scale(0.98)';
+      setTimeout(function () {
+        if (portal.style.opacity === '0') {
+          portal.style.display = 'none';
+          portal.hidden = true;
+          activeTrigger = null;
+        }
+      }, 150);
+    }
+
+    portal.querySelectorAll('.luongson-commentator-option').forEach(function (opt) {
+      opt.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (!activeTrigger) return;
+
+        var name = opt.getAttribute('data-commentator');
+        var avatar = opt.getAttribute('data-avatar');
+        var nameEl = activeTrigger.querySelector('.luongson-match-commentator-name');
+        var imgEl = activeTrigger.querySelector('.luongson-match-commentator-avatar img');
+        var wrap = activeTrigger.closest('.luongson-match-commentator');
+
+        if (nameEl) nameEl.textContent = name;
+        if (imgEl) imgEl.src = avatar;
+        if (wrap) wrap.setAttribute('data-commentator', name);
+
+        closeDropdown();
+      });
+    });
+
+    root.querySelectorAll('.luongson-match-commentator-trigger').forEach(function (btn) {
+      if (btn.__lsBound) return;
+      btn.__lsBound = true;
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openDropdown(btn);
+      });
+    });
+
+    document.addEventListener('click', function (e) {
+      if (
+        portal.style.display !== 'none' &&
+        !portal.contains(e.target) &&
+        (!activeTrigger || !activeTrigger.contains(e.target))
+      ) {
+        closeDropdown();
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && portal.style.display !== 'none') closeDropdown();
+    });
+
+    window.addEventListener(
+      'scroll',
+      function () {
+        if (portal.style.display === 'none' || !activeTrigger) return;
+        var rect = activeTrigger.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > window.innerHeight) {
+          portal.style.display = 'none';
+          portal.style.opacity = '0';
+          activeTrigger.setAttribute('aria-expanded', 'false');
+          activeTrigger = null;
+        } else {
+          openDropdown(activeTrigger);
+        }
+      },
+      { passive: true }
+    );
+
+    window.addEventListener('resize', function () {
+      if (portal.style.display !== 'none' && activeTrigger) openDropdown(activeTrigger);
+    });
+  }
+
+  /* ------------------------------------------------------------------------ */
+  /* Match status modal                                                       */
+  /* ------------------------------------------------------------------------ */
+
+  function initMatchModal(root) {
+    var portal = document.querySelector('.luongson-match-modal-portal');
+    if (!portal) {
+      portal = document.createElement('div');
+      portal.className = 'luongson-match-modal-portal';
+      portal.hidden = true;
+      portal.style.cssText =
+        'display:none;opacity:0;transform:scale(.96);transform-origin:top center;transition:opacity .15s ease,transform .15s cubic-bezier(.2,0,.2,1);';
+      portal.innerHTML =
+        '<div class="luongson-match-modal-portal__panel" role="dialog">' +
+        '<div class="luongson-match-modal-tabs">' +
+        tabHtml('all', 'Tất cả', true) +
+        tabHtml('h1', 'Hiệp 1', false) +
+        tabHtml('h2', 'Hiệp 2', false) +
+        '</div>' +
+        rowHtml('possession', 'TL kiểm soát bóng', '57%', '43%', 57, 43) +
+        rowHtml(null, 'Phạt góc', '4', '1', 80, 20) +
+        rowHtml(null, 'Thẻ vàng', '2', '0', 100, 0) +
+        rowHtml(null, 'Sút bóng', '7', '3', 70, 30) +
+        rowHtml(null, 'Sút cầu môn', '4', '1', 80, 20) +
+        rowHtml(null, 'Sút ngoài cầu môn', '3', '2', 60, 40) +
+        rowHtml(null, 'Tấn công', '19', '17', 53, 47) +
+        rowHtml(null, 'Tấn công nguy hiểm', '23', '8', 74, 26) +
+        '</div>';
+      document.body.appendChild(portal);
+    }
+
+    function tabHtml(id, label, active) {
+      return (
+        '<button type="button" class="luongson-match-modal-tab' +
+        (active ? ' is-active' : '') +
+        '" data-tab="' +
+        id +
+        '" data-border="true">' +
+        label +
+        '</button>'
+      );
+    }
+
+    function rowHtml(key, label, left, right, leftPct, rightPct) {
+      var leftCls = key ? 'stat-val-left-' + key + ' is-val' : 'is-val';
+      var rightCls = key ? 'stat-val-right-' + key + ' is-val' : 'is-val';
+      var leftBarCls = key ? 'stat-bar-left-' + key : '';
+      var rightBarCls = key ? 'stat-bar-right-' + key : '';
+      return (
+        '<div class="luongson-match-modal-row">' +
+        '<div class="luongson-match-modal-row__labels">' +
+        '<span class="' +
+        leftCls +
+        '">' +
+        left +
+        '</span>' +
+        '<span class="is-label">' +
+        label +
+        '</span>' +
+        '<span class="' +
+        rightCls +
+        '">' +
+        right +
+        '</span>' +
+        '</div>' +
+        '<div class="luongson-match-modal-bars">' +
+        '<div class="luongson-match-modal-bar is-home"><span class="' +
+        leftBarCls +
+        '" style="width:' +
+        leftPct +
+        '%"></span></div>' +
+        '<div class="luongson-match-modal-bar is-away"><span class="' +
+        rightBarCls +
+        '" style="width:' +
+        rightPct +
+        '%"></span></div>' +
+        '</div></div>'
+      );
+    }
+
+    var leftText = portal.querySelector('.stat-val-left-possession');
+    var rightText = portal.querySelector('.stat-val-right-possession');
+    var leftBar = portal.querySelector('.stat-bar-left-possession');
+    var rightBar = portal.querySelector('.stat-bar-right-possession');
+    var tabs = portal.querySelectorAll('.luongson-match-modal-tab');
+    var tabData = {
+      all: { leftText: '57%', rightText: '43%', leftWidth: '57%', rightWidth: '43%' },
+      h1: { leftText: '70%', rightText: '30%', leftWidth: '70%', rightWidth: '30%' },
+      h2: { leftText: '45%', rightText: '55%', leftWidth: '45%', rightWidth: '55%' },
+    };
+
+    function setTab(name) {
+      tabs.forEach(function (t) {
+        t.classList.toggle('is-active', t.getAttribute('data-tab') === name);
+      });
+      var data = tabData[name] || tabData.all;
+      if (leftText) leftText.textContent = data.leftText;
+      if (rightText) rightText.textContent = data.rightText;
+      if (leftBar) leftBar.style.width = data.leftWidth;
+      if (rightBar) rightBar.style.width = data.rightWidth;
+    }
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setTab(tab.getAttribute('data-tab'));
+      });
+    });
+
+    var currentTrigger = null;
+    var closeTimeout = null;
+
+    function showPopover(trigger) {
+      if (closeTimeout) {
+        clearTimeout(closeTimeout);
+        closeTimeout = null;
+      }
+      currentTrigger = trigger;
+      portal.hidden = false;
+      portal.style.display = 'block';
+
+      var rect = trigger.getBoundingClientRect();
+      var modalWidth = Math.min(384, window.innerWidth - 24);
+      var modalHeight = portal.offsetHeight || 440;
+      var left = rect.left + rect.width / 2 - modalWidth / 2;
+      if (left < 10) left = 10;
+      if (left + modalWidth > window.innerWidth - 10) {
+        left = window.innerWidth - modalWidth - 10;
+      }
+
+      var top = rect.bottom + 4;
+      if (top + modalHeight > window.innerHeight - 10 && rect.top - modalHeight - 4 > 0) {
+        top = rect.top - modalHeight - 4;
+      }
+
+      portal.style.left = left + 'px';
+      portal.style.top = top + 'px';
+
+      requestAnimationFrame(function () {
+        portal.style.opacity = '1';
+        portal.style.transform = 'scale(1)';
+      });
+    }
+
+    function hidePopover() {
+      if (closeTimeout) clearTimeout(closeTimeout);
+      closeTimeout = setTimeout(function () {
+        portal.style.opacity = '0';
+        portal.style.transform = 'scale(0.96)';
+        setTimeout(function () {
+          if (portal.style.opacity === '0') {
+            portal.style.display = 'none';
+            portal.hidden = true;
+            currentTrigger = null;
+          }
+        }, 150);
+      }, 120);
+    }
+
+    portal.addEventListener('mouseenter', function () {
+      if (closeTimeout) {
+        clearTimeout(closeTimeout);
+        closeTimeout = null;
+      }
+    });
+    portal.addEventListener('mouseleave', hidePopover);
+
+    root.querySelectorAll('.luongson-match-status').forEach(function (badge) {
+      if (badge.__lsBound) return;
+      badge.__lsBound = true;
+      badge.addEventListener('mouseenter', function () {
+        showPopover(badge);
+      });
+      badge.addEventListener('mouseleave', hidePopover);
+    });
+
+    window.addEventListener(
+      'scroll',
+      function () {
+        if (portal.style.display === 'none' || !currentTrigger) return;
+        var rect = currentTrigger.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > window.innerHeight) {
+          portal.style.display = 'none';
+          portal.style.opacity = '0';
+          currentTrigger = null;
+        } else {
+          showPopover(currentTrigger);
+        }
+      },
+      { passive: true }
+    );
+
+    window.addEventListener('resize', function () {
+      if (portal.style.display !== 'none' && currentTrigger) showPopover(currentTrigger);
+    });
+  }
+
+  function initAll() {
+    var root = document.querySelector('.luongson-list-matches');
+    if (!root) return;
+    renderStaticMockCards(root);
+    initCommentatorDropdown(root);
+    initMatchModal(root);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAll);
+  } else {
+    initAll();
+  }
+})();
+
+})(window, window.jQuery || window.$, window.jQuery || window.$, window.Hls, window.Swiper);
+
+/* schedule.js */
+(function(window, $, jQuery, Hls, Swiper) {
+/**
+ * LuongSon Sport — Match schedule date picker + status hover modal
+ */
+(function () {
+  'use strict';
+
+  var cfg = window.luongsonSchedule || {};
+  var IMG = cfg.imgUrl || '';
+
+  function img(file) {
+    return IMG + file;
+  }
+
+  var MONTHS = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+
+  function pad(n) {
+    return n < 10 ? '0' + n : String(n);
+  }
+
+  function isSameDay(a, b) {
+    return (
+      a.getFullYear() === b.getFullYear() &&
+      a.getMonth() === b.getMonth() &&
+      a.getDate() === b.getDate()
+    );
+  }
+
+  function formatLabel(date) {
+    var today = new Date();
+    var dm = pad(date.getDate()) + '/' + MONTHS[date.getMonth()];
+    if (isSameDay(date, today)) {
+      return 'Hôm nay, ' + dm;
+    }
+    var yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    if (isSameDay(date, yesterday)) {
+      return 'Hôm qua, ' + dm;
+    }
+    var tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    if (isSameDay(date, tomorrow)) {
+      return 'Ngày mai, ' + dm;
+    }
+    return dm + '/' + date.getFullYear();
+  }
+
+  /* ------------------------------------------------------------------------ */
+  /* Static mock rows (replace with API when ready)                           */
+  /* ------------------------------------------------------------------------ */
+
+  function buildScheduleMatchRowHtml() {
+    return (
+      '<div class="framer-w4nh6l">' +
+      '<div class="framer-10q8rqr" data-framer-name="Live Match Header">' +
+      '<div class="ssr-variant"><div class="framer-1u3bdzr-container">' +
+      '<div class="framer-iz7ZB framer-3i8edo framer-v-3i8edo ls-ltd-s48 luongson-match-status" data-framer-name="Tất cả" data-highlight="true">' +
+      '<div class="framer-9wekp1 ls-ltd-s49"></div>' +
+      '<div class="framer-oy32wj ls-ltd-s50" data-framer-component-type="RichTextContainer">' +
+      '<p class="framer-text ls-ltd-s51" dir="auto">Hiệp 2 - 72’</p></div></div></div></div>' +
+      '<div class="framer-fo8uj4 ls-ltd-s8" data-framer-component-type="RichTextContainer">' +
+      '<p class="framer-text ls-ltd-s52" dir="auto">' +
+      '<a class="framer-text framer-styles-preset-1kr0omk" data-styles-preset="aObUTo9X9" href="#">AUS VIC Women\'s Premier League</a>' +
+      '</p></div>' +
+      '<div class="framer-1s265wr">' +
+      '<div class="framer-ptrkjg ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s53" dir="auto">15:30</p></div>' +
+      '<div class="framer-wjt7qo ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s52" dir="auto">15.08</p></div>' +
+      '</div></div>' +
+      '<div aria-hidden="true" class="framer-1fb9lh6 ls-ltd-s54" data-framer-component-type="SVG"></div>' +
+      '<div class="framer-6y1vgx">' +
+      '<div class="framer-f916c2" data-framer-name="Man City">' +
+      '<div class="framer-lpvq2y ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s55" dir="auto">1</p></div>' +
+      '<div class="framer-k4r736" data-framer-name="Man City Logo"><div class="ssr-variant"><div class="framer-4svd1w" data-framer-name="Image">' +
+      '<div class="ls-ltd-s3" data-framer-background-image-wrapper="true">' +
+      '<img alt="" class="ls-ltd-s4" decoding="async" height="325" src="' +
+      img('f6O1RC012JUvScTVjvuSVD2fa8g_f64310a4.png') +
+      '" width="306" /></div></div></div></div>' +
+      '<div class="framer-12jd5dg ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s56" dir="auto">Keilor Park Women</p></div>' +
+      '<div class="framer-1qcymno" data-framer-name="Live Score">' +
+      '<div class="framer-1n2kznj">' +
+      '<svg class="framer-bSUln framer-lwakex" role="presentation" viewBox="0 0 24 24"><path d="M5 21V4m0 0l13 4.5L5 13V4z" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" /></svg>' +
+      '<div class="ssr-variant"><div class="framer-1vimra6 ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s57" dir="auto">6</p></div></div></div>' +
+      '<div class="framer-1l567ap"><div aria-hidden="true" class="framer-16c3b9w ls-ltd-s58" data-framer-component-type="SVG"></div>' +
+      '<div class="framer-jj8xat ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s57" dir="auto">2</p></div></div>' +
+      '<div class="framer-1gv02xo"><div aria-hidden="true" class="framer-1naohdo ls-ltd-s65" data-framer-component-type="SVG"></div>' +
+      '<div class="framer-10qz6z5 ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s57" dir="auto">1</p></div></div>' +
+      '</div></div>' +
+      '<div class="framer-14yunt6" data-framer-name="Liverpool">' +
+      '<div class="framer-pvvwao ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s55" dir="auto">0</p></div>' +
+      '<div class="framer-rnop1x" data-framer-name="Liverpool Logo"><div class="ssr-variant"><div class="framer-14v5o2a" data-framer-name="Wolverhampton Wanderers">' +
+      '<div class="ls-ltd-s3" data-framer-background-image-wrapper="true">' +
+      '<img alt="" class="ls-ltd-s4" decoding="async" height="204" src="' +
+      img('FIczztJVnGEBQ3TM8WvjBhtLM_b12db86a.png') +
+      '" width="186" /></div></div></div></div>' +
+      '<div class="framer-167qswu ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s56" dir="auto">Heidelberg United Women</p></div>' +
+      '<div class="framer-1nt9csj" data-framer-name="Live Score">' +
+      '<div class="framer-1er19rb">' +
+      '<svg class="framer-bSUln framer-bgyb85" role="presentation" viewBox="0 0 24 24"><path d="M5 21V4m0 0l13 4.5L5 13V4z" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" /></svg>' +
+      '<div class="framer-1dcwg5u ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s57" dir="auto">8</p></div></div>' +
+      '<div class="framer-nkqsx9"><div aria-hidden="true" class="framer-1ctyskl ls-ltd-s58" data-framer-component-type="SVG"></div>' +
+      '<div class="framer-1qkfb9p ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s57" dir="auto">3</p></div></div>' +
+      '</div></div></div>' +
+      '<div class="framer-1rwoktm">' +
+      '<div class="framer-kvg3eg" data-framer-name="Live Score">' +
+      '<div class="framer-1fj6fv7">' +
+      '<div class="framer-45zk6d ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s59" dir="auto">HT</p></div>' +
+      '<div class="framer-7rm2ei ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s59" dir="auto">0.95</p></div>' +
+      '<div class="framer-16mpmbs ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s62" dir="auto">0.25</p></div>' +
+      '<div class="framer-1nam7at ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s59" dir="auto">0.85</p></div></div>' +
+      '<div class="framer-11m1cm9">' +
+      '<div class="framer-lgis4k ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s59" dir="auto">FT</p></div>' +
+      '<div class="framer-5l2cc9 ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s60" dir="auto">0.97</p></div>' +
+      '<div class="framer-vvlwst ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s62" dir="auto">0.25</p></div>' +
+      '<div class="framer-1yur8au ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s61" dir="auto">0.83</p></div></div></div>' +
+      '<div class="framer-1fh56dl" data-framer-name="Live Score">' +
+      '<div class="framer-hewvbf">' +
+      '<div class="framer-7ilrx5 ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s59" dir="auto">HT</p></div>' +
+      '<div class="framer-g7imbk ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s60" dir="auto">0.96</p></div>' +
+      '<div class="framer-1nuh4c9 ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s62" dir="auto">0.25</p></div>' +
+      '<div class="framer-h0x5kk ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s59" dir="auto">0.85</p></div></div>' +
+      '<div class="framer-130lxau">' +
+      '<div class="framer-ya78b ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s59" dir="auto">FT</p></div>' +
+      '<div class="framer-rbcqob ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s60" dir="auto">0.97</p></div>' +
+      '<div class="framer-1xvm2dx ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s62" dir="auto">0.25</p></div>' +
+      '<div class="framer-xs9xlf ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s61" dir="auto">0.83</p></div></div></div></div>' +
+      '<div class="framer-9iptzt">' +
+      '<div class="framer-1k1h91o" data-border="true" data-framer-name="Bet button">' +
+      '<div class="ssr-variant"><div class="framer-lrcy3t" data-framer-name="Image">' +
+      '<div class="ls-ltd-s3" data-framer-background-image-wrapper="true">' +
+      '<img alt="" class="ls-ltd-s4" decoding="async" height="150" src="' +
+      img('TtSpXaqqwKEewlPr41OF4DTPA_802653d7.png') +
+      '" width="300" /></div></div></div>' +
+      '<div class="framer-uwn2lx ls-ltd-s63" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s64" dir="auto">cược</p></div></div>' +
+      '<div class="framer-3xtg2y" data-border="true" data-framer-name="Bet button">' +
+      '<div class="ssr-variant"><div class="framer-1b7t7uc ls-ltd-s63" data-framer-name="Logo Vic88">' +
+      '<div class="ls-ltd-s3" data-framer-background-image-wrapper="true">' +
+      '<img alt="" class="ls-ltd-s4" decoding="async" height="68" src="' +
+      img('KB717wZbU63tSAHyTm9pLUqxM_b79bb177.png') +
+      '" width="280" /></div></div></div>' +
+      '<div class="framer-iwh02n ls-ltd-s63" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s64" dir="auto">cược</p></div></div></div></div>'
+    );
+  }
+
+  function renderStaticMockRows(root) {
+    if (!root || root.dataset.staticRendered) return;
+    root.dataset.staticRendered = '1';
+
+    var rowHtml = buildScheduleMatchRowHtml();
+    var i;
+    for (i = 0; i < 5; i++) {
+      root.insertAdjacentHTML('beforeend', rowHtml);
+    }
+  }
+
+  function initSchedule(root) {
+    if (!root || root.__lsScheduleInit) return;
+    root.__lsScheduleInit = true;
+
+    var label = root.querySelector('.luongson-schedule__date-label');
+    var prev = root.querySelector('[data-framer-name="Previous Day"]');
+    var next = root.querySelector('[data-framer-name="Next Day"]');
+    if (!label || !prev || !next) return;
+
+    var current = new Date();
+    current.setHours(0, 0, 0, 0);
+
+    function render() {
+      label.textContent = formatLabel(current);
+    }
+
+    prev.addEventListener('click', function (e) {
+      e.preventDefault();
+      current.setDate(current.getDate() - 1);
+      render();
+    });
+
+    next.addEventListener('click', function (e) {
+      e.preventDefault();
+      current.setDate(current.getDate() + 1);
+      render();
+    });
+
+    render();
+  }
+
+  /* ------------------------------------------------------------------------ */
+  /* Match status modal (hover on live badge — same as list-matches / HTML)   */
+  /* ------------------------------------------------------------------------ */
+
+  function initMatchModal(root) {
+    if (!root || root.__lsScheduleModalInit) return;
+    root.__lsScheduleModalInit = true;
+
+    var portal = document.querySelector('.luongson-match-modal-portal');
+    if (!portal) {
+      portal = document.createElement('div');
+      portal.className = 'luongson-match-modal-portal';
+      portal.hidden = true;
+      portal.style.cssText =
+        'display:none;opacity:0;transform:scale(.96);transform-origin:top center;transition:opacity .15s ease,transform .15s cubic-bezier(.2,0,.2,1);';
+      portal.innerHTML =
+        '<div class="luongson-match-modal-portal__panel" role="dialog">' +
+        '<div class="luongson-match-modal-tabs">' +
+        tabHtml('all', 'Tất cả', true) +
+        tabHtml('h1', 'Hiệp 1', false) +
+        tabHtml('h2', 'Hiệp 2', false) +
+        '</div>' +
+        rowHtml('possession', 'TL kiểm soát bóng', '57%', '43%', 57, 43) +
+        rowHtml(null, 'Phạt góc', '4', '1', 80, 20) +
+        rowHtml(null, 'Thẻ vàng', '2', '0', 100, 0) +
+        rowHtml(null, 'Sút bóng', '7', '3', 70, 30) +
+        rowHtml(null, 'Sút cầu môn', '4', '1', 80, 20) +
+        rowHtml(null, 'Sút ngoài cầu môn', '3', '2', 60, 40) +
+        rowHtml(null, 'Tấn công', '19', '17', 53, 47) +
+        rowHtml(null, 'Tấn công nguy hiểm', '23', '8', 74, 26) +
+        '</div>';
+      document.body.appendChild(portal);
+    }
+
+    function tabHtml(id, label, active) {
+      return (
+        '<button type="button" class="luongson-match-modal-tab' +
+        (active ? ' is-active' : '') +
+        '" data-tab="' +
+        id +
+        '" data-border="true">' +
+        label +
+        '</button>'
+      );
+    }
+
+    function rowHtml(key, label, left, right, leftPct, rightPct) {
+      var leftCls = key ? 'stat-val-left-' + key + ' is-val' : 'is-val';
+      var rightCls = key ? 'stat-val-right-' + key + ' is-val' : 'is-val';
+      var leftBarCls = key ? 'stat-bar-left-' + key : '';
+      var rightBarCls = key ? 'stat-bar-right-' + key : '';
+      return (
+        '<div class="luongson-match-modal-row">' +
+        '<div class="luongson-match-modal-row__labels">' +
+        '<span class="' +
+        leftCls +
+        '">' +
+        left +
+        '</span>' +
+        '<span class="is-label">' +
+        label +
+        '</span>' +
+        '<span class="' +
+        rightCls +
+        '">' +
+        right +
+        '</span>' +
+        '</div>' +
+        '<div class="luongson-match-modal-bars">' +
+        '<div class="luongson-match-modal-bar is-home"><span class="' +
+        leftBarCls +
+        '" style="width:' +
+        leftPct +
+        '%"></span></div>' +
+        '<div class="luongson-match-modal-bar is-away"><span class="' +
+        rightBarCls +
+        '" style="width:' +
+        rightPct +
+        '%"></span></div>' +
+        '</div></div>'
+      );
+    }
+
+    var leftText = portal.querySelector('.stat-val-left-possession');
+    var rightText = portal.querySelector('.stat-val-right-possession');
+    var leftBar = portal.querySelector('.stat-bar-left-possession');
+    var rightBar = portal.querySelector('.stat-bar-right-possession');
+    var tabs = portal.querySelectorAll('.luongson-match-modal-tab');
+    var tabData = {
+      all: { leftText: '57%', rightText: '43%', leftWidth: '57%', rightWidth: '43%' },
+      h1: { leftText: '70%', rightText: '30%', leftWidth: '70%', rightWidth: '30%' },
+      h2: { leftText: '45%', rightText: '55%', leftWidth: '45%', rightWidth: '55%' },
+    };
+
+    function setTab(name) {
+      tabs.forEach(function (t) {
+        t.classList.toggle('is-active', t.getAttribute('data-tab') === name);
+      });
+      var data = tabData[name] || tabData.all;
+      if (leftText) leftText.textContent = data.leftText;
+      if (rightText) rightText.textContent = data.rightText;
+      if (leftBar) leftBar.style.width = data.leftWidth;
+      if (rightBar) rightBar.style.width = data.rightWidth;
+    }
+
+    if (!portal.__lsTabsBound) {
+      portal.__lsTabsBound = true;
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function (e) {
+          e.stopPropagation();
+          setTab(tab.getAttribute('data-tab'));
+        });
+      });
+    }
+
+    var currentTrigger = null;
+    var closeTimeout = null;
+
+    function showPopover(trigger) {
+      if (closeTimeout) {
+        clearTimeout(closeTimeout);
+        closeTimeout = null;
+      }
+      currentTrigger = trigger;
+      portal.hidden = false;
+      portal.style.display = 'block';
+
+      var rect = trigger.getBoundingClientRect();
+      var modalWidth = Math.min(384, window.innerWidth - 24);
+      var modalHeight = portal.offsetHeight || 440;
+      var left = rect.left + rect.width / 2 - modalWidth / 2;
+      if (left < 10) left = 10;
+      if (left + modalWidth > window.innerWidth - 10) {
+        left = window.innerWidth - modalWidth - 10;
+      }
+
+      var top = rect.bottom + 4;
+      if (top + modalHeight > window.innerHeight - 10 && rect.top - modalHeight - 4 > 0) {
+        top = rect.top - modalHeight - 4;
+      }
+
+      portal.style.left = left + 'px';
+      portal.style.top = top + 'px';
+
+      requestAnimationFrame(function () {
+        portal.style.opacity = '1';
+        portal.style.transform = 'scale(1)';
+      });
+    }
+
+    function hidePopover() {
+      if (closeTimeout) clearTimeout(closeTimeout);
+      closeTimeout = setTimeout(function () {
+        portal.style.opacity = '0';
+        portal.style.transform = 'scale(0.96)';
+        setTimeout(function () {
+          if (portal.style.opacity === '0') {
+            portal.style.display = 'none';
+            portal.hidden = true;
+            currentTrigger = null;
+          }
+        }, 150);
+      }, 120);
+    }
+
+    if (!portal.__lsHoverBound) {
+      portal.__lsHoverBound = true;
+      portal.addEventListener('mouseenter', function () {
+        if (closeTimeout) {
+          clearTimeout(closeTimeout);
+          closeTimeout = null;
+        }
+      });
+      portal.addEventListener('mouseleave', hidePopover);
+    }
+
+    root.querySelectorAll('.luongson-match-status, .framer-iz7ZB.framer-3i8edo').forEach(function (badge) {
+      if (badge.__lsBound) return;
+      badge.__lsBound = true;
+      badge.addEventListener('mouseenter', function () {
+        showPopover(badge);
+      });
+      badge.addEventListener('mouseleave', hidePopover);
+    });
+
+    window.addEventListener(
+      'scroll',
+      function () {
+        if (portal.style.display === 'none' || !currentTrigger) return;
+        var rect = currentTrigger.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > window.innerHeight) {
+          portal.style.display = 'none';
+          portal.style.opacity = '0';
+          currentTrigger = null;
+        } else {
+          showPopover(currentTrigger);
+        }
+      },
+      { passive: true }
+    );
+
+    window.addEventListener('resize', function () {
+      if (portal.style.display !== 'none' && currentTrigger) showPopover(currentTrigger);
+    });
+  }
+
+  function initAll() {
+    document.querySelectorAll('.luongson-schedule').forEach(function (root) {
+      renderStaticMockRows(root);
+      initSchedule(root);
+      initMatchModal(root);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAll);
+  } else {
+    initAll();
+  }
+})();
+
+})(window, window.jQuery || window.$, window.jQuery || window.$, window.Hls, window.Swiper);
+
+/* stream-match.js */
+(function(window, $, jQuery, Hls, Swiper) {
+/**
+ * LuongSon V2 — Live stream player (jQuery)
+ * Tải dữ liệu trận, phát HLS, đổi BLV, hiển thị kèo & ticker.
+ */
+(function ($) {
+  'use strict';
+
+  // --- Cấu hình từ WordPress runtime (class-assets-loader) hoặc HTML prototype ---
+  var cfg = window.luongsonStreamMatch || {};
+  var pluginUrl = (
+    typeof window.DV2_STREAMING_PLUGIN_URL !== 'undefined' && window.DV2_STREAMING_PLUGIN_URL
+  ) || (window.dv2Streaming && window.dv2Streaming.pluginUrl) || cfg.assetsUrl || '';
+
+  if (pluginUrl && pluginUrl.slice(-1) !== '/') {
+    pluginUrl += '/';
+  }
+
+  var ASSETS = pluginUrl
+    ? pluginUrl + 'assets/images/luongson-v2/'
+    : (cfg.assetsUrl || '../../assets/images/luongson-v2/');
+  var IMG = pluginUrl
+    ? pluginUrl + 'html/luongson-v2/images/'
+    : (cfg.imgUrl || 'images/');
+  var API_BASE = (
+    typeof window.BASE_API_URL !== 'undefined' && window.BASE_API_URL
+  )
+    ? String(window.BASE_API_URL).replace(/\/+$/, '') + '/api/data/lives/'
+    : (cfg.apiBase || 'https://vsc-apidev.helizones.com/api/data/lives/');
+  var MATCH_ID = (
+    typeof window.DV2_MATCH_ID !== 'undefined' && window.DV2_MATCH_ID
+  ) || cfg.matchId || 'zp5rzghge5n8q82';
+  var POSTER = cfg.posterUrl || ASSETS + 'bg-stream.webp';
+  var FALLBACK_AVATAR = ASSETS + 'svg-blv.svg';
+  var BET_URL = (
+    typeof window.DV2_LINK_BET !== 'undefined' && window.DV2_LINK_BET
+  ) || cfg.betUrl || cfg.playCtaUrl || '#';
+
+  // --- Biến trạng thái ---
+  var currentHls = null;
+  var playbackGen = 0;
+  var matchData = null;
+  var streamLinks = [];
+  var activeLinkIndex = 0;
+
+  /** Lấy match id từ ?match=, DV2_MATCH_ID (/streams/{id}), hoặc mặc định */
+  function getMatchId() {
+    var params = new URLSearchParams(window.location.search);
+    var matchId = params.get('match');
+
+    if (!matchId) {
+      if (typeof window.DV2_MATCH_ID !== 'undefined' && window.DV2_MATCH_ID) {
+        matchId = window.DV2_MATCH_ID;
+      } else {
+        matchId = MATCH_ID;
+      }
+    }
+
+    return matchId;
+  }
+
+  /** Format số kèo: 1.5 → "1.50" */
+  function formatOdd(val) {
+    if (val == null || val === '') return '-';
+    var n = Number(val);
+    return Number.isFinite(n) ? n.toFixed(2) : '-';
+  }
+
+  /** Class CSS theo xu hướng kèo lên/xuống */
+  function trendClass(trend) {
+    if (trend === 'up') return 'is-up';
+    if (trend === 'down') return 'is-down';
+    return '';
+  }
+
+  /** Hiện / ẩn overlay "Đang tải..." */
+  function setLoading(show, message) {
+    var $el = $('#luongsonStreamLoading');
+    if (!$el.length) return;
+    if (show) {
+      $el.removeAttr('hidden');
+      if (message) $el.find('.luongson-stream-loading__text').text(message);
+    } else {
+      $el.attr('hidden', 'hidden');
+    }
+  }
+
+  /** Dừng và giải phóng HLS cũ */
+  function destroyHls() {
+    playbackGen += 1;
+    if (currentHls) {
+      try { currentHls.destroy(); } catch (e) {}
+      currentHls = null;
+    }
+  }
+
+  /** Cập nhật icon nút Play/Pause */
+  function syncPlayButton($video) {
+    var $btn = $('#luongsonStreamPlay');
+    if (!$video.length) return;
+    $btn.toggleClass('is-paused', $video.get(0).paused);
+  }
+
+  /** Cập nhật nút mute và thanh trượt âm lượng */
+  function syncVolumeUi($video) {
+    var $btn = $('#luongsonStreamVolume');
+    var $slider = $('#luongsonStreamVolumeSlider');
+    if (!$video.length || !$btn.length) return;
+
+    var video = $video.get(0);
+    var isMuted = video.muted || video.volume === 0;
+    var displayVol = isMuted ? 0 : video.volume;
+
+    $btn.toggleClass('is-muted', isMuted);
+    $btn.attr({
+      'aria-label': isMuted ? 'Bật tiếng' : 'Tắt tiếng',
+      title: isMuted ? 'Bật tiếng' : 'Tắt tiếng'
+    });
+
+    if ($slider.length) {
+      $slider.val(displayVol);
+    }
+  }
+
+  /** Gắn sự kiện Play, Volume, Fullscreen */
+  function initPlayerControls($video) {
+    $('#luongsonStreamPlay').off('click').on('click', function () {
+      var video = $video.get(0);
+      if (!video) return;
+      if (video.paused) {
+        video.play().catch(function () {});
+      } else {
+        video.pause();
+      }
+      syncPlayButton($video);
+    });
+
+    $('#luongsonStreamVolume').off('click').on('click', function () {
+      var video = $video.get(0);
+      if (!video) return;
+      if (video.muted || video.volume === 0) {
+        video.muted = false;
+        if (video.volume === 0) video.volume = 0.7;
+      } else {
+        video.muted = true;
+      }
+      syncVolumeUi($video);
+    });
+
+    $('#luongsonStreamVolumeSlider').off('input change').on('input change', function (e) {
+      e.stopPropagation();
+      var video = $video.get(0);
+      if (!video) return;
+      var vol = parseFloat(this.value);
+      if (!Number.isFinite(vol)) return;
+      video.volume = vol;
+      video.muted = vol === 0;
+      syncVolumeUi($video);
+    });
+
+    $('#luongsonStreamFs').off('click').on('click', function () {
+      var $stage = $('#luongsonStreamStage');
+      var stage = $stage.get(0);
+      if (!stage) return;
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else if (stage.requestFullscreen) {
+        stage.requestFullscreen();
+      } else if (stage.webkitRequestFullscreen) {
+        stage.webkitRequestFullscreen();
+      }
+    });
+
+    $video.off('play pause volumechange').on('play pause volumechange', function () {
+      syncPlayButton($video);
+      syncVolumeUi($video);
+    });
+  }
+
+  /** Khởi tạo phát HLS (hoặc native Safari) */
+  function initHls(url, $video) {
+    destroyHls();
+    var gen = playbackGen;
+
+    if (!url || !$video.length) {
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true, 'Đang tải luồng phát...');
+    var video = $video.get(0);
+
+    function isStale() {
+      return gen !== playbackGen;
+    }
+
+    function onReady() {
+      if (isStale()) return;
+      setLoading(false);
+      syncPlayButton($video);
+      syncVolumeUi($video);
+      video.muted = true;
+      video.play().catch(function () {});
+    }
+
+    if (window.Hls && Hls.isSupported()) {
+      currentHls = new Hls({
+        maxBufferLength: 10,
+        liveSyncDuration: 3,
+        enableWorker: true,
+        xhrSetup: function (xhr) {
+          xhr.withCredentials = false;
+          xhr.referrerPolicy = 'no-referrer-when-downgrade';
+        }
+      });
+      currentHls.loadSource(url);
+      currentHls.attachMedia(video);
+      currentHls.on(Hls.Events.MANIFEST_PARSED, function () {
+        if (isStale()) return;
+        onReady();
+      });
+      currentHls.on(Hls.Events.ERROR, function (_, data) {
+        if (isStale()) return;
+        if (data && data.fatal) setLoading(false);
+      });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      $video.one('loadedmetadata', function () {
+        if (isStale()) return;
+        onReady();
+      });
+      $video.attr('src', url);
+    } else {
+      setLoading(false);
+    }
+  }
+
+  /** Cập nhật các ô kèo FT / HT */
+  function renderOdds(data) {
+    var hdp = data.hdp || {};
+    var ou = data.ou || {};
+
+    function setVal(key, val, trend) {
+      $('[data-odds="' + key + '"]')
+        .text(formatOdd(val))
+        .removeClass('is-up is-down')
+        .addClass(trendClass(trend));
+    }
+
+    setVal('hdp-home', hdp.home, hdp.homeTrend);
+    setVal('hdp-rate', hdp.rate, hdp.rateTrend);
+    setVal('hdp-away', hdp.away, hdp.awayTrend);
+    setVal('ou-over', ou.over, ou.overTrend);
+    setVal('ou-rate', ou.rate, ou.rateTrend);
+    setVal('ou-under', ou.under, ou.underTrend);
+  }
+
+  /** Sắp xếp link: ưu tiên BLV đang live */
+  function sortLinks(links) {
+    if (!Array.isArray(links)) return [];
+    return links.slice().sort(function (a, b) {
+      return (b.isStreaming ? 1 : 0) - (a.isStreaming ? 1 : 0);
+    });
+  }
+
+  /** Chọn BLV active theo ?liveId= hoặc link đang stream */
+  function resolveActiveIndex(links) {
+    var params = new URLSearchParams(window.location.search);
+    var liveId = params.get('liveId');
+    var idx = -1;
+    var i;
+
+    if (liveId) {
+      for (i = 0; i < links.length; i++) {
+        if (String(links[i].liveId) === String(liveId)) {
+          idx = i;
+          break;
+        }
+      }
+      if (idx >= 0) return idx;
+    }
+
+    for (i = 0; i < links.length; i++) {
+      if (links[i].isStreaming) return i;
+    }
+    return 0;
+  }
+
+  /** Cập nhật tên + avatar BLV trên thanh điều khiển */
+  function updateCommentatorUi(link) {
+    if (!link) return;
+    var name = $.trim(String(link.commentator || '')) || 'BLV';
+    var avatar = link.avatar || FALLBACK_AVATAR;
+
+    $('#luongsonStreamCommentator').attr('data-commentator', name);
+    $('#luongsonCommentatorTrigger .luongson-match-commentator-name').text(name);
+    $('#luongsonCommentatorTrigger .luongson-match-commentator-avatar img').attr({
+      src: avatar,
+      alt: name
+    });
+  }
+
+  /** Chuyển sang luồng BLV khác */
+  function switchStream(index) {
+    if (!streamLinks.length || index < 0 || index >= streamLinks.length) return;
+
+    activeLinkIndex = index;
+    var link = streamLinks[index];
+    updateCommentatorUi(link);
+
+    if (link.liveId) {
+      var params = new URLSearchParams(window.location.search);
+      params.set('liveId', String(link.liveId));
+      var q = params.toString();
+      window.history.replaceState(
+        null,
+        '',
+        window.location.pathname + (q ? '?' + q : '') + window.location.hash
+      );
+    }
+
+    if (link.url) {
+      initHls(link.url, $('#liveVideo'));
+    }
+  }
+
+  /** Dropdown chọn BLV (portal gắn vào body) */
+  function buildCommentatorPortal(links) {
+    var $portal = $('.luongson-stream-commentator-portal');
+
+    if (!$portal.length) {
+      $portal = $('<div>', {
+        class: 'luongson-commentator-portal luongson-stream-commentator-portal',
+        hidden: true
+      }).css({
+        display: 'none',
+        opacity: 0,
+        transform: 'translateY(-4px) scale(0.98)',
+        transition: 'opacity .15s ease, transform .15s cubic-bezier(0,.8,.2,1)',
+        'transform-origin': 'bottom left'
+      });
+      $('body').append($portal);
+    }
+
+    var panelHtml =
+      '<div class="luongson-commentator-portal__panel" data-border="true" role="listbox">';
+
+    $.each(links, function (i, link) {
+      var name = $.trim(String(link.commentator || '')) || 'BLV ' + (i + 1);
+      var avatar = link.avatar || FALLBACK_AVATAR;
+      var activeClass = i === activeLinkIndex ? ' is-active' : '';
+
+      panelHtml +=
+        '<button type="button" class="luongson-commentator-option' + activeClass + '"' +
+        ' role="option" data-index="' + i + '" data-commentator="' + name + '">' +
+        '<span class="luongson-commentator-option__avatar">' +
+        '<img alt="" decoding="async" src="' + avatar + '" />' +
+        '</span>' +
+        '<span class="luongson-commentator-option__name">' + name + '</span>' +
+        '</button>';
+    });
+
+    panelHtml += '</div>';
+    $portal.html(panelHtml);
+
+    var $activeTrigger = null;
+
+    function closeDropdown() {
+      if ($activeTrigger) $activeTrigger.attr('aria-expanded', 'false');
+      $portal.css({ opacity: 0, transform: 'translateY(-4px) scale(0.98)' });
+      setTimeout(function () {
+        if (parseFloat($portal.css('opacity')) === 0) {
+          $portal.hide().attr('hidden', 'hidden');
+          $activeTrigger = null;
+        }
+      }, 150);
+    }
+
+    function openDropdown($trigger) {
+      if ($activeTrigger && $activeTrigger.get(0) === $trigger.get(0) && $portal.is(':visible')) {
+        closeDropdown();
+        return;
+      }
+
+      $activeTrigger = $trigger;
+      $trigger.attr('aria-expanded', 'true');
+      $portal.removeAttr('hidden').show();
+
+      var rect = $trigger.get(0).getBoundingClientRect();
+      var w = 170;
+      var h = $portal.outerHeight() || 120;
+      var left = rect.left;
+
+      if (left + w > $(window).width() - 10) left = $(window).width() - w - 10;
+      if (left < 10) left = 10;
+
+      var top = rect.top - h - 6;
+      if (top < 10) top = rect.bottom + 6;
+
+      $portal.css({ left: left, top: top });
+
+      requestAnimationFrame(function () {
+        $portal.css({ opacity: 1, transform: 'translateY(0) scale(1)' });
+      });
+    }
+
+    $portal.find('.luongson-commentator-option').on('click', function (e) {
+      e.stopPropagation();
+      var $opt = $(this);
+      var idx = parseInt($opt.attr('data-index'), 10);
+
+      $portal.find('.luongson-commentator-option').removeClass('is-active');
+      $opt.addClass('is-active');
+      switchStream(idx);
+      closeDropdown();
+    });
+
+    var $trigger = $('#luongsonCommentatorTrigger');
+    if ($trigger.length && !$trigger.data('lsStreamBound')) {
+      $trigger.data('lsStreamBound', true).on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!links.length) return;
+        openDropdown($trigger);
+      });
+    }
+
+    $(document).off('click.lsStreamPortal').on('click.lsStreamPortal', function (e) {
+      if (
+        $portal.is(':visible') &&
+        !$.contains($portal.get(0), e.target) &&
+        (!$activeTrigger || !$.contains($activeTrigger.get(0), e.target))
+      ) {
+        closeDropdown();
+      }
+    });
+
+    $(document).off('keydown.lsStreamPortal').on('keydown.lsStreamPortal', function (e) {
+      if (e.key === 'Escape' && $portal.is(':visible')) closeDropdown();
+    });
+  }
+
+  /** Ticker quảng cáo chạy ngang (kéo tay được) */
+  function createFeaturedAdsTicker(container) {
+    var $container = $(container);
+    var $track = $container.find('ul').first();
+
+    if (!$track.length || $track.data('lsStreamTickerInit')) return;
+    $track.data('lsStreamTickerInit', true);
+
+    var $originalChildren = $track.children().not('.clone-item');
+    if (!$originalChildren.length) return;
+
+    var speed = 38;
+    var direction = -1;
+    var singleSetWidth = 0;
+    var currentX = 0;
+    var isHovered = false;
+    var isDragging = false;
+    var startX = 0;
+    var dragStartX = 0;
+    var lastTimestamp = null;
+
+    function buildClones() {
+      $track.find('.clone-item').remove();
+
+      var containerWidth = $container.outerWidth() || $(window).width();
+      var gap = 12;
+      var firstEl = $originalChildren.first().get(0);
+      var lastEl = $originalChildren.last().get(0);
+      var firstRect = firstEl.getBoundingClientRect();
+      var lastRect = lastEl.getBoundingClientRect();
+
+      singleSetWidth =
+        lastRect.right - firstRect.left + gap > 0
+          ? lastRect.right - firstRect.left + gap
+          : $originalChildren.toArray().reduce(function (acc, el) {
+              return acc + ($(el).outerWidth() || 80) + gap;
+            }, 0);
+
+      if (singleSetWidth <= 0) return;
+
+      var neededCopies = Math.max(2, Math.ceil((containerWidth * 2) / singleSetWidth) + 1);
+      var i;
+
+      for (i = 0; i < neededCopies; i++) {
+        $originalChildren.each(function () {
+          var $clone = $(this).clone().addClass('clone-item').attr('aria-hidden', 'true');
+          $track.append($clone);
+        });
+      }
+    }
+
+    function setTransform(x) {
+      $track.css('transform', 'translate3d(' + x + 'px, 0, 0)');
+    }
+
+    function animate(timestamp) {
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      var dt = Math.min((timestamp - lastTimestamp) / 1000, 0.1);
+      lastTimestamp = timestamp;
+
+      if (!isHovered && !isDragging && singleSetWidth > 0) {
+        currentX += direction * speed * dt;
+        while (currentX <= -singleSetWidth) currentX += singleSetWidth;
+        setTransform(currentX);
+      }
+      requestAnimationFrame(animate);
+    }
+
+    $container.on('mouseenter', function () { isHovered = true; });
+    $container.on('mouseleave', function () { isHovered = false; lastTimestamp = null; });
+
+    function onPointerDown(e) {
+      isDragging = true;
+      startX = e.type.indexOf('touch') === 0 ? e.originalEvent.touches[0].clientX : e.clientX;
+      dragStartX = currentX;
+    }
+
+    function onPointerMove(e) {
+      if (!isDragging) return;
+      var clientX = e.type.indexOf('touch') === 0 ? e.originalEvent.touches[0].clientX : e.clientX;
+      var dx = clientX - startX;
+      currentX = dragStartX + dx;
+
+      if (singleSetWidth > 0) {
+        while (currentX <= -singleSetWidth) currentX += singleSetWidth;
+        while (currentX > 0) currentX -= singleSetWidth;
+      }
+      setTransform(currentX);
+    }
+
+    function onPointerUp() {
+      isDragging = false;
+      lastTimestamp = null;
+    }
+
+    $track.on('mousedown', onPointerDown);
+    $(window).on('mousemove.lsStreamTicker', onPointerMove);
+    $(window).on('mouseup.lsStreamTicker', onPointerUp);
+
+    buildClones();
+    requestAnimationFrame(animate);
+
+    $(window).on('resize.lsStreamTicker', function () {
+      setTimeout(buildClones, 150);
+    });
+  }
+
+  /** Gọi API lấy dữ liệu trận và bắt đầu phát */
+  function loadMatch() {
+    var matchId = getMatchId();
+    var $video = $('#liveVideo');
+
+    $video.attr('poster', POSTER);
+    initPlayerControls($video);
+    setLoading(true, 'Đang tải thông tin trận đấu...');
+
+    $.ajax({
+      url: API_BASE + matchId,
+      method: 'GET',
+      success: function (res) {
+        var data = res && res.data;
+        if (!data) {
+          setLoading(false);
+          return;
+        }
+
+        matchData = data;
+        renderOdds(data);
+
+        var links = sortLinks(data.livestream && data.livestream.links);
+        streamLinks = links;
+
+        if (!links.length) {
+          setLoading(false);
+          updateCommentatorUi({ commentator: 'Chưa có BLV', avatar: FALLBACK_AVATAR });
+          return;
+        }
+
+        activeLinkIndex = resolveActiveIndex(links);
+        buildCommentatorPortal(links);
+        updateCommentatorUi(links[activeLinkIndex]);
+
+        var activeLink = links[activeLinkIndex];
+        if (activeLink && activeLink.url) {
+          initHls(activeLink.url, $video);
+        } else {
+          setLoading(false);
+        }
+      },
+      error: function () {
+        setLoading(false);
+      }
+    });
+  }
+
+  /** Gắn URL asset tĩnh và link CTA (WordPress / HTML prototype) */
+  function initStaticAssets() {
+    var tickerImg = IMG + 'PUSEI2ZAlkDV8Tn0LUSpOKWlJMU_d2f4ba6f.png';
+    var betLogo = cfg.betImageUrl || ASSETS + 'xo88.avif';
+    var betUrl = BET_URL || '#';
+    var playUrl = cfg.playCtaUrl || betUrl;
+
+    $('#liveVideo').attr('poster', POSTER);
+    $('.luongson-stream-ticker img').attr('src', tickerImg);
+    $('#luongsonPlayCta').attr('href', playUrl);
+    $('#luongsonPlayCta img').attr('src', ASSETS + 'icon-play.svg');
+    $('#luongsonCommentatorTrigger .luongson-match-commentator-avatar img').attr('src', FALLBACK_AVATAR);
+    $('#luongsonStreamPlay .luongson-stream-ctrl__icon-play').attr('src', ASSETS + 'icon-play.svg');
+    $('#luongsonStreamVolume .luongson-stream-ctrl__icon-vol').attr('src', ASSETS + 'icon-volume.svg');
+    $('#luongsonStreamFs img').attr('src', ASSETS + 'icon-zoom.svg');
+    $('#luongsonStreamBet').attr('href', betUrl);
+    $('#luongsonStreamBet .luongson-stream-bet-logo').attr('src', betLogo);
+  }
+
+  // --- Khởi chạy khi DOM sẵn sàng ---
+  $(function () {
+    if (!$('.luongson-stream-match').length) return;
+
+    initStaticAssets();
+    $('.luongson-stream-ticker').each(function () {
+      createFeaturedAdsTicker(this);
+    });
+    loadMatch();
+  });
+})(jQuery.noConflict());
+
+})(window, window.jQuery || window.$, window.jQuery || window.$, window.Hls, window.Swiper);
+
 /* top-commentators.js */
 (function(window, $, jQuery, Hls, Swiper) {
 /**

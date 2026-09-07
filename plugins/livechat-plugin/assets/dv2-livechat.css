@@ -1,0 +1,604 @@
+:root {
+  --dv2-bg-page: #F0F0F1;
+  --dv2-bg-card: #FFFFFF;
+  --dv2-border: #C3C4C7;
+  --dv2-text-primary: #1D2327;
+  --dv2-text-label: #2C3338;
+  --dv2-text-secondary: #646970;
+  --dv2-btn-bg: #2271B1;
+  --dv2-btn-text: #FFFFFF;
+  --dv2-accent: #2271B1;
+  --dv2-success: #46B450;
+  --dv2-danger: #D63638;
+}
+
+.nav-tab {
+  user-select: none;
+  cursor: pointer;
+}
+
+.nav-tab.nav-tab-active {
+  background-color: #fff;
+}
+
+.button.button-small.button-outline {
+  border: unset !important;
+  outline: unset !important;
+  box-shadow: none !important;
+}
+
+#dv2-livechat-app {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+#dv2-livechat-app[v-cloak] {
+  display: none;
+}
+
+#dv2-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  color: var(--dv2-text-secondary);
+}
+
+.dv2-card {
+  background: var(--dv2-bg-card);
+  border: 1px solid var(--dv2-border);
+  border-radius: 4px;
+  padding: 24px;
+}
+
+.dv2-card-verify {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dv2-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dv2-field label,
+.dv2-field-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--dv2-text-label);
+}
+
+.dv2-field input[type="text"],
+.dv2-field input[type="password"] {
+  height: 40px;
+  border: 1px solid var(--dv2-border);
+  border-radius: 4px;
+  padding: 0 12px;
+  width: 100%;
+  max-width: 600px;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  color: var(--dv2-text-primary);
+}
+
+.dv2-desc {
+  color: var(--dv2-text-secondary);
+  font-size: 13px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.dv2-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--dv2-text-primary);
+  cursor: pointer;
+}
+
+.dv2-btn-primary {
+  background: var(--dv2-btn-bg);
+  color: var(--dv2-btn-text);
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dv2-btn-primary:hover {
+  background: #135e96;
+}
+
+.dv2-divider {
+  height: 1px;
+  background: var(--dv2-border);
+  border: none;
+  margin: 0;
+}
+
+.dv2-info-bar {
+  background: var(--dv2-bg-card);
+  border: 1px solid var(--dv2-border);
+  border-radius: 4px;
+  padding: 12px 16px;
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.dv2-info-bar strong {
+  font-weight: 600;
+  color: var(--dv2-text-primary);
+}
+
+.dv2-info-bar code {
+  margin-left: 6px;
+  font-size: 11px;
+  color: var(--dv2-text-primary);
+}
+
+.dv2-config-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dv2-field-row {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+}
+
+.dv2-group-col-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.dv2-field-row.dv2-align-start {
+  align-items: flex-start;
+}
+
+.dv2-color-input {
+  width: 48px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--dv2-border);
+  border-radius: 4px;
+  cursor: pointer;
+  background: none;
+}
+
+.dv2-quill-wrapper .ql-toolbar {
+  border-radius: 4px 4px 0 0;
+  background: #F8F9FA;
+  border: 1px solid var(--dv2-border);
+}
+
+.dv2-quill-wrapper .ql-container {
+  border-radius: 0 0 4px 4px;
+  border: 1px solid var(--dv2-border);
+  border-top: none;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+}
+
+.dv2-quill-wrapper .ql-editor {
+  min-height: 120px;
+}
+
+.dv2-spam-config {
+  border: 1px solid var(--dv2-border);
+  border-radius: 4px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dv2-spam-grid {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.dv2-radio-group {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.dv2-radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--dv2-text-primary);
+  cursor: pointer;
+}
+
+.dv2-css-editor {
+  width: 100%;
+  height: 240px;
+  font-family: monospace;
+  font-size: 13px;
+  border: 1px solid var(--dv2-border);
+  border-radius: 4px;
+  padding: 8px;
+  background: #F6F8FA;
+  resize: vertical;
+  color: var(--dv2-text-primary);
+}
+
+.cm-s-default {
+  height: 100% !important;
+  max-height: 440px;
+}
+
+.dv2-guide-item {
+  border: 1px solid var(--dv2-border);
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.dv2-guide-header span:last-child {
+  color: var(--dv2-text-secondary);
+}
+
+.dv2-guide-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--dv2-text-label);
+  user-select: none;
+  border-radius: 4px;
+}
+
+.dv2-guide-header:hover {
+  background: #F8F9FA;
+}
+
+.dv2-guide-body {
+  border-top: 1px solid var(--dv2-border);
+  padding: 12px 16px;
+  color: var(--dv2-text-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.dv2-ads-layout {
+  display: grid;
+  grid-template-columns: 300px 2fr;
+  gap: 16px;
+}
+
+.dv2-revive-config {
+  /* width: 197px; */
+  flex-shrink: 0;
+}
+
+.dv2-ads-list {
+  /* flex: 1; */
+  min-width: 0;
+}
+
+.dv2-revive-card {
+  border: 1px solid var(--dv2-border);
+  border-radius: 4px;
+  padding: 16px;
+}
+
+.dv2-ads-card {
+  border: 1px solid var(--dv2-border);
+  border-radius: 4px;
+  padding: 16px;
+}
+
+.dv2-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dv2-modal-card {
+  background: var(--dv2-bg-card);
+  border-radius: 8px;
+  padding: 24px;
+  width: 520px;
+  max-width: 90vw;
+}
+
+.dv2-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 100001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dv2-popup-card {
+  background: var(--dv2-bg-card);
+  border-radius: 8px;
+  padding: 24px;
+  width: 360px;
+}
+
+.dv2-modal-overlay h2,
+.dv2-popup-card h3 {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.dv2-required {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--dv2-text-primary);
+}
+
+/* ─── Screen 2 wrap ────────────────────────────────────── */
+.dv2-screen2-wrap {
+  margin-bottom: 20px;
+}
+
+/* ─── Header row ────────────────────────────────────────── */
+.dv2-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dv2-header-row h1 {
+  margin: 0;
+}
+
+#site-name {
+  font-weight: 400;
+}
+
+.dv2-inline-form {
+  margin: 0;
+}
+
+.dv2-btn-disconnect {
+  color: var(--dv2-danger) !important;
+}
+
+/* ─── Private Key display ───────────────────────────────── */
+.dv2-pk-display {
+  margin-left: 6px;
+  font-size: 11px;
+}
+
+.dv2-pk-btn {
+  margin-left: 6px;
+  min-height: 0;
+  line-height: 1.6;
+}
+
+.dv2-pk-btn+.dv2-pk-btn {
+  margin-left: 4px;
+}
+
+/* ─── Tab panel fixes ───────────────────────────────────── */
+.dv2-tab-panel {
+  background: var(--dv2-bg-card);
+  border: 1px solid var(--dv2-border);
+  border-top: none;
+  padding: 24px;
+}
+
+/* ─── Config tab ────────────────────────────────────────── */
+.dv2-quill-wrapper {
+  width: 100%;
+}
+
+.dv2-spam-config>.dv2-checkbox-row {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--dv2-text-label);
+}
+
+.dv2-spam-grid .dv2-field {
+  flex: 1;
+}
+
+.dv2-spam-grid input[type="number"] {
+  width: 80px;
+}
+
+.dv2-saved-indicator {
+  color: var(--dv2-success);
+  margin-left: 8px;
+}
+
+/* ─── Ads tab ───────────────────────────────────────────── */
+.dv2-section-title {
+  margin-top: 0;
+}
+
+.dv2-input-full {
+  width: 100%;
+}
+
+.dv2-ads-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.dv2-ads-header h3 {
+  margin: 0;
+}
+
+.dv2-btn-edit {
+  color: var(--dv2-text-secondary);
+}
+
+.dv2-btn-delete {
+  color: var(--dv2-danger);
+  margin-left: 4px;
+}
+
+.dv2-empty-state {
+  text-align: center;
+  color: var(--dv2-text-secondary);
+}
+
+.dv2-pagination {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dv2-pagination-bar {
+  display: flex;
+  align-items: center;
+}
+
+.dv2-page-text {
+  margin: 0 8px;
+}
+
+.dv2-revive-footer {
+  margin-top: 16px;
+}
+
+/* ─── Modal ──────────────────────────────────────────────── */
+.dv2-modal-card label {
+  font-weight: 600;
+}
+
+.dv2-modal-card .dv2-quill-wrapper {
+  margin-top: 6px;
+}
+
+.dv2-input-small {
+  width: 100px;
+}
+
+.dv2-modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.dv2-modal-field-row {
+  display: flex;
+  gap: 16px;
+}
+
+.dv2-popup-card .dv2-modal-actions {
+  padding-top: 8px;
+}
+
+.dv2-btn-delete-confirm {
+  background: var(--dv2-danger) !important;
+  color: #fff !important;
+  border-color: var(--dv2-danger) !important;
+}
+
+/* ─── Spam config nested label fix ──────────────────────── */
+.dv2-spam-config .dv2-field label {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* ─── Auth placeholder ──────────────────────────────────── */
+.dv2-auth-placeholder {
+  padding: 40px 20px;
+  text-align: center;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  color: var(--dv2-text-secondary);
+}
+
+/* ─── Premium UI Extensions ────────────────────────────── */
+@keyframes dv2-pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.dv2-status-dot-live {
+  animation: dv2-pulse 2s infinite;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+}
+
+.nav-tab-wrapper {
+  border-bottom: 1px solid var(--dv2-border) !important;
+  margin-bottom: 0 !important;
+  display: flex;
+  gap: 4px;
+  background: #F0F0F1;
+  padding: 6px 6px 0 6px;
+  border-radius: 8px 8px 0 0;
+}
+
+.nav-tab {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-bottom: none !important;
+  border-radius: 6px 6px 0 0 !important;
+  padding: 8px 16px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--dv2-text-secondary) !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.nav-tab:hover {
+  color: var(--dv2-text-primary) !important;
+  background: rgba(0,0,0,0.03) !important;
+}
+
+.nav-tab.nav-tab-active {
+  background: #fff !important;
+  border-color: var(--dv2-border) var(--dv2-border) transparent !important;
+  color: var(--dv2-accent) !important;
+}
+
+.dv2-theme-thumbnail:hover {
+  transform: scale(1.04);
+  border-color: var(--dv2-accent) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.dv2-lightbox-card {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.dv2-lightbox-img {
+  max-width: 100%;
+  max-height: 80vh;
+  border-radius: 8px;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3), 0 8px 10px -6px rgb(0 0 0 / 0.3);
+}
