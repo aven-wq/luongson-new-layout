@@ -312,3 +312,89 @@
     renderRows: renderRows,
   };
 })();
+
+/**
+ * LuongSon V2 — Fallback ảnh mặc định khi load lỗi
+ */
+(function () {
+  'use strict';
+
+  var DEFAULT_IMG = null;
+  var initialized = false;
+
+  function getPluginUrl() {
+    var pluginUrl =
+      (typeof window.DV2_STREAMING_PLUGIN_URL !== 'undefined' && window.DV2_STREAMING_PLUGIN_URL) ||
+      (window.dv2Streaming && window.dv2Streaming.pluginUrl) ||
+      '';
+
+    if (pluginUrl && pluginUrl.slice(-1) !== '/') {
+      pluginUrl += '/';
+    }
+
+    return pluginUrl;
+  }
+
+  function getDefaultImgUrl() {
+    if (DEFAULT_IMG) return DEFAULT_IMG;
+
+    var pluginUrl = getPluginUrl();
+    DEFAULT_IMG = pluginUrl
+      ? pluginUrl + 'assets/images/default-img.png'
+      : '../../assets/images/default-img.png';
+
+    return DEFAULT_IMG;
+  }
+
+  function isDefaultImg(src) {
+    return !src || src.indexOf('default-img.png') !== -1;
+  }
+
+  function applyFallback(img) {
+    if (!img || img.tagName !== 'IMG' || img.dataset.lsImgFallback === '1') return;
+
+    var fallback = getDefaultImgUrl();
+    var currentSrc = img.getAttribute('src') || img.currentSrc || img.src || '';
+
+    if (isDefaultImg(currentSrc) || currentSrc === fallback) return;
+
+    img.dataset.lsImgFallback = '1';
+    img.src = fallback;
+  }
+
+  function handleImgError(e) {
+    applyFallback(e.target);
+  }
+
+  function patchBrokenImages(root) {
+    var scope = root || document;
+    scope.querySelectorAll('img').forEach(function (img) {
+      if (img.complete && img.naturalWidth === 0 && (img.getAttribute('src') || img.src)) {
+        applyFallback(img);
+      }
+    });
+  }
+
+  function init(root) {
+    if (!initialized) {
+      initialized = true;
+      document.addEventListener('error', handleImgError, true);
+    }
+
+    patchBrokenImages(root);
+  }
+
+  window.LuongsonImageFallback = {
+    getDefaultImgUrl: getDefaultImgUrl,
+    applyFallback: applyFallback,
+    init: init,
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      init();
+    });
+  } else {
+    init();
+  }
+})();

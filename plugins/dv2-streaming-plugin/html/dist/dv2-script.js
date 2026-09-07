@@ -16783,6 +16783,92 @@ function showError(message) {
   };
 })();
 
+/**
+ * LuongSon V2 — Fallback ảnh mặc định khi load lỗi
+ */
+(function () {
+  'use strict';
+
+  var DEFAULT_IMG = null;
+  var initialized = false;
+
+  function getPluginUrl() {
+    var pluginUrl =
+      (typeof window.DV2_STREAMING_PLUGIN_URL !== 'undefined' && window.DV2_STREAMING_PLUGIN_URL) ||
+      (window.dv2Streaming && window.dv2Streaming.pluginUrl) ||
+      '';
+
+    if (pluginUrl && pluginUrl.slice(-1) !== '/') {
+      pluginUrl += '/';
+    }
+
+    return pluginUrl;
+  }
+
+  function getDefaultImgUrl() {
+    if (DEFAULT_IMG) return DEFAULT_IMG;
+
+    var pluginUrl = getPluginUrl();
+    DEFAULT_IMG = pluginUrl
+      ? pluginUrl + 'assets/images/default-img.png'
+      : '../../assets/images/default-img.png';
+
+    return DEFAULT_IMG;
+  }
+
+  function isDefaultImg(src) {
+    return !src || src.indexOf('default-img.png') !== -1;
+  }
+
+  function applyFallback(img) {
+    if (!img || img.tagName !== 'IMG' || img.dataset.lsImgFallback === '1') return;
+
+    var fallback = getDefaultImgUrl();
+    var currentSrc = img.getAttribute('src') || img.currentSrc || img.src || '';
+
+    if (isDefaultImg(currentSrc) || currentSrc === fallback) return;
+
+    img.dataset.lsImgFallback = '1';
+    img.src = fallback;
+  }
+
+  function handleImgError(e) {
+    applyFallback(e.target);
+  }
+
+  function patchBrokenImages(root) {
+    var scope = root || document;
+    scope.querySelectorAll('img').forEach(function (img) {
+      if (img.complete && img.naturalWidth === 0 && (img.getAttribute('src') || img.src)) {
+        applyFallback(img);
+      }
+    });
+  }
+
+  function init(root) {
+    if (!initialized) {
+      initialized = true;
+      document.addEventListener('error', handleImgError, true);
+    }
+
+    patchBrokenImages(root);
+  }
+
+  window.LuongsonImageFallback = {
+    getDefaultImgUrl: getDefaultImgUrl,
+    applyFallback: applyFallback,
+    init: init,
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      init();
+    });
+  } else {
+    init();
+  }
+})();
+
 })(window, window.jQuery || window.$, window.jQuery || window.$, window.Hls, window.Swiper);
 
 /* home-match.js */
@@ -18659,9 +18745,26 @@ function showError(message) {
       ? String(window.BASE_API_URL).replace(/\/+$/, '')
       : 'https://vsc-apidev.helizones.com';
   var COMMENTATORS_API = BASE + '/api/admin/streams/commentators';
-  var FALLBACK_AVATAR =
-    'https://sta.vnres.co/file/common/20250410/000bfdfc22afe0f322140fabd2228aec.jpg';
   var CARD_VARIANTS = ['is-blue', 'is-teal', 'is-green'];
+
+  function getFallbackAvatar() {
+    if (window.LuongsonImageFallback && window.LuongsonImageFallback.getDefaultImgUrl) {
+      return window.LuongsonImageFallback.getDefaultImgUrl();
+    }
+
+    var pluginUrl =
+      (typeof window.DV2_STREAMING_PLUGIN_URL !== 'undefined' && window.DV2_STREAMING_PLUGIN_URL) ||
+      (window.dv2Streaming && window.dv2Streaming.pluginUrl) ||
+      '';
+
+    if (pluginUrl && pluginUrl.slice(-1) !== '/') {
+      pluginUrl += '/';
+    }
+
+    return pluginUrl
+      ? pluginUrl + 'assets/images/default-img.png'
+      : '../../assets/images/default-img.png';
+  }
 
   function escapeHtml(value) {
     return String(value == null ? '' : value)
@@ -18685,7 +18788,7 @@ function showError(message) {
 
   function buildCommentatorCard(blv, index) {
     var name = blv && blv.name ? String(blv.name) : 'Bình luận viên';
-    var avatar = (blv && blv.avatar) || FALLBACK_AVATAR;
+    var avatar = (blv && blv.avatar) || getFallbackAvatar();
     var meta = formatMeta();
     var variant = CARD_VARIANTS[index % CARD_VARIANTS.length];
     var id = blv && blv.id != null ? String(blv.id) : '';
@@ -18702,9 +18805,7 @@ function showError(message) {
       escapeHtml(name) +
       '" decoding="async" draggable="false" height="360" loading="lazy" src="' +
       escapeHtml(avatar) +
-      '" width="240" onerror="this.onerror=null;this.src=\'' +
-      FALLBACK_AVATAR +
-      '\'" />' +
+      '" width="240" />' +
       '</div>' +
       '</div>' +
       '<div class="luongson-commentator-info">' +

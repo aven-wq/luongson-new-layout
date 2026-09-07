@@ -11,9 +11,26 @@
       ? String(window.BASE_API_URL).replace(/\/+$/, '')
       : 'https://vsc-apidev.helizones.com';
   var COMMENTATORS_API = BASE + '/api/admin/streams/commentators';
-  var FALLBACK_AVATAR =
-    'https://sta.vnres.co/file/common/20250410/000bfdfc22afe0f322140fabd2228aec.jpg';
   var CARD_VARIANTS = ['is-blue', 'is-teal', 'is-green'];
+
+  function getFallbackAvatar() {
+    if (window.LuongsonImageFallback && window.LuongsonImageFallback.getDefaultImgUrl) {
+      return window.LuongsonImageFallback.getDefaultImgUrl();
+    }
+
+    var pluginUrl =
+      (typeof window.DV2_STREAMING_PLUGIN_URL !== 'undefined' && window.DV2_STREAMING_PLUGIN_URL) ||
+      (window.dv2Streaming && window.dv2Streaming.pluginUrl) ||
+      '';
+
+    if (pluginUrl && pluginUrl.slice(-1) !== '/') {
+      pluginUrl += '/';
+    }
+
+    return pluginUrl
+      ? pluginUrl + 'assets/images/default-img.png'
+      : '../../assets/images/default-img.png';
+  }
 
   function escapeHtml(value) {
     return String(value == null ? '' : value)
@@ -37,7 +54,7 @@
 
   function buildCommentatorCard(blv, index) {
     var name = blv && blv.name ? String(blv.name) : 'Bình luận viên';
-    var avatar = (blv && blv.avatar) || FALLBACK_AVATAR;
+    var avatar = (blv && blv.avatar) || getFallbackAvatar();
     var meta = formatMeta();
     var variant = CARD_VARIANTS[index % CARD_VARIANTS.length];
     var id = blv && blv.id != null ? String(blv.id) : '';
@@ -54,9 +71,7 @@
       escapeHtml(name) +
       '" decoding="async" draggable="false" height="360" loading="lazy" src="' +
       escapeHtml(avatar) +
-      '" width="240" onerror="this.onerror=null;this.src=\'' +
-      FALLBACK_AVATAR +
-      '\'" />' +
+      '" width="240" />' +
       '</div>' +
       '</div>' +
       '<div class="luongson-commentator-info">' +
