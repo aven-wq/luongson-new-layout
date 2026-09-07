@@ -5,14 +5,35 @@
 (function ($) {
   'use strict';
 
-  // --- Cấu hình từ WordPress / HTML ---
+  // --- Cấu hình từ WordPress runtime (class-assets-loader) hoặc HTML prototype ---
   var cfg = window.luongsonStreamMatch || {};
-  var IMG = cfg.imgUrl || 'images/';
-  var ASSETS = cfg.assetsUrl || '../../assets/images/luongson-v2/';
-  var API_BASE = cfg.apiBase || 'https://vsc-apidev.helizones.com/api/data/lives/';
-  var MATCH_ID = cfg.matchId || 'zp5rzghge5n8q82';
+  var pluginUrl = (
+    typeof window.DV2_STREAMING_PLUGIN_URL !== 'undefined' && window.DV2_STREAMING_PLUGIN_URL
+  ) || (window.dv2Streaming && window.dv2Streaming.pluginUrl) || cfg.assetsUrl || '';
+
+  if (pluginUrl && pluginUrl.slice(-1) !== '/') {
+    pluginUrl += '/';
+  }
+
+  var ASSETS = pluginUrl
+    ? pluginUrl + 'assets/images/luongson-v2/'
+    : (cfg.assetsUrl || '../../assets/images/luongson-v2/');
+  var IMG = pluginUrl
+    ? pluginUrl + 'html/luongson-v2/images/'
+    : (cfg.imgUrl || 'images/');
+  var API_BASE = (
+    typeof window.BASE_API_URL !== 'undefined' && window.BASE_API_URL
+  )
+    ? String(window.BASE_API_URL).replace(/\/+$/, '') + '/api/data/lives/'
+    : (cfg.apiBase || 'https://vsc-apidev.helizones.com/api/data/lives/');
+  var MATCH_ID = (
+    typeof window.DV2_MATCH_ID !== 'undefined' && window.DV2_MATCH_ID
+  ) || cfg.matchId || 'zp5rzghge5n8q82';
   var POSTER = cfg.posterUrl || ASSETS + 'bg-stream.webp';
   var FALLBACK_AVATAR = ASSETS + 'svg-blv.svg';
+  var BET_URL = (
+    typeof window.DV2_LINK_BET !== 'undefined' && window.DV2_LINK_BET
+  ) || cfg.betUrl || cfg.playCtaUrl || '#';
 
   // --- Biến trạng thái ---
   var currentHls = null;
@@ -21,10 +42,20 @@
   var streamLinks = [];
   var activeLinkIndex = 0;
 
-  /** Lấy match id từ URL (?match=...) hoặc dùng mặc định */
+  /** Lấy match id từ ?match=, DV2_MATCH_ID (/streams/{id}), hoặc mặc định */
   function getMatchId() {
     var params = new URLSearchParams(window.location.search);
-    return params.get('match') || MATCH_ID;
+    var matchId = params.get('match');
+
+    if (!matchId) {
+      if (typeof window.DV2_MATCH_ID !== 'undefined' && window.DV2_MATCH_ID) {
+        matchId = window.DV2_MATCH_ID;
+      } else {
+        matchId = MATCH_ID;
+      }
+    }
+
+    return matchId;
   }
 
   /** Format số kèo: 1.5 → "1.50" */
@@ -562,18 +593,30 @@
     });
   }
 
-  /** Gắn link CTA từ cấu hình */
-  function initCtaLinks() {
-    if (cfg.playCtaUrl) $('#luongsonPlayCta').attr('href', cfg.playCtaUrl);
-    if (cfg.betUrl) $('#luongsonStreamBet').attr('href', cfg.betUrl);
-    if (cfg.betImageUrl) $('#luongsonStreamBet .luongson-stream-bet-logo').attr('src', cfg.betImageUrl);
+  /** Gắn URL asset tĩnh và link CTA (WordPress / HTML prototype) */
+  function initStaticAssets() {
+    var tickerImg = IMG + 'PUSEI2ZAlkDV8Tn0LUSpOKWlJMU_d2f4ba6f.png';
+    var betLogo = cfg.betImageUrl || ASSETS + 'xo88.avif';
+    var betUrl = BET_URL || '#';
+    var playUrl = cfg.playCtaUrl || betUrl;
+
+    $('#liveVideo').attr('poster', POSTER);
+    $('.luongson-stream-ticker img').attr('src', tickerImg);
+    $('#luongsonPlayCta').attr('href', playUrl);
+    $('#luongsonPlayCta img').attr('src', ASSETS + 'icon-play.svg');
+    $('#luongsonCommentatorTrigger .luongson-match-commentator-avatar img').attr('src', FALLBACK_AVATAR);
+    $('#luongsonStreamPlay .luongson-stream-ctrl__icon-play').attr('src', ASSETS + 'icon-play.svg');
+    $('#luongsonStreamVolume .luongson-stream-ctrl__icon-vol').attr('src', ASSETS + 'icon-volume.svg');
+    $('#luongsonStreamFs img').attr('src', ASSETS + 'icon-zoom.svg');
+    $('#luongsonStreamBet').attr('href', betUrl);
+    $('#luongsonStreamBet .luongson-stream-bet-logo').attr('src', betLogo);
   }
 
   // --- Khởi chạy khi DOM sẵn sàng ---
   $(function () {
     if (!$('.luongson-stream-match').length) return;
 
-    initCtaLinks();
+    initStaticAssets();
     $('.luongson-stream-ticker').each(function () {
       createFeaturedAdsTicker(this);
     });

@@ -16599,7 +16599,7 @@ body:has(> .luongson-stream-match:only-child) {
 
 .luongson-stream-stage {
   width: 100%;
-  max-width: 960px;
+  max-width: 1180px;
   margin: 0 auto;
 }
 
@@ -16933,6 +16933,7 @@ body:has(> .luongson-stream-match:only-child) {
   background: transparent;
   cursor: pointer;
   flex: none;
+  margin: 0;
 }
 
 .luongson-stream-ctrl:hover {

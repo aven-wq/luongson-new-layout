@@ -1,0 +1,137 @@
+<?php
+/**
+ * LuongSon V2 stream detail — [stream_detail layout="luongson-v2"]
+ *
+ * Markup from html/luongson-v2/stream-match.html;
+ * CSS/JS bundled via html/luongson-v2/stream-match.{css,js}.
+ *
+ * @package DV2_Streaming
+ */
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+?>
+<div class="luongson-stream-match">
+    <div class="luongson-stream-stage" id="luongsonStreamStage">
+        <div class="luongson-stream-video-wrap">
+            <div id="stream-player" class="luongson-stream-player-slot">
+                <video
+                    id="liveVideo"
+                    class="luongson-stream-video"
+                    playsinline
+                    muted
+                    autoplay
+                ></video>
+            </div>
+
+            <div class="luongson-stream-loading" id="luongsonStreamLoading" hidden aria-live="polite">
+                <div class="luongson-stream-loading__spinner" aria-hidden="true"></div>
+                <p class="luongson-stream-loading__text">Đang tải luồng phát...</p>
+            </div>
+
+            <div class="luongson-stream-top-bar" data-border="true">
+                <div class="luongson-stream-ticker luongson-featured-ads-ticker">
+                    <ul>
+                        <li class="ticker-item"><span class="luongson-stream-ticker__dot"></span></li>
+                        <li class="ticker-item">
+                            <img alt="" decoding="async" height="26" />
+                        </li>
+                        <li class="ticker-item"><span class="luongson-stream-ticker__dot"></span></li>
+                        <li class="ticker-item">
+                            <p class="luongson-stream-ticker__text">⚽️ Kèo thơm mỗi ngày • Nhận ưu đãi thành viên mới</p>
+                        </li>
+                        <li class="ticker-item"><span class="luongson-stream-ticker__dot"></span></li>
+                        <li class="ticker-item">
+                            <img alt="" decoding="async" height="26" />
+                        </li>
+                        <li class="ticker-item"><span class="luongson-stream-ticker__dot"></span></li>
+                        <li class="ticker-item">
+                            <p class="luongson-stream-ticker__text">• Soi kèo nhanh, tỷ lệ chuẩn • Tham gia ngay hôm nay 🔥</p>
+                        </li>
+                    </ul>
+                </div>
+                <a class="luongson-stream-play-cta" id="luongsonPlayCta" href="#" data-border="true">
+                    <span class="luongson-stream-play-cta__icon" aria-hidden="true">
+                        <img alt="" width="11" height="13" />
+                    </span>
+                    <span class="luongson-stream-play-cta__label">Chơi ngay</span>
+                </a>
+            </div>
+
+            <div class="luongson-stream-bottom-bar">
+                <div class="luongson-stream-bottom-left">
+                    <div class="luongson-match-commentator-container">
+                        <div class="luongson-match-commentator" id="luongsonStreamCommentator" data-commentator="">
+                            <button
+                                type="button"
+                                class="luongson-match-commentator-trigger"
+                                id="luongsonCommentatorTrigger"
+                                aria-haspopup="listbox"
+                                aria-expanded="false"
+                            >
+                                <span class="luongson-match-commentator-avatar" data-border="true">
+                                    <img alt="" decoding="async" />
+                                </span>
+                                <span class="luongson-match-commentator-name">—</span>
+                                <svg class="luongson-match-commentator-chevron" role="presentation" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="button" class="luongson-stream-ctrl luongson-stream-ctrl--play is-paused" id="luongsonStreamPlay" aria-label="Phát" title="Phát">
+                        <img class="luongson-stream-ctrl__icon-play" alt="" width="20" height="20" />
+                        <svg class="luongson-stream-ctrl__icon-pause" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                            <path d="M4 2h3v12H4V2zm5 0h3v12H9V2z" />
+                        </svg>
+                    </button>
+
+                    <div class="luongson-stream-volume" id="luongsonStreamVolumeWrap">
+                        <button type="button" class="luongson-stream-ctrl luongson-stream-ctrl--volume is-muted" id="luongsonStreamVolume" aria-label="Bật tiếng" title="Âm lượng">
+                            <img class="luongson-stream-ctrl__icon-vol" alt="" width="20" height="20" />
+                        </button>
+                        <input
+                            type="range"
+                            class="luongson-stream-volume__slider"
+                            id="luongsonStreamVolumeSlider"
+                            min="0"
+                            max="1"
+                            step="0.05"
+                            value="0"
+                            aria-label="Mức âm lượng"
+                        />
+                    </div>
+                </div>
+
+                <div class="luongson-stream-bottom-right">
+                    <div class="luongson-stream-odds-panel" id="luongsonStreamOdds" aria-label="Tỷ lệ kèo">
+                        <div class="luongson-stream-odds-row">
+                            <span class="luongson-stream-odds-label">FT</span>
+                            <span class="luongson-stream-odds-val" data-odds="hdp-home">-</span>
+                            <span class="luongson-stream-odds-val is-rate" data-odds="hdp-rate">-</span>
+                            <span class="luongson-stream-odds-val" data-odds="hdp-away">-</span>
+                        </div>
+                        <div class="luongson-stream-odds-row">
+                            <span class="luongson-stream-odds-label">HT</span>
+                            <span class="luongson-stream-odds-val" data-odds="ou-over">-</span>
+                            <span class="luongson-stream-odds-val is-rate" data-odds="ou-rate">-</span>
+                            <span class="luongson-stream-odds-val" data-odds="ou-under">-</span>
+                        </div>
+                    </div>
+
+                    <div class="luongson-stream-bottom-actions">
+                        <button type="button" class="luongson-stream-ctrl luongson-stream-ctrl--fs" id="luongsonStreamFs" aria-label="Toàn màn hình" title="Toàn màn hình">
+                            <img alt="" width="20" height="20" />
+                        </button>
+                        <a class="luongson-stream-bet-link" id="luongsonStreamBet" href="#" target="_blank" rel="noopener noreferrer">
+                            <span class="luongson-stream-bet-text">cược</span>
+                            <img class="luongson-stream-bet-logo" alt="XO88" decoding="async" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -325,7 +325,7 @@ class DV2_Shortcodes {
      * Shortcode: [stream_detail layout="socolive" shortcode_stream="dv2_livechat" banner_zone_id="2724"]
      * Display stream detail page - reads ID from URL /streams/{id}
      * 
-     * Available layouts: socolive, vebo, thapcam
+     * Available layouts: socolive, vebo, thapcam, luongson-v2
      */
     public function shortcode_stream_detail($atts) {
         global $wp_query;
@@ -349,6 +349,16 @@ class DV2_Shortcodes {
         // If stream not found, show error
         if (empty($stream_id)) {
             return '<div class="dv2-stream-not-found"><p>' . esc_html__('Stream not found.', 'dv2-streaming') . '</p></div>';
+        }
+
+        $layout = sanitize_file_name((string) $atts['layout']);
+        if ($layout === 'luongson-v2') {
+            wp_enqueue_style(
+                'luongson-v2-stream-fonts',
+                'https://fonts.googleapis.com/css2?family=Anton+SC&family=Momo+Trust+Sans:wght@400;600;700;800&display=swap',
+                array(),
+                null
+            );
         }
 
         $template_path = $this->get_template_path('stream-detail.block.php', $atts['layout']);

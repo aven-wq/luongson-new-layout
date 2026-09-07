@@ -23,7 +23,8 @@
   box-sizing: border-box;
 }
 
-body {
+/* Standalone HTML preview only — avoid affecting WordPress page body */
+body:has(> .luongson-stream-match:only-child) {
   margin: 0;
   background: #0a1628;
   padding: 16px;
@@ -31,7 +32,7 @@ body {
 
 .luongson-stream-stage {
   width: 100%;
-  max-width: 960px;
+  max-width: 1180px;
   margin: 0 auto;
 }
 
@@ -365,6 +366,7 @@ body {
   background: transparent;
   cursor: pointer;
   flex: none;
+  margin: 0;
 }
 
 .luongson-stream-ctrl:hover {
@@ -585,6 +587,7 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-family: "Momo Trust Sans", system-ui, sans-serif;
 }
 
 /* Fullscreen */
