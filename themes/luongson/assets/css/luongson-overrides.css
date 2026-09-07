@@ -13,7 +13,6 @@
   margin: 0 !important;
   box-sizing: border-box !important;
 }
-
 /* --------------------------------------------------------------------------
    Desktop (>= 1024px) — center whole shell (sidebar + content)
    Shell width = spacer 210 + content 1500 + main-layout right pad 10
@@ -29,7 +28,7 @@
     flex-direction: column !important;
     align-items: stretch !important;
     width: 100% !important;
-    max-width: 1720px !important;
+    max-width: 1730px !important;
     margin-left: auto !important;
     margin-right: auto !important;
     min-height: 100vh !important;
@@ -42,7 +41,7 @@
     position: fixed !important;
     top: 0 !important;
     /* Keep fixed sidebar aligned with centered shell, not viewport left */
-    left: max(0px, calc(50% - 860px)) !important;
+    left: max(0px, calc(50% - 864px)) !important;
     width: 200px !important;
     height: 100vh !important;
     z-index: 100 !important;
@@ -52,13 +51,9 @@
   #luongson-site-root .luongson-catfish,
   #luongson-site-root .framer-9hgzo {
     left: max(0px, calc(50% - 860px)) !important;
-    width: min(100%, 1720px) !important;
+    /* width: min(100%, 1720px) !important;
     max-width: 1720px !important;
-    z-index: 999;
-  }
-
-  .framer-wh6HR .framer-8fw8a0, .framer-6AsMN .framer-8fw8a0 {
-    width: 100px;
+    z-index: 999; */
   }
 
   #luongson-site-root .framer-QbuP0.framer-1ei7e2m {
