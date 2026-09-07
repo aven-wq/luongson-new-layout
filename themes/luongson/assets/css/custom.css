@@ -479,6 +479,8 @@ body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongs
     height: 100%;
     box-sizing: border-box;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 @keyframes gwd-icon-pulse {
