@@ -123,6 +123,7 @@
 .luongson-notice .gwd-fixed-img {
     flex: 0 0 auto !important;
     margin-right: 0 !important;
+    background-color: transparent !important;
 }
 
 .luongson-notice .notification-banner-close {
