@@ -399,6 +399,10 @@ body.admin-bar #luongson-site-root .framer-QbuP0.framer-1ei7e2m {
     min-height: calc(100vh - 46px) !important;
     max-height: calc(100vh - 46px) !important;
   }
+
+  #luongson-site-root .luongson-main-content, #luongson-site-root .framer-1rvbi9f {
+    padding: 0 !important;
+  }
 }
 
 /* --------------------------------------------------------------------------

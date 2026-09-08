@@ -4247,7 +4247,7 @@ navigationcontainer [data-framer-component-type="NavigationContainer"] > *,
   position: relative;
 }
 
-.luongson-ads-right-sidebar .framer-8fw8a0  {
+.luongson-ads-right-sidebar .framer-8fw8a0 {
   width: 125px;
 }
 
@@ -4387,6 +4387,10 @@ navigationcontainer [data-framer-component-type="NavigationContainer"] > *,
     order: 3;
     padding: 0px 10px 4px;
     gap: 0;
+  }
+
+  .framer-wh6HR .framer-8fw8a0, .framer-6AsMN .framer-8fw8a0 {
+    height: 0 !important;
   }
 }
 
@@ -4648,6 +4652,10 @@ navigationcontainer [data-framer-component-type="NavigationContainer"] > *,
     flex-direction: column;
     order: 3;
     padding: 0px;
+    gap: 0;
+  }
+  .framer-wh6HR .framer-8fw8a0, .framer-6AsMN .framer-8fw8a0 {
+    height: 0 !important;
   }
   .framer-wh6HR .framer-9pns00,
   .framer-6AsMN .framer-9pns00 {
