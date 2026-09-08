@@ -848,25 +848,119 @@ body:has(> .luongson-stream-match:only-child) {
   font-family: "Momo Trust Sans", system-ui, sans-serif;
 }
 
-/* Fullscreen */
+/* Overlay UI layer (wraps chrome; bounded to letterboxed video in fullscreen) */
+.luongson-stream-ui-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.luongson-stream-ui-layer > * {
+  pointer-events: auto;
+}
+
+/* Fullscreen — align with vebo-v2 (contain video, fixed chrome, iOS CSS fallback) */
+body.luongson-stream-body-fs {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
+
+.luongson-fs-placeholder {
+  width: 100%;
+  pointer-events: none;
+}
+
 .luongson-stream-stage:fullscreen,
-.luongson-stream-stage:-webkit-full-screen {
+.luongson-stream-stage:-webkit-full-screen,
+.luongson-stream-stage.luongson-stream-stage-fs {
   max-width: none;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #000;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.luongson-stream-stage.luongson-stream-stage-fs {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483645;
+  margin: 0;
 }
 
 .luongson-stream-stage:fullscreen .luongson-stream-video-wrap,
-.luongson-stream-stage:-webkit-full-screen .luongson-stream-video-wrap {
+.luongson-stream-stage:-webkit-full-screen .luongson-stream-video-wrap,
+.luongson-stream-stage.luongson-stream-stage-fs .luongson-stream-video-wrap {
   width: 100%;
   height: 100%;
-  max-height: 100vh;
+  max-height: 100dvh;
   border-radius: 0;
   aspect-ratio: auto;
+  overflow: visible;
+}
+
+.luongson-stream-stage:fullscreen .luongson-stream-video,
+.luongson-stream-stage:-webkit-full-screen .luongson-stream-video,
+.luongson-stream-stage.luongson-stream-stage-fs .luongson-stream-video {
+  object-fit: contain;
+}
+
+.luongson-stream-stage:fullscreen .luongson-stream-bottom-bar,
+.luongson-stream-stage:-webkit-full-screen .luongson-stream-bottom-bar,
+.luongson-stream-stage.luongson-stream-stage-fs .luongson-stream-bottom-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2147483646;
+  border-radius: 0;
+  padding:
+    8px
+    max(12px, env(safe-area-inset-right))
+    max(10px, env(safe-area-inset-bottom))
+    max(12px, env(safe-area-inset-left));
+}
+
+.luongson-stream-stage:fullscreen .luongson-stream-top-bar,
+.luongson-stream-stage:-webkit-full-screen .luongson-stream-top-bar,
+.luongson-stream-stage.luongson-stream-stage-fs .luongson-stream-top-bar {
+  position: fixed;
+  left: max(10px, env(safe-area-inset-left));
+  right: max(10px, env(safe-area-inset-right));
+  top: max(10px, env(safe-area-inset-top));
+  z-index: 2147483646;
+}
+
+.luongson-stream-stage:fullscreen .luongson-stream-loading,
+.luongson-stream-stage:-webkit-full-screen .luongson-stream-loading,
+.luongson-stream-stage.luongson-stream-stage-fs .luongson-stream-loading,
+.luongson-stream-stage:fullscreen .luongson-stream-prematch,
+.luongson-stream-stage:-webkit-full-screen .luongson-stream-prematch,
+.luongson-stream-stage.luongson-stream-stage-fs .luongson-stream-prematch {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483644;
+  border-radius: 0;
+}
+
+.luongson-stream-stage:fullscreen .luongson-stream-ui-layer--bounded,
+.luongson-stream-stage:-webkit-full-screen .luongson-stream-ui-layer--bounded,
+.luongson-stream-stage.luongson-stream-stage-fs .luongson-stream-ui-layer--bounded {
+  position: absolute;
+  z-index: 3;
+  max-width: none;
+  pointer-events: none;
+}
+
+.luongson-stream-ui-layer--bounded > * {
+  pointer-events: auto;
 }
 
 /* Fullscreen: banner head ẩn mặc định, hiện 10s mỗi 60s */
@@ -1014,6 +1108,24 @@ body:has(> .luongson-stream-match:only-child) {
 
   .luongson-stream-prematch__score-value {
     font-size: 26px;
+  }
+
+  .luongson-stream-stage:fullscreen .luongson-stream-bottom-bar,
+  .luongson-stream-stage:-webkit-full-screen .luongson-stream-bottom-bar,
+  .luongson-stream-stage.luongson-stream-stage-fs .luongson-stream-bottom-bar {
+    padding:
+      6px
+      max(8px, env(safe-area-inset-right))
+      max(8px, env(safe-area-inset-bottom))
+      max(8px, env(safe-area-inset-left));
+  }
+
+  .luongson-stream-stage:fullscreen .luongson-stream-top-bar,
+  .luongson-stream-stage:-webkit-full-screen .luongson-stream-top-bar,
+  .luongson-stream-stage.luongson-stream-stage-fs .luongson-stream-top-bar {
+    left: max(6px, env(safe-area-inset-left));
+    right: max(6px, env(safe-area-inset-right));
+    top: max(6px, env(safe-area-inset-top));
   }
 }
 
@@ -1378,7 +1490,8 @@ body:has(> .luongson-stream-match:only-child) {
 }
 
 .luongson-stream-stage:fullscreen .dv2-stream-tvc,
-.luongson-stream-stage:-webkit-full-screen .dv2-stream-tvc {
+.luongson-stream-stage:-webkit-full-screen .dv2-stream-tvc,
+.luongson-stream-stage.luongson-stream-stage-fs .dv2-stream-tvc {
   z-index: 2147483646;
 }
 

@@ -461,13 +461,358 @@
     }
   }
 
-  function isStageFullscreen() {
-    var stage = $('#luongsonStreamStage').get(0);
-    if (!stage) return false;
+  function getFullscreenElement() {
     return (
-      document.fullscreenElement === stage ||
-      document.webkitFullscreenElement === stage
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement ||
+      null
     );
+  }
+
+  function isNativeStageFullscreen($stage) {
+    var stage = $stage.get(0);
+    if (!stage) return false;
+    return getFullscreenElement() === stage;
+  }
+
+  function isCssStageFullscreen($stage) {
+    return !!$stage.data('cssStageFs');
+  }
+
+  function isStageFullscreen() {
+    var $stage = $('#luongsonStreamStage');
+    return isNativeStageFullscreen($stage) || isCssStageFullscreen($stage);
+  }
+
+  function supportsStageFullscreenApi() {
+    var el = document.createElement('div');
+    return !!(
+      el.requestFullscreen ||
+      el.webkitRequestFullscreen ||
+      el.mozRequestFullScreen ||
+      el.msRequestFullscreen
+    );
+  }
+
+  function shouldPreferCssStageFullscreen() {
+    return (
+      /iPad|iPhone|iPod/i.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+    );
+  }
+
+  function requestStageFullscreen(stage) {
+    if (!stage) return Promise.reject();
+    var req =
+      stage.requestFullscreen ||
+      stage.webkitRequestFullscreen ||
+      stage.mozRequestFullScreen ||
+      stage.msRequestFullscreen;
+    if (!req) return Promise.reject();
+    return Promise.resolve(req.call(stage));
+  }
+
+  function exitDocumentFullscreen() {
+    var exit =
+      document.exitFullscreen ||
+      document.webkitExitFullscreen ||
+      document.mozCancelFullScreen ||
+      document.msExitFullscreen;
+    if (!exit) return Promise.resolve();
+    return Promise.resolve(exit.call(document));
+  }
+
+  function syncStageFullscreenUi($stage) {
+    if (!$stage.length) return;
+    var isFs = isStageFullscreen();
+    $stage.toggleClass('luongson-stream-stage-fs', isFs);
+
+    var $fsBtn = $('#luongsonStreamFs');
+    if ($fsBtn.length) {
+      var fsLabel = isFs ? 'Thu nhỏ' : 'Toàn màn hình';
+      $fsBtn.attr({ 'aria-label': fsLabel, title: fsLabel });
+    }
+  }
+
+  function mountCssFullscreenPortal($stage) {
+    if (!$stage.length || $stage.hasClass('luongson-fs-portal')) return;
+
+    var $placeholder = $('<div class="luongson-fs-placeholder" aria-hidden="true"></div>');
+    var height = $stage.outerHeight();
+    if (height > 0) {
+      $placeholder.height(height);
+    }
+
+    $stage.data('lsFsPortalParent', $stage.parent());
+    $placeholder.insertBefore($stage);
+    $stage.data('lsFsPortalPlaceholder', $placeholder);
+    $stage.addClass('luongson-fs-portal');
+    $('body').append($stage);
+  }
+
+  function restoreCssFullscreenPortal($stage) {
+    if (!$stage.length || !$stage.hasClass('luongson-fs-portal')) return;
+
+    var $placeholder = $stage.data('lsFsPortalPlaceholder');
+    var $originalParent = $stage.data('lsFsPortalParent');
+
+    $stage.removeClass('luongson-fs-portal');
+    if ($placeholder && $placeholder.length) {
+      $stage.insertBefore($placeholder);
+      $placeholder.remove();
+    } else if ($originalParent && $originalParent.length) {
+      $originalParent.append($stage);
+    }
+
+    $stage.removeData('lsFsPortalPlaceholder');
+    $stage.removeData('lsFsPortalParent');
+  }
+
+  function syncCssFullscreenPortal($stage) {
+    if (!$stage.length) return;
+    if (isCssStageFullscreen($stage)) {
+      mountCssFullscreenPortal($stage);
+      return;
+    }
+    restoreCssFullscreenPortal($stage);
+  }
+
+  function enterCssStageFullscreen($stage) {
+    $stage.data('cssStageFs', true);
+    $('body').addClass('luongson-stream-body-fs');
+    syncStageFullscreenUi($stage);
+    $stage.trigger('lsStageFsChange');
+  }
+
+  function exitCssStageFullscreen($stage) {
+    $stage.data('cssStageFs', false);
+    restoreCssFullscreenPortal($stage);
+
+    var hasOtherCssFs = $('.luongson-stream-stage')
+      .toArray()
+      .some(function (el) {
+        return $(el).data('cssStageFs');
+      });
+
+    if (!hasOtherCssFs) {
+      $('body').removeClass('luongson-stream-body-fs');
+    }
+
+    syncStageFullscreenUi($stage);
+    $stage.trigger('lsStageFsChange');
+  }
+
+  function exitStageFullscreen($stage) {
+    if (isNativeStageFullscreen($stage)) {
+      exitDocumentFullscreen();
+    }
+    if (isCssStageFullscreen($stage)) {
+      exitCssStageFullscreen($stage);
+    }
+  }
+
+  function getContainedVideoBounds(video, containerRect) {
+    if (!video || !containerRect || !containerRect.width || !containerRect.height) return null;
+
+    var intrinsicW = video.videoWidth;
+    var intrinsicH = video.videoHeight;
+    if (!intrinsicW || !intrinsicH) return null;
+
+    var containerRatio = containerRect.width / containerRect.height;
+    var videoRatio = intrinsicW / intrinsicH;
+    var width;
+    var height;
+    var left;
+    var top;
+
+    if (videoRatio > containerRatio) {
+      width = containerRect.width;
+      height = containerRect.width / videoRatio;
+      left = 0;
+      top = (containerRect.height - height) / 2;
+    } else {
+      height = containerRect.height;
+      width = containerRect.height * videoRatio;
+      top = 0;
+      left = (containerRect.width - width) / 2;
+    }
+
+    return { top: top, left: left, width: width, height: height };
+  }
+
+  function ensureStreamUiLayer($wrap) {
+    if (!$wrap.length) return $();
+
+    var $layer = $wrap.children('.luongson-stream-ui-layer').first();
+    if ($layer.length) return $layer;
+
+    $layer = $('<div class="luongson-stream-ui-layer"></div>');
+    $wrap.children(
+      '.luongson-stream-top-bar, .luongson-stream-bottom-bar, .luongson-stream-loading, .luongson-stream-prematch'
+    ).appendTo($layer);
+    $wrap.append($layer);
+    return $layer;
+  }
+
+  function syncStreamUiLayerLayout() {
+    if (!isStageFullscreen()) return;
+
+    var $stage = $('#luongsonStreamStage');
+    var $wrap = $('.luongson-stream-video-wrap').first();
+    var $layer = ensureStreamUiLayer($wrap);
+    var $video = $('#liveVideo');
+    var video = $video.get(0);
+    var container = $wrap.get(0);
+
+    if (!$layer.length || !video || !container) return;
+
+    var bounds = getContainedVideoBounds(video, container.getBoundingClientRect());
+
+    if (!bounds || !bounds.width || !bounds.height) {
+      $layer.removeClass('luongson-stream-ui-layer--bounded').css({
+        top: '',
+        left: '',
+        width: '',
+        height: ''
+      });
+      return;
+    }
+
+    $layer
+      .addClass('luongson-stream-ui-layer--bounded')
+      .css({
+        top: bounds.top + 'px',
+        left: bounds.left + 'px',
+        width: bounds.width + 'px',
+        height: bounds.height + 'px'
+      });
+  }
+
+  function scheduleStreamUiLayerLayoutSync() {
+    var $stage = $('#luongsonStreamStage');
+    if ($stage.data('lsUiLayerSyncRaf')) return;
+
+    var rafId = requestAnimationFrame(function () {
+      $stage.removeData('lsUiLayerSyncRaf');
+      syncStreamUiLayerLayout();
+    });
+
+    $stage.data('lsUiLayerSyncRaf', rafId);
+  }
+
+  function initStreamUiLayerSync($video) {
+    var $stage = $('#luongsonStreamStage');
+    if ($stage.data('lsUiLayerSyncBound')) return;
+    $stage.data('lsUiLayerSyncBound', true);
+
+    ensureStreamUiLayer($('.luongson-stream-video-wrap').first());
+
+    var scheduleSync = scheduleStreamUiLayerLayoutSync;
+
+    scheduleSync();
+
+    $video.on('loadedmetadata.lsUiLayerSync loadeddata.lsUiLayerSync resize.lsUiLayerSync', scheduleSync);
+
+    if (typeof ResizeObserver !== 'undefined') {
+      var $wrap = $('.luongson-stream-video-wrap').first();
+      var observer = new ResizeObserver(scheduleSync);
+      if ($wrap.length) observer.observe($wrap.get(0));
+      if ($video.length) observer.observe($video.get(0));
+      $stage.data('lsUiLayerResizeObserver', observer);
+    }
+
+    $(window).on('resize.lsUiLayerSync orientationchange.lsUiLayerSync', scheduleSync);
+    $stage.on('lsStageFsChange.lsUiLayerSync', scheduleSync);
+    $(document).on(
+      'fullscreenchange.lsUiLayerSync webkitfullscreenchange.lsUiLayerSync',
+      scheduleSync
+    );
+  }
+
+  function syncStageFullscreenChrome() {
+    var $stage = $('#luongsonStreamStage');
+    if (!$stage.length) return;
+
+    if (
+      !isNativeStageFullscreen($stage) &&
+      isCssStageFullscreen($stage)
+    ) {
+      // Giữ CSS fullscreen khi native API không dùng được (iOS).
+    } else if (!isNativeStageFullscreen($stage)) {
+      $stage.data('cssStageFs', false);
+      restoreCssFullscreenPortal($stage);
+
+      var hasOtherCssFs = $('.luongson-stream-stage')
+        .toArray()
+        .some(function (el) {
+          return $(el).data('cssStageFs');
+        });
+
+      if (!hasOtherCssFs) {
+        $('body').removeClass('luongson-stream-body-fs');
+      }
+    }
+
+    syncCssFullscreenPortal($stage);
+    syncStageFullscreenUi($stage);
+    syncFsTopBarCycle();
+    scheduleStreamUiLayerLayoutSync();
+  }
+
+  function toggleStageFullscreen() {
+    var $stage = $('#luongsonStreamStage');
+    var stage = $stage.get(0);
+    if (!stage) return;
+
+    if (isStageFullscreen()) {
+      exitStageFullscreen($stage);
+      return;
+    }
+
+    if (shouldPreferCssStageFullscreen()) {
+      enterCssStageFullscreen($stage);
+      return;
+    }
+
+    if (!supportsStageFullscreenApi()) {
+      enterCssStageFullscreen($stage);
+      return;
+    }
+
+    requestStageFullscreen(stage)
+      .then(function () {
+        if (getFullscreenElement() !== stage) {
+          enterCssStageFullscreen($stage);
+          return;
+        }
+        syncStageFullscreenUi($stage);
+        $stage.trigger('lsStageFsChange');
+      })
+      .catch(function () {
+        enterCssStageFullscreen($stage);
+      });
+  }
+
+  function initCssFullscreenPortal($stage) {
+    if (!$stage.length || $stage.data('lsFsPortalBound')) return;
+    $stage.data('lsFsPortalBound', true);
+
+    $stage.on('lsStageFsChange.lsFsPortal', function () {
+      syncCssFullscreenPortal($stage);
+    });
+
+    $(document).on(
+      'fullscreenchange.lsFsPortal webkitfullscreenchange.lsFsPortal',
+      function () {
+        syncCssFullscreenPortal($stage);
+      }
+    );
+
+    $(window).on('pagehide.lsFsPortal', function () {
+      restoreCssFullscreenPortal($stage);
+    });
   }
 
   function hideFsTopBar() {
@@ -562,21 +907,22 @@
     });
 
     $('#luongsonStreamFs').off('click').on('click', function () {
-      var $stage = $('#luongsonStreamStage');
-      var stage = $stage.get(0);
-      if (!stage) return;
-      if (document.fullscreenElement) {
-        document.exitFullscreen();
-      } else if (stage.requestFullscreen) {
-        stage.requestFullscreen();
-      } else if (stage.webkitRequestFullscreen) {
-        stage.webkitRequestFullscreen();
-      }
+      toggleStageFullscreen();
     });
+
+    var $stage = $('#luongsonStreamStage');
+    initCssFullscreenPortal($stage);
+    initStreamUiLayerSync($video);
 
     $(document)
       .off('fullscreenchange.lsStreamTopBar webkitfullscreenchange.lsStreamTopBar')
-      .on('fullscreenchange.lsStreamTopBar webkitfullscreenchange.lsStreamTopBar', syncFsTopBarCycle);
+      .on('fullscreenchange.lsStreamTopBar webkitfullscreenchange.lsStreamTopBar', syncStageFullscreenChrome);
+
+    $stage.off('lsStageFsChange.lsStreamTopBar').on('lsStageFsChange.lsStreamTopBar', syncStageFullscreenChrome);
+
+    $(window)
+      .off('resize.lsStreamFs orientationchange.lsStreamFs')
+      .on('resize.lsStreamFs orientationchange.lsStreamFs', syncStageFullscreenChrome);
 
     $video.off('play pause volumechange').on('play pause volumechange', function () {
       syncPlayButton($video);
