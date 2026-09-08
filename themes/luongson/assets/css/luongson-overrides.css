@@ -656,3 +656,8 @@ a.luongson-live-banner {
   display: flex;
 }
 
+@media (min-width: 1750px) {
+  #luongson-site-root .luongson-catfish, #luongson-site-root .framer-9hgzo {
+      max-width: 1730px !important;
+  }
+}
