@@ -50,7 +50,7 @@
 
   #luongson-site-root .luongson-catfish,
   #luongson-site-root .framer-9hgzo {
-    left: max(-10px, calc(50% - 875px)) !important;
+    left: max(0px, calc(50% - 865px)) !important;
     /* width: min(100%, 1720px) !important;
     max-width: 1720px !important;
     z-index: 999; */
@@ -89,9 +89,9 @@
   #luongson-site-root .luongson-sidebar-spacer,
   #luongson-site-root .framer-10rzk9d {
     display: block !important;
-    flex: 0 0 210px !important;
-    width: 210px !important;
-    min-width: 210px !important;
+    flex: 0 0 220px !important;
+    width: 220px !important;
+    min-width: 220px !important;
     height: 1px !important;
     pointer-events: none !important;
   }
