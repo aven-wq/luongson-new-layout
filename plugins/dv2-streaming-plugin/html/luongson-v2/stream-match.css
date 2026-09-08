@@ -912,14 +912,14 @@ body.luongson-stream-body-fs {
   object-fit: contain;
 }
 
-.luongson-stream-stage:fullscreen .luongson-stream-bottom-bar,
-.luongson-stream-stage:-webkit-full-screen .luongson-stream-bottom-bar,
-.luongson-stream-stage.luongson-stream-stage-fs .luongson-stream-bottom-bar {
-  position: fixed;
+/* Fullscreen chrome stays inside bounded ui-layer (syncStreamUiLayerLayout) */
+.luongson-stream-stage:fullscreen .luongson-stream-ui-layer--bounded .luongson-stream-bottom-bar,
+.luongson-stream-stage:-webkit-full-screen .luongson-stream-ui-layer--bounded .luongson-stream-bottom-bar,
+.luongson-stream-stage.luongson-stream-stage-fs .luongson-stream-ui-layer--bounded .luongson-stream-bottom-bar {
+  position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 2147483646;
   border-radius: 0;
   padding:
     8px
@@ -928,25 +928,23 @@ body.luongson-stream-body-fs {
     max(12px, env(safe-area-inset-left));
 }
 
-.luongson-stream-stage:fullscreen .luongson-stream-top-bar,
-.luongson-stream-stage:-webkit-full-screen .luongson-stream-top-bar,
-.luongson-stream-stage.luongson-stream-stage-fs .luongson-stream-top-bar {
-  position: fixed;
+.luongson-stream-stage:fullscreen .luongson-stream-ui-layer--bounded .luongson-stream-top-bar,
+.luongson-stream-stage:-webkit-full-screen .luongson-stream-ui-layer--bounded .luongson-stream-top-bar,
+.luongson-stream-stage.luongson-stream-stage-fs .luongson-stream-ui-layer--bounded .luongson-stream-top-bar {
+  position: absolute;
   left: max(10px, env(safe-area-inset-left));
   right: max(10px, env(safe-area-inset-right));
   top: max(10px, env(safe-area-inset-top));
-  z-index: 2147483646;
 }
 
-.luongson-stream-stage:fullscreen .luongson-stream-loading,
-.luongson-stream-stage:-webkit-full-screen .luongson-stream-loading,
-.luongson-stream-stage.luongson-stream-stage-fs .luongson-stream-loading,
-.luongson-stream-stage:fullscreen .luongson-stream-prematch,
-.luongson-stream-stage:-webkit-full-screen .luongson-stream-prematch,
-.luongson-stream-stage.luongson-stream-stage-fs .luongson-stream-prematch {
-  position: fixed;
+.luongson-stream-stage:fullscreen .luongson-stream-ui-layer--bounded .luongson-stream-loading,
+.luongson-stream-stage:-webkit-full-screen .luongson-stream-ui-layer--bounded .luongson-stream-loading,
+.luongson-stream-stage.luongson-stream-stage-fs .luongson-stream-ui-layer--bounded .luongson-stream-loading,
+.luongson-stream-stage:fullscreen .luongson-stream-ui-layer--bounded .luongson-stream-prematch,
+.luongson-stream-stage:-webkit-full-screen .luongson-stream-ui-layer--bounded .luongson-stream-prematch,
+.luongson-stream-stage.luongson-stream-stage-fs .luongson-stream-ui-layer--bounded .luongson-stream-prematch {
+  position: absolute;
   inset: 0;
-  z-index: 2147483644;
   border-radius: 0;
 }
 
@@ -1110,9 +1108,9 @@ body.luongson-stream-body-fs {
     font-size: 26px;
   }
 
-  .luongson-stream-stage:fullscreen .luongson-stream-bottom-bar,
-  .luongson-stream-stage:-webkit-full-screen .luongson-stream-bottom-bar,
-  .luongson-stream-stage.luongson-stream-stage-fs .luongson-stream-bottom-bar {
+  .luongson-stream-stage:fullscreen .luongson-stream-ui-layer--bounded .luongson-stream-bottom-bar,
+  .luongson-stream-stage:-webkit-full-screen .luongson-stream-ui-layer--bounded .luongson-stream-bottom-bar,
+  .luongson-stream-stage.luongson-stream-stage-fs .luongson-stream-ui-layer--bounded .luongson-stream-bottom-bar {
     padding:
       6px
       max(8px, env(safe-area-inset-right))
@@ -1120,9 +1118,9 @@ body.luongson-stream-body-fs {
       max(8px, env(safe-area-inset-left));
   }
 
-  .luongson-stream-stage:fullscreen .luongson-stream-top-bar,
-  .luongson-stream-stage:-webkit-full-screen .luongson-stream-top-bar,
-  .luongson-stream-stage.luongson-stream-stage-fs .luongson-stream-top-bar {
+  .luongson-stream-stage:fullscreen .luongson-stream-ui-layer--bounded .luongson-stream-top-bar,
+  .luongson-stream-stage:-webkit-full-screen .luongson-stream-ui-layer--bounded .luongson-stream-top-bar,
+  .luongson-stream-stage.luongson-stream-stage-fs .luongson-stream-ui-layer--bounded .luongson-stream-top-bar {
     left: max(6px, env(safe-area-inset-left));
     right: max(6px, env(safe-area-inset-right));
     top: max(6px, env(safe-area-inset-top));
@@ -1495,3 +1493,10 @@ body.luongson-stream-body-fs {
   z-index: 2147483646;
 }
 
+
+@media (orientation: landscape) and (max-width: 1350px) {
+  .luongson-stream-prematch__backdrop {
+    backdrop-filter: unset;
+    background: unset;
+  }
+}

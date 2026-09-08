@@ -343,11 +343,13 @@
     }
 
     $overlay.removeAttr('hidden');
+    scheduleStreamUiLayerLayoutSync();
   }
 
   function hidePreMatchOverlay() {
     stopPreMatchCountdown();
     $('#luongsonStreamPreMatch').attr('hidden', 'hidden');
+    scheduleStreamUiLayerLayoutSync();
   }
 
   /** Container gắn overlay TVC pre-roll (giống .dv2-video-wrapper ở vebo/cakhia) */
@@ -613,6 +615,30 @@
     }
   }
 
+  function getLetterboxedBounds(containerRect, contentRatio) {
+    if (!containerRect || !containerRect.width || !containerRect.height || !contentRatio) return null;
+
+    var containerRatio = containerRect.width / containerRect.height;
+    var width;
+    var height;
+    var left;
+    var top;
+
+    if (contentRatio > containerRatio) {
+      width = containerRect.width;
+      height = containerRect.width / contentRatio;
+      left = 0;
+      top = (containerRect.height - height) / 2;
+    } else {
+      height = containerRect.height;
+      width = containerRect.height * contentRatio;
+      top = 0;
+      left = (containerRect.width - width) / 2;
+    }
+
+    return { top: top, left: left, width: width, height: height };
+  }
+
   function getContainedVideoBounds(video, containerRect) {
     if (!video || !containerRect || !containerRect.width || !containerRect.height) return null;
 
@@ -620,26 +646,17 @@
     var intrinsicH = video.videoHeight;
     if (!intrinsicW || !intrinsicH) return null;
 
-    var containerRatio = containerRect.width / containerRect.height;
-    var videoRatio = intrinsicW / intrinsicH;
-    var width;
-    var height;
-    var left;
-    var top;
+    return getLetterboxedBounds(containerRect, intrinsicW / intrinsicH);
+  }
 
-    if (videoRatio > containerRatio) {
-      width = containerRect.width;
-      height = containerRect.width / videoRatio;
-      left = 0;
-      top = (containerRect.height - height) / 2;
-    } else {
-      height = containerRect.height;
-      width = containerRect.height * videoRatio;
-      top = 0;
-      left = (containerRect.width - width) / 2;
-    }
+  /** Poster / pre-match: dùng 16:9 khi video chưa có metadata (giống object-fit: contain) */
+  function getStreamUiLayerBounds(video, containerRect) {
+    if (!containerRect || !containerRect.width || !containerRect.height) return null;
 
-    return { top: top, left: left, width: width, height: height };
+    var bounds = video ? getContainedVideoBounds(video, containerRect) : null;
+    if (bounds && bounds.width && bounds.height) return bounds;
+
+    return getLetterboxedBounds(containerRect, 16 / 9);
   }
 
   function ensureStreamUiLayer($wrap) {
@@ -657,18 +674,28 @@
   }
 
   function syncStreamUiLayerLayout() {
-    if (!isStageFullscreen()) return;
-
-    var $stage = $('#luongsonStreamStage');
     var $wrap = $('.luongson-stream-video-wrap').first();
     var $layer = ensureStreamUiLayer($wrap);
+
+    if (!isStageFullscreen()) {
+      if ($layer.length) {
+        $layer.removeClass('luongson-stream-ui-layer--bounded').css({
+          top: '',
+          left: '',
+          width: '',
+          height: ''
+        });
+      }
+      return;
+    }
+
     var $video = $('#liveVideo');
     var video = $video.get(0);
     var container = $wrap.get(0);
 
-    if (!$layer.length || !video || !container) return;
+    if (!$layer.length || !container) return;
 
-    var bounds = getContainedVideoBounds(video, container.getBoundingClientRect());
+    var bounds = getStreamUiLayerBounds(video, container.getBoundingClientRect());
 
     if (!bounds || !bounds.width || !bounds.height) {
       $layer.removeClass('luongson-stream-ui-layer--bounded').css({
