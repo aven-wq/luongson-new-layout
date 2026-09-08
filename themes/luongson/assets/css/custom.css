@@ -178,7 +178,9 @@
 }
 
 body .ck2-card .ck2-card-title {
-    min-height: 1.7rem !important;
+    min-height: 1.5rem !important;
+    -webkit-line-clamp: 1 !important;
+    line-clamp: 1 !important;
 }
 
 .dv2-highlights-football-root.ck2-highlight-page {
