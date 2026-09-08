@@ -477,10 +477,13 @@ body.admin-bar #luongson-site-root .framer-QbuP0.framer-1ei7e2m {
   margin: 0;
   white-space: normal;
   word-break: break-word;
+  min-height: 2.8em; /* 2 lines at line-height 1.4em */
 }
 
 .framer-Q1644 .framer-u5kxfl {
   align-items: stretch !important;
+  /* 14px title × 2 lines + gap + 12px excerpt × 2 lines */
+  min-height: calc(2.8 * 25px + 8px + 2.8 * 12px);
 }
 
 .framer-Q1644 .luongson-archive-pagination a {
