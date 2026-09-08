@@ -161,12 +161,12 @@
     transform: scale(1.03);
 }
 
-.block-khuyen-mai img {
-    border-radius: 8px;
+.block-khuyen-mai .col-inner {
+    margin-bottom: 10px;
 }
 
-.block-khuyen-mai {
-    margin-bottom: 10px;
+.block-khuyen-mai img {
+    border-radius: 8px;
 }
 
 .row-collapse-space-10 .col:first-child {
@@ -596,7 +596,7 @@ body.ai-prediction-modal-open {
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .ck2-highlight-grid {
         grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
         gap: 15px !important;
