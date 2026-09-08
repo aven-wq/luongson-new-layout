@@ -1,5 +1,6 @@
 .luongson-ambassador-block .framer-s44gus, .framer-1th9ham .framer-s44gus, .framer-s44gus {
     justify-content: start !important;
+    padding-top: 0 !important;
 }/* SEO block lists: WP editor newlines + Framer pre-wrap break bullet alignment on mobile */
 #luongson-site-root .luongson-seo-block ul.framer-text,
 #luongson-site-root .luongson-seo-block ol.framer-text,
@@ -98,6 +99,7 @@
     padding: 0 50px 0 0 !important;
     margin: 0 !important;
     border: 0 !important;
+    line-height: 23px;
 }
 
 .luongson-notice .gwd-marquee-track ins:nth-child(2),
