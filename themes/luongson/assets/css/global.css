@@ -4247,6 +4247,10 @@ navigationcontainer [data-framer-component-type="NavigationContainer"] > *,
   position: relative;
 }
 
+.luongson-ads-right-sidebar .framer-8fw8a0  {
+  width: 125px;
+}
+
 .framer-wh6HR .framer-1thqph1-container {
   z-index: 6;
   flex: 0 0 auto;
