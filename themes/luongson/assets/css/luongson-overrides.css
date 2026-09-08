@@ -115,6 +115,15 @@
    Tablet & Mobile (< 1024px)
    -------------------------------------------------------------------------- */
 @media (max-width: 1023.98px) {
+
+  #luongson-site-root .luongson-page-main #content,
+  #luongson-site-root .luongson-page-main .blog-wrapper,
+  #luongson-site-root .luongson-page-main .page-wrapper,
+  #luongson-site-root .luongson-wp-content,
+  .framer-Q1644 .luongson-single-author {
+    padding: 0 !important;
+  }
+
   #luongson-site-root .luongson-sidebar-left,
   #luongson-site-root .framer-ea4vkm-container,
   #luongson-site-root .luongson-sidebar-spacer,
@@ -288,10 +297,10 @@
 #luongson-site-root .luongson-wp-content {
   width: 100% !important;
   max-width: 100% !important;
-  padding: 0 !important;
   margin: 0 !important;
   background: transparent !important;
   box-sizing: border-box !important;
+  padding: 0 40px;
 }
 
 /* --------------------------------------------------------------------------
@@ -621,7 +630,7 @@ body.admin-bar #luongson-site-root .framer-QbuP0.framer-1ei7e2m {
 
 .framer-Q1644 .luongson-single-author {
   width: 100%;
-  padding: 0 10px 10px;
+  padding: 0 40px;
   box-sizing: border-box;
   text-align: right;
 }
