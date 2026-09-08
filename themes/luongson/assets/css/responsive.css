@@ -114,7 +114,7 @@ body {
     flex-flow: row !important;
     width: 100% !important;
     gap: 20px !important;
-    padding: 0 10px !important;
+    padding: 0 !important;
     box-sizing: border-box !important;
   }
 
@@ -840,7 +840,7 @@ body {
     padding: 0px !important;
     display: flex !important;
     position: relative !important;
-    background-color: rgb(242, 242, 242) !important;
+    background-color: transparent !important;
     border-radius: 16px !important;
   }
 
@@ -886,6 +886,7 @@ body {
   
   .luongson-footer .framer-MvKn2.framer-bk5noi {
     padding: 44px 20px 100px;
+    border-radius: unset !important;
   }
 }
 
