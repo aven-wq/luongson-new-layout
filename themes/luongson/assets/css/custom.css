@@ -595,6 +595,11 @@ body.ai-prediction-modal-open {
 }
 
 @media (max-width: 768px) {
+    .ck2-highlight-grid {
+        grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+        gap: 15px !important;
+    }
+
     .luongson-notice .gwd_notification {
         gap: 8px !important;
         padding: 0 32px 0 8px !important;
