@@ -35,6 +35,25 @@ $logo_h   = $logo ? $logo['height'] : 142;
 			</div>
 			<div class="framer-2zreyi ls-s6">
 				<div
+					class="framer-1uixw6l ls-s6 luongson-ai-prediction-trigger"
+					id="aiPredictionToggle"
+					data-highlight="true"
+					tabindex="0"
+					role="button"
+					aria-label="<?php esc_attr_e( 'Dự đoán bằng AI', 'luongson' ); ?>"
+					aria-haspopup="dialog"
+					aria-expanded="false"
+				>
+					<div
+						class="framer-lz08td ls-s177"
+						data-framer-component-type="RichTextContainer"
+						data-highlight="true"
+					>
+						<h3 class="framer-text ls-s213" dir="auto"><?php esc_html_e( 'Dự đoán bằng AI', 'luongson' ); ?></h3>
+					</div>
+					<div class="framer-mh61q framer-slafhz ls-s8" aria-hidden="true"></div>
+				</div>
+				<div
 					class="framer-q2hsys ls-s6"
 					data-highlight="true"
 					id="sidebarToggle"
@@ -49,6 +68,22 @@ $logo_h   = $logo ? $logo['height'] : 142;
 					</svg>
 				</div>
 			</div>
+		</div>
+	</div>
+</div>
+
+<div
+	class="luongson-ai-prediction-modal"
+	id="aiPredictionModal"
+	role="dialog"
+	aria-modal="true"
+	aria-label="<?php esc_attr_e( 'Dự đoán bằng AI', 'luongson' ); ?>"
+	hidden
+>
+	<div class="luongson-ai-prediction-modal__backdrop" aria-hidden="true"></div>
+	<div class="luongson-ai-prediction-modal__panel">
+		<div class="luongson-ai-prediction-modal__body">
+			<?php echo do_shortcode( '[ai_prediction_widget]' ); ?>
 		</div>
 	</div>
 </div>

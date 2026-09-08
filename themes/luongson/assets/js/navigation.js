@@ -77,6 +77,63 @@
       portal.remove();
     });
     document.body.classList.remove('menu-open');
+    closeAiPredictionModal();
+  }
+
+  function openAiPredictionModal() {
+    var modal = document.getElementById('aiPredictionModal');
+    var trigger = document.getElementById('aiPredictionToggle');
+    if (!modal) return;
+
+    modal.removeAttribute('hidden');
+    document.body.classList.add('ai-prediction-modal-open');
+    if (trigger) {
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+  }
+
+  function closeAiPredictionModal() {
+    var modal = document.getElementById('aiPredictionModal');
+    var trigger = document.getElementById('aiPredictionToggle');
+    if (!modal || modal.hasAttribute('hidden')) return;
+
+    modal.setAttribute('hidden', '');
+    document.body.classList.remove('ai-prediction-modal-open');
+    if (trigger) {
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  function bindAiPredictionModal() {
+    var trigger = document.getElementById('aiPredictionToggle');
+    var modal = document.getElementById('aiPredictionModal');
+    if (!trigger || !modal) return;
+
+    trigger.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (modal.hasAttribute('hidden')) {
+        closeAllOverlays();
+        openAiPredictionModal();
+      } else {
+        closeAiPredictionModal();
+      }
+    });
+
+    trigger.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        trigger.click();
+      }
+    });
+
+    var backdrop = modal.querySelector('.luongson-ai-prediction-modal__backdrop');
+    if (backdrop) {
+      backdrop.addEventListener('click', function (e) {
+        e.stopPropagation();
+        closeAiPredictionModal();
+      });
+    }
   }
 
   function openMenuDrawer(triggerElement) {
@@ -263,6 +320,7 @@
   function onReady() {
     setActiveNavLinks();
     bindMobileMenu();
+    bindAiPredictionModal();
     bindCatfishClose();
     initFooterSponsorTicker();
 
