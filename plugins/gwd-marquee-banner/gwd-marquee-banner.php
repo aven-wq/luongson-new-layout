@@ -52,8 +52,9 @@ function gwd_banner_marquee_toro_shortcode($atts = []) {
     <div class="gwd-dynamic-html-container">
         <img width="20" height="20" class="gwd-fixed-img" src="<?php echo esc_url( plugins_url( 'icon-loa.avif', __FILE__ ) ); ?>" alt="noti-banner">
         <div class="gwd-dynamic-html-wrapper">
-            <ins data-z="<?php echo esc_attr($zone_id); ?>" data-revive-id="1718ffff6aff14155bf9e84ffb3a29ee"></ins>
-            <ins data-z="<?php echo esc_attr($zone_id); ?>" data-revive-id="1718ffff6aff14155bf9e84ffb3a29ee"></ins>
+            <div class="gwd-marquee-track">
+                <ins data-z="<?php echo esc_attr($zone_id); ?>" data-revive-id="1718ffff6aff14155bf9e84ffb3a29ee"></ins>
+            </div>
         </div>
         <button type="button" class="notification-banner-close" onclick="dismissNotificationBanner('notification-banner-696ce25bbecf8', 'notification_banner_dismissed')" aria-label="Đóng thông báo">
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -67,7 +68,6 @@ function gwd_banner_marquee_toro_shortcode($atts = []) {
     // Config
     var storageKey = 'notification_banner_dismissed';
     var bannerId = 'notification-banner-696ce25bbecf8';
-    var messageId = 'message-notification-banner-696ce25bbecf8';
     var expireMinutes = 30; // Thời hạn 30 phút
     var expireTime = expireMinutes * 60 * 1000; // Chuyển sang milliseconds
     // Kiểm tra localStorage với thời hạn
@@ -94,72 +94,6 @@ function gwd_banner_marquee_toro_shortcode($atts = []) {
         }
     }
 
-    // Bật scroll text luôn (không cần kiểm tra overflow)
-    function checkAndEnableScroll() {
-        var messageEl = document.getElementById(messageId);
-        if (!messageEl) return;
-
-        var wrapper = messageEl.querySelector('.notification-banner-message-wrapper');
-        if (!wrapper) return;
-
-        // Luôn bật scrolling
-        messageEl.classList.add('scrolling');
-
-        // Tính toán thời gian animation dựa trên độ dài tất cả messages
-        var totalWidth = 0;
-        var items = wrapper.querySelectorAll('.notification-banner-message-item');
-        items.forEach(function(item) {
-            totalWidth += item.offsetWidth;
-        });
-
-        // Tính scroll distance (tổng width của tất cả items trừ item cuối cùng - là duplicate của item đầu)
-        var scrollDistance = totalWidth - (items[items.length - 1] ? items[items.length - 1].offsetWidth : 0);
-
-        // Tính duration: tốc độ 80px/s
-        var duration = Math.max(15, (scrollDistance / 55));
-
-        // Set CSS variables
-        messageEl.style.setProperty('--scroll-distance', '-' + scrollDistance + 'px');
-        messageEl.style.setProperty('--animation-duration', duration + 's');
-    }
-
-    // Pause animation khi hover vào message hoặc các link
-    function setupHoverPause() {
-        var messageEl = document.getElementById(messageId);
-        if (messageEl) {
-            messageEl.addEventListener('mouseenter', function() {
-                messageEl.classList.add('paused');
-            });
-
-            messageEl.addEventListener('mouseleave', function() {
-                messageEl.classList.remove('paused');
-            });
-        }
-    }
-
-    // Chạy sau khi DOM load xong
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                checkAndEnableScroll();
-                setupHoverPause();
-            }, 100);
-        });
-    } else {
-        setTimeout(function() {
-            checkAndEnableScroll();
-            setupHoverPause();
-        }, 100);
-    }
-
-    // Kiểm tra lại khi resize
-    window.addEventListener('resize', function() {
-        var messageEl = document.getElementById(messageId);
-        if (messageEl) {
-            messageEl.classList.remove('scrolling');
-            setTimeout(checkAndEnableScroll, 100);
-        }
-    });
 })();
 
 // Function để đóng banner và lưu vào localStorage với timestamp
@@ -238,13 +172,29 @@ function dismissNotificationBanner(bannerId, storageKey) {
     
 }
 
-.gwd-dynamic-html-wrapper ins{
-    display: inline-block;
+.gwd-marquee-track {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    width: max-content;
     white-space: nowrap;
-    animation: scroll-left 40s linear infinite;
-    padding-right: 20px;
-    margin-right: 15px;
-    border-right: 1px solid #000;
+}
+
+.gwd-marquee-segment {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    white-space: nowrap;
+    padding-right: 50px;
+}
+
+.gwd-marquee-segment ins {
+    display: inline-block;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 0;
+    margin: 0;
+    border: 0;
 }
 .notification-banner-message-separator{
 	margin-left: 15px;
@@ -257,20 +207,6 @@ function dismissNotificationBanner(bannerId, storageKey) {
 }
 .gwd-dynamic-html-wrapper .label {
     font-weight: 600;
-}
-.gwd-dynamic-html-wrapper ins:nth-child(2){
-    position: absolute;
-    left: 100%;
-    top: 0;
-    padding-left: 30px;
-    margin-left: 15px;
-}
-@keyframes scroll-left {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-100%); }
-}
-.gwd-dynamic-html-wrapper:hover ins{
-    animation-play-state: paused;
 }
 .notification-banner-close{
 	position: absolute;

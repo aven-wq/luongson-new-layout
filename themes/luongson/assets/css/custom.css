@@ -71,6 +71,12 @@
     overflow: hidden !important;
     position: relative !important;
     display: block !important;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.luongson-notice .gwd-dynamic-html-wrapper.gwd-marquee-ready {
+    opacity: 1;
 }
 
 .luongson-notice .gwd-marquee-track {
@@ -78,15 +84,32 @@
     flex-wrap: nowrap !important;
     align-items: center !important;
     width: max-content !important;
-    animation: luongson-notice-marquee 40s linear infinite !important;
+    max-width: none !important;
+    gap: 0 !important;
+    animation: none !important;
     will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translate3d(0, 0, 0);
+    touch-action: pan-y;
 }
 
-.luongson-notice .gwd-dynamic-html-wrapper:hover .gwd-marquee-track {
-    animation-play-state: paused !important;
+.luongson-notice .gwd-marquee-segment {
+    display: inline-flex !important;
+    flex: 0 0 auto !important;
+    align-items: center !important;
+    white-space: nowrap !important;
+    padding-right: 50px !important;
+    margin: 0 !important;
+    line-height: 23px;
 }
 
-.luongson-notice .gwd-marquee-track ins,
+.luongson-notice .gwd-marquee-segment.gwd-marquee-clone {
+    pointer-events: none !important;
+}
+
+.luongson-notice .gwd-marquee-segment ins,
+.luongson-notice .gwd-marquee-track > ins,
 .luongson-notice .gwd-dynamic-html-wrapper > ins {
     display: inline-block !important;
     flex: 0 0 auto !important;
@@ -96,28 +119,10 @@
     top: auto !important;
     animation: none !important;
     transform: none !important;
-    padding: 0 50px 0 0 !important;
+    padding: 0 !important;
     margin: 0 !important;
     border: 0 !important;
     line-height: 23px;
-}
-
-.luongson-notice .gwd-marquee-track ins:nth-child(2),
-.luongson-notice .gwd-dynamic-html-wrapper > ins:nth-child(2) {
-    position: static !important;
-    left: auto !important;
-    padding-left: 0 !important;
-    margin-left: 0 !important;
-}
-
-@keyframes luongson-notice-marquee {
-    0% {
-        transform: translateX(0);
-    }
-
-    100% {
-        transform: translateX(-50%);
-    }
 }
 
 .luongson-notice .gwd-fixed-img {
