@@ -4251,6 +4251,10 @@ navigationcontainer [data-framer-component-type="NavigationContainer"] > *,
   width: 125px;
 }
 
+.single .framer-8fw8a0 {
+  width: 300px;
+}
+
 .framer-wh6HR .framer-1thqph1-container {
   z-index: 6;
   flex: 0 0 auto;
