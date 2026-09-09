@@ -297,6 +297,7 @@
   position: relative;
   overflow: visible;
   transition: transform 0.3s ease;
+  margin: 0;
 }
 
 .luongson-blv-form .framer-ai6nli:hover {
