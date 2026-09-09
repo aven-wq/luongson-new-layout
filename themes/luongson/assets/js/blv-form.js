@@ -113,8 +113,25 @@
     form.addEventListener('submit', handleSubmit);
   }
 
+  function scrollToBlvFormCard(event) {
+    var card = document.querySelector('.luongson-blv-form__card');
+    if (!card) return;
+
+    event.preventDefault();
+    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function initRegisterScroll() {
+    document.querySelectorAll('.blv-register').forEach(function (trigger) {
+      if (trigger.__lsBlvRegisterInit) return;
+      trigger.__lsBlvRegisterInit = true;
+      trigger.addEventListener('click', scrollToBlvFormCard);
+    });
+  }
+
   function initAll() {
     document.querySelectorAll('.luongson-blv-form').forEach(initForm);
+    initRegisterScroll();
   }
 
   if (document.readyState === 'loading') {

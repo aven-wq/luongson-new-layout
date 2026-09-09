@@ -325,6 +325,12 @@ body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongs
     font-weight: 700;
     font-size: 18px;
     color: #fff;
+    transition: transform 0.3s ease;
+}
+
+.banner-blv .button.primary:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
 }
 
 .banner-blv  .text-inner {
@@ -335,7 +341,7 @@ body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongs
 }
 
 .banner-blv  .text-inner h1 {
-    font-size: 53px;
+    font-size: 5rem;
     font-weight: 800;
 }
 
@@ -379,6 +385,7 @@ body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongs
     margin: 10px 0;
     font-weight: 800;
     font-family: "Momo Trust Sans", sans-serif !important;
+    line-height: 30px;
 }
 
 .header-blv p:last-child {
@@ -585,7 +592,17 @@ body.ai-prediction-modal-open {
     }
 }
 
+@media (max-width: 1750px) {
+    .banner-blv  .text-inner h1 {
+        font-size: 3.5rem;
+    }
+}
+
 @media (max-width: 1300px) {
+    .banner-blv  .text-inner h1 {
+        font-size: 2.5rem;
+    }
+
     body .luongson-div-2 .luongson-div-2-right {
         display: none;
     }
@@ -625,8 +642,12 @@ body.ai-prediction-modal-open {
     }
 
     .banner-blv .text-inner .framer-1inmm7c p {
-        padding: 0 30px;
+        padding: 0 10px;
         line-height: 23px;
+    }
+
+    .blv-form-wrapper {
+        padding: 0 !important;
     }
 
     .row-collapse-space-10 .col:first-child {
@@ -639,5 +660,9 @@ body.ai-prediction-modal-open {
 
     #luongson-site-root .luongson-page-main {
         padding: 0 10px;
+    }
+
+    .banner.has-hover.banner-blv {
+        padding-top: 450px !important;
     }
 }
