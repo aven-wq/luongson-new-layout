@@ -120,7 +120,8 @@
   #luongson-site-root .luongson-page-main .blog-wrapper,
   #luongson-site-root .luongson-page-main .page-wrapper,
   #luongson-site-root .luongson-wp-content,
-  .framer-Q1644 .luongson-single-author {
+  .framer-Q1644 .luongson-single-autho,
+  .single #luongson-site-root .luongson-wp-contentr {
     padding: 0 !important;
   }
 
@@ -300,6 +301,10 @@
   margin: 0 !important;
   background: transparent !important;
   box-sizing: border-box !important;
+  padding: 0;
+}
+
+.single #luongson-site-root .luongson-wp-content {
   padding: 0 40px;
 }
 
