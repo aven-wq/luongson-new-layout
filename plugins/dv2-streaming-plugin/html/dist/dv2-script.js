@@ -16482,9 +16482,9 @@ function showError(message) {
 /* common.js */
 (function(window, $, jQuery, Hls, Swiper) {
 /**
- * LuongSon V2 — Shared match statistics hover modal
+ * LuongSon V2 — Shared match statistics hover modal (jQuery)
  */
-(function () {
+(function ($) {
   'use strict';
 
   // Keys align with upstream match detail: stats.ft / stats.h1 (array [home, away]).
@@ -16501,9 +16501,9 @@ function showError(message) {
     { key: 'blockedShots', label: 'Sút bị chặn' },
   ];
 
-  var portal = null;
-  var bodyEl = null;
-  var tabs = null;
+  var $portal = null;
+  var $bodyEl = null;
+  var $tabs = null;
   var currentTrigger = null;
   var currentStats = null;
   var activeTab = 'ft';
@@ -16628,7 +16628,7 @@ function showError(message) {
     var tabStats = getStatsForTab(stats, activeTab);
     var html = '';
 
-    STAT_ROWS.forEach(function (row) {
+    $.each(STAT_ROWS, function (_, row) {
       var pair = getStatPair(getRowStat(tabStats, row));
       var bars = calcBarPct(pair.home, pair.away, row.isPercent);
 
@@ -16646,52 +16646,57 @@ function showError(message) {
   }
 
   function ensurePortal() {
-    if (portal) return portal;
+    if ($portal && $portal.length) return $portal;
 
-    portal = document.createElement('div');
-    portal.className = 'luongson-match-modal-portal';
-    portal.hidden = true;
-    portal.style.cssText =
-      'display:none;opacity:0;transform:scale(.96);transform-origin:top center;transition:opacity .15s ease,transform .15s cubic-bezier(.2,0,.2,1);';
-    portal.innerHTML =
-      '<div class="luongson-match-modal-portal__panel" role="dialog" aria-label="Thống kê trận đấu">' +
-      '<div class="luongson-match-modal-tabs">' +
-      tabHtml('ft', 'Toàn trận', true) +
-      tabHtml('h1', 'Hiệp 1', false) +
-      '</div>' +
-      '<div class="luongson-match-modal-body"></div>' +
-      '</div>';
-    document.body.appendChild(portal);
-
-    bodyEl = portal.querySelector('.luongson-match-modal-body');
-    tabs = portal.querySelectorAll('.luongson-match-modal-tab');
-
-    tabs.forEach(function (tab) {
-      tab.addEventListener('click', function (e) {
-        e.stopPropagation();
-        setActiveTab(tab.getAttribute('data-tab') || 'ft');
-      });
+    $portal = $('<div>', {
+      class: 'luongson-match-modal-portal',
+      hidden: true,
+    }).css({
+      display: 'none',
+      opacity: 0,
+      transform: 'scale(.96)',
+      'transform-origin': 'top center',
+      transition: 'opacity .15s ease,transform .15s cubic-bezier(.2,0,.2,1)',
     });
 
-    portal.addEventListener('mouseenter', function () {
+    $portal.html(
+      '<div class="luongson-match-modal-portal__panel" role="dialog" aria-label="Thống kê trận đấu">' +
+        '<div class="luongson-match-modal-tabs">' +
+        tabHtml('ft', 'Toàn trận', true) +
+        tabHtml('h1', 'Hiệp 1', false) +
+        '</div>' +
+        '<div class="luongson-match-modal-body"></div>' +
+        '</div>'
+    );
+    $('body').append($portal);
+
+    $bodyEl = $portal.find('.luongson-match-modal-body');
+    $tabs = $portal.find('.luongson-match-modal-tab');
+
+    $tabs.on('click', function (e) {
+      e.stopPropagation();
+      setActiveTab($(this).attr('data-tab') || 'ft');
+    });
+
+    $portal.on('mouseenter', function () {
       if (closeTimeout) {
         clearTimeout(closeTimeout);
         closeTimeout = null;
       }
     });
-    portal.addEventListener('mouseleave', hidePopover);
+    $portal.on('mouseleave', hidePopover);
 
     bindGlobalListeners();
-    return portal;
+    return $portal;
   }
 
   function setActiveTab(name) {
     activeTab = name === 'all' ? 'ft' : name || 'ft';
-    tabs.forEach(function (tab) {
-      tab.classList.toggle('is-active', tab.getAttribute('data-tab') === activeTab);
+    $tabs.each(function () {
+      $(this).toggleClass('is-active', $(this).attr('data-tab') === activeTab);
     });
-    if (bodyEl) bodyEl.innerHTML = renderRows(currentStats);
-    if (currentTrigger && portal && portal.style.display !== 'none') {
+    if ($bodyEl && $bodyEl.length) $bodyEl.html(renderRows(currentStats));
+    if (currentTrigger && $portal && $portal.css('display') !== 'none') {
       showPopover(currentTrigger);
     }
   }
@@ -16699,7 +16704,7 @@ function showError(message) {
   function updatePanel(stats) {
     ensurePortal();
     currentStats = stats || {};
-    if (bodyEl) bodyEl.innerHTML = renderRows(currentStats);
+    if ($bodyEl && $bodyEl.length) $bodyEl.html(renderRows(currentStats));
   }
 
   function showPopover(trigger) {
@@ -16712,45 +16717,42 @@ function showError(message) {
 
     currentTrigger = trigger;
     ensurePortal();
-    portal.hidden = false;
-    portal.style.display = 'block';
+    $portal.removeAttr('hidden').css('display', 'block');
 
     var rect = trigger.getBoundingClientRect();
-    var modalWidth = Math.min(384, window.innerWidth - 24);
-    portal.style.width = modalWidth + 'px';
-    portal.style.maxWidth = 'calc(100vw - 24px)';
-    var modalHeight = portal.offsetHeight || 440;
+    var modalWidth = Math.min(384, $(window).width() - 24);
+    $portal.css({
+      width: modalWidth + 'px',
+      maxWidth: 'calc(100vw - 24px)',
+    });
+    var modalHeight = $portal.outerHeight() || 440;
     var left = rect.left + rect.width / 2 - modalWidth / 2;
     if (left < 10) left = 10;
-    if (left + modalWidth > window.innerWidth - 10) {
-      left = window.innerWidth - modalWidth - 10;
+    if (left + modalWidth > $(window).width() - 10) {
+      left = $(window).width() - modalWidth - 10;
     }
 
     var top = rect.bottom + 4;
-    if (top + modalHeight > window.innerHeight - 10 && rect.top - modalHeight - 4 > 0) {
+    if (top + modalHeight > $(window).height() - 10 && rect.top - modalHeight - 4 > 0) {
       top = rect.top - modalHeight - 4;
     }
 
-    portal.style.left = left + 'px';
-    portal.style.top = top + 'px';
+    $portal.css({ left: left + 'px', top: top + 'px' });
 
     requestAnimationFrame(function () {
-      portal.style.opacity = '1';
-      portal.style.transform = 'scale(1)';
+      $portal.css({ opacity: 1, transform: 'scale(1)' });
     });
   }
 
   function hidePopover() {
-    if (!portal) return;
+    if (!$portal || !$portal.length) return;
 
     if (closeTimeout) clearTimeout(closeTimeout);
     closeTimeout = setTimeout(function () {
-      portal.style.opacity = '0';
-      portal.style.transform = 'scale(0.96)';
+      $portal.css({ opacity: 0, transform: 'scale(0.96)' });
       setTimeout(function () {
-        if (portal.style.opacity === '0') {
-          portal.style.display = 'none';
-          portal.hidden = true;
+        if (parseFloat($portal.css('opacity')) === 0) {
+          $portal.css('display', 'none').attr('hidden', 'hidden');
           currentTrigger = null;
         }
       }, 150);
@@ -16761,24 +16763,19 @@ function showError(message) {
     if (globalListenersBound) return;
     globalListenersBound = true;
 
-    window.addEventListener(
-      'scroll',
-      function () {
-        if (!portal || portal.style.display === 'none' || !currentTrigger) return;
-        var rect = currentTrigger.getBoundingClientRect();
-        if (rect.bottom < 0 || rect.top > window.innerHeight) {
-          portal.style.display = 'none';
-          portal.style.opacity = '0';
-          currentTrigger = null;
-        } else {
-          showPopover(currentTrigger);
-        }
-      },
-      { passive: true }
-    );
+    $(window).on('scroll.lsMatchModal', function () {
+      if (!$portal || $portal.css('display') === 'none' || !currentTrigger) return;
+      var rect = currentTrigger.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > $(window).height()) {
+        $portal.css({ display: 'none', opacity: 0 });
+        currentTrigger = null;
+      } else {
+        showPopover(currentTrigger);
+      }
+    });
 
-    window.addEventListener('resize', function () {
-      if (portal && portal.style.display !== 'none' && currentTrigger) {
+    $(window).on('resize.lsMatchModal', function () {
+      if ($portal && $portal.css('display') !== 'none' && currentTrigger) {
         showPopover(currentTrigger);
       }
     });
@@ -16789,17 +16786,21 @@ function showError(message) {
 
     ensurePortal();
 
-    root.querySelectorAll(selector).forEach(function (trigger) {
-      if (trigger.__lsStatsBound) return;
-      trigger.__lsStatsBound = true;
+    $(root)
+      .find(selector)
+      .each(function () {
+        var $trigger = $(this);
+        if ($trigger.data('lsStatsBound')) return;
+        $trigger.data('lsStatsBound', true);
 
-      trigger.addEventListener('mouseenter', function () {
-        var stats = typeof getStats === 'function' ? getStats(trigger) : null;
-        updatePanel(stats);
-        showPopover(trigger);
+        $trigger.on('mouseenter', function () {
+          var el = this;
+          var stats = typeof getStats === 'function' ? getStats(el) : null;
+          updatePanel(stats);
+          showPopover(el);
+        });
+        $trigger.on('mouseleave', hidePopover);
       });
-      trigger.addEventListener('mouseleave', hidePopover);
-    });
   }
 
   function setCardStats(cardEl, stats) {
@@ -16817,12 +16818,12 @@ function showError(message) {
     getStatsForTab: getStatsForTab,
     renderRows: renderRows,
   };
-})();
+})(jQuery);
 
 /**
- * LuongSon V2 — Fallback ảnh mặc định khi load lỗi
+ * LuongSon V2 — Fallback ảnh mặc định khi load lỗi (jQuery)
  */
-(function () {
+(function ($) {
   'use strict';
 
   var DEFAULT_IMG = null;
@@ -16857,15 +16858,15 @@ function showError(message) {
   }
 
   function applyFallback(img) {
-    if (!img || img.tagName !== 'IMG' || img.dataset.lsImgFallback === '1') return;
+    if (!img || img.tagName !== 'IMG' || $(img).data('lsImgFallback') === '1') return;
 
     var fallback = getDefaultImgUrl();
-    var currentSrc = img.getAttribute('src') || img.currentSrc || img.src || '';
+    var $img = $(img);
+    var currentSrc = $img.attr('src') || img.currentSrc || img.src || '';
 
     if (isDefaultImg(currentSrc) || currentSrc === fallback) return;
 
-    img.dataset.lsImgFallback = '1';
-    img.src = fallback;
+    $img.data('lsImgFallback', '1').attr('src', fallback);
   }
 
   function handleImgError(e) {
@@ -16873,9 +16874,10 @@ function showError(message) {
   }
 
   function patchBrokenImages(root) {
-    var scope = root || document;
-    scope.querySelectorAll('img').forEach(function (img) {
-      if (img.complete && img.naturalWidth === 0 && (img.getAttribute('src') || img.src)) {
+    var $scope = root ? $(root) : $(document);
+    $scope.find('img').each(function () {
+      var img = this;
+      if (img.complete && img.naturalWidth === 0 && ($(img).attr('src') || img.src)) {
         applyFallback(img);
       }
     });
@@ -16884,6 +16886,7 @@ function showError(message) {
   function init(root) {
     if (!initialized) {
       initialized = true;
+      // Capture phase needed so broken <img> error reaches document before bubble stop.
       document.addEventListener('error', handleImgError, true);
     }
 
@@ -16896,47 +16899,43 @@ function showError(message) {
     init: init,
   };
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () {
-      init();
-    });
-  } else {
+  $(function () {
     init();
-  }
-})();
+  });
+})(jQuery);
 
 })(window, window.jQuery || window.$, window.jQuery || window.$, window.Hls, window.Swiper);
 
 /* home-match.js */
 (function(window, $, jQuery, Hls, Swiper) {
 /**
- * LuongSon Sport — Home Featured Match
+ * LuongSon Sport — Home Featured Match (jQuery)
  * Ads ticker infinite scroll (from themes/html/js/modules/sliders.js)
  */
-(function () {
+(function ($) {
   'use strict';
 
   function createFeaturedAdsTicker(container) {
-    var track = container.querySelector('ul');
-    if (!track || track.__lsHomeMatchTickerInit) return;
-    track.__lsHomeMatchTickerInit = true;
+    var $container = $(container);
+    var $track = $container.find('ul').first();
+    if (!$track.length || $track.data('lsHomeMatchTickerInit')) return;
+    $track.data('lsHomeMatchTickerInit', true);
 
-    var originalChildren = Array.prototype.slice.call(track.children).filter(function (child) {
-      return !child.classList.contains('clone-item') && child.getAttribute('aria-hidden') !== 'true';
+    var $originalChildren = $track.children().filter(function () {
+      return !$(this).hasClass('clone-item') && $(this).attr('aria-hidden') !== 'true';
     });
 
-    if (originalChildren.length === 0) return;
+    if (!$originalChildren.length) return;
 
-    Array.prototype.slice.call(track.children).forEach(function (child) {
-      if (child.classList.contains('clone-item') || child.getAttribute('aria-hidden') === 'true') {
-        child.remove();
+    $track.children().each(function () {
+      var $child = $(this);
+      if ($child.hasClass('clone-item') || $child.attr('aria-hidden') === 'true') {
+        $child.remove();
       }
     });
 
-    originalChildren.forEach(function (child) {
-      if (!child.classList.contains('ticker-item')) {
-        child.classList.add('ticker-item');
-      }
+    $originalChildren.each(function () {
+      $(this).addClass('ticker-item');
     });
 
     var speed = 38;
@@ -16952,30 +16951,27 @@ function showError(message) {
     var rafId = null;
 
     function buildClones() {
-      Array.prototype.slice.call(track.querySelectorAll('.clone-item')).forEach(function (c) {
-        c.remove();
-      });
+      $track.find('.clone-item').remove();
 
-      if (originalChildren.length === 0) return;
+      if (!$originalChildren.length) return;
 
-      var containerWidth = container.offsetWidth || window.innerWidth;
-      var computedStyle = window.getComputedStyle(track);
+      var containerWidth = $container.outerWidth() || $(window).width();
+      var computedStyle = window.getComputedStyle($track.get(0));
       var gap = parseFloat(computedStyle.gap) || parseFloat(computedStyle.columnGap) || 12;
 
-      var firstChild = originalChildren[0];
-      var lastChild = originalChildren[originalChildren.length - 1];
+      var firstChild = $originalChildren.get(0);
+      var lastChild = $originalChildren.get($originalChildren.length - 1);
       var firstRect = firstChild.getBoundingClientRect();
       var lastRect = lastChild.getBoundingClientRect();
 
       if (firstRect.width > 0 && lastRect.right - firstRect.left > 0) {
         singleSetWidth = lastRect.right - firstRect.left + gap;
       } else {
-        singleSetWidth =
-          lastChild.offsetLeft + lastChild.offsetWidth - firstChild.offsetLeft + gap;
+        singleSetWidth = lastChild.offsetLeft + lastChild.offsetWidth - firstChild.offsetLeft + gap;
       }
 
       if (singleSetWidth <= 0 || isNaN(singleSetWidth)) {
-        singleSetWidth = originalChildren.reduce(function (acc, el) {
+        singleSetWidth = $originalChildren.toArray().reduce(function (acc, el) {
           return acc + (el.offsetWidth || 80) + gap;
         }, 0);
       }
@@ -16983,13 +16979,12 @@ function showError(message) {
       if (singleSetWidth <= 0) return;
 
       var neededCopies = Math.max(2, Math.ceil((containerWidth * 2) / singleSetWidth) + 1);
+      var i;
 
-      for (var i = 0; i < neededCopies; i++) {
-        originalChildren.forEach(function (child) {
-          var clone = child.cloneNode(true);
-          clone.classList.add('clone-item');
-          clone.setAttribute('aria-hidden', 'true');
-          track.appendChild(clone);
+      for (i = 0; i < neededCopies; i++) {
+        $originalChildren.each(function () {
+          var $clone = $(this).clone().addClass('clone-item').attr('aria-hidden', 'true');
+          $track.append($clone);
         });
       }
     }
@@ -17010,31 +17005,38 @@ function showError(message) {
             currentX -= singleSetWidth;
           }
         }
-        track.style.setProperty('transform', 'translate3d(' + currentX + 'px, 0, 0)', 'important');
+        $track.get(0).style.setProperty('transform', 'translate3d(' + currentX + 'px, 0, 0)', 'important');
       }
 
       rafId = requestAnimationFrame(animate);
     }
 
-    container.addEventListener('mouseenter', function () {
+    $container.on('mouseenter', function () {
       isHovered = true;
     });
-    container.addEventListener('mouseleave', function () {
+    $container.on('mouseleave', function () {
       isHovered = false;
       lastTimestamp = null;
     });
 
+    function pointerClientX(e) {
+      var oe = e.originalEvent || e;
+      if (oe.touches && oe.touches.length) return oe.touches[0].clientX;
+      if (oe.changedTouches && oe.changedTouches.length) return oe.changedTouches[0].clientX;
+      return e.clientX;
+    }
+
     function onPointerDown(e) {
       isDragging = true;
       dragDistance = 0;
-      startX = e.type.indexOf('touch') === 0 ? e.touches[0].clientX : e.clientX;
+      startX = pointerClientX(e);
       dragStartX = currentX;
-      track.style.cursor = 'grabbing';
+      $track.css('cursor', 'grabbing');
     }
 
     function onPointerMove(e) {
       if (!isDragging) return;
-      var clientX = e.type.indexOf('touch') === 0 ? e.touches[0].clientX : e.clientX;
+      var clientX = pointerClientX(e);
       var dx = clientX - startX;
       dragDistance = Math.abs(dx);
       currentX = dragStartX + dx;
@@ -17044,8 +17046,9 @@ function showError(message) {
         while (currentX > 0) currentX -= singleSetWidth;
       }
 
-      track.style.setProperty('transform', 'translate3d(' + currentX + 'px, 0, 0)', 'important');
-      if (e.cancelable && e.type.indexOf('touch') === 0) {
+      $track.get(0).style.setProperty('transform', 'translate3d(' + currentX + 'px, 0, 0)', 'important');
+      var oe = e.originalEvent || e;
+      if (oe.cancelable && String(e.type || '').indexOf('touch') === 0) {
         e.preventDefault();
       }
     }
@@ -17053,18 +17056,28 @@ function showError(message) {
     function onPointerUp() {
       if (!isDragging) return;
       isDragging = false;
-      track.style.cursor = '';
+      $track.css('cursor', '');
       lastTimestamp = null;
     }
 
-    track.addEventListener('mousedown', onPointerDown);
-    window.addEventListener('mousemove', onPointerMove);
-    window.addEventListener('mouseup', onPointerUp);
-    track.addEventListener('touchstart', onPointerDown, { passive: true });
-    track.addEventListener('touchmove', onPointerMove, { passive: false });
-    track.addEventListener('touchend', onPointerUp);
+    var trackEl = $track.get(0);
 
-    track.addEventListener(
+    $track.on('mousedown', onPointerDown);
+    $(window).on('mousemove.lsHomeMatchTicker', onPointerMove);
+    $(window).on('mouseup.lsHomeMatchTicker', onPointerUp);
+
+    // Native listeners keep passive:false so touch drag can call preventDefault.
+    trackEl.addEventListener('touchstart', function (e) {
+      onPointerDown($.event.fix(e));
+    }, { passive: true });
+    trackEl.addEventListener('touchmove', function (e) {
+      onPointerMove($.event.fix(e));
+    }, { passive: false });
+    trackEl.addEventListener('touchend', function (e) {
+      onPointerUp($.event.fix(e));
+    });
+
+    trackEl.addEventListener(
       'click',
       function (e) {
         if (dragDistance > 6) {
@@ -17077,7 +17090,7 @@ function showError(message) {
     );
 
     var resizeTimer = null;
-    window.addEventListener('resize', function () {
+    $(window).on('resize.lsHomeMatchTicker', function () {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(function () {
         buildClones();
@@ -17085,7 +17098,7 @@ function showError(message) {
       }, 150);
     });
 
-    document.addEventListener('visibilitychange', function () {
+    $(document).on('visibilitychange.lsHomeMatchTicker', function () {
       if (document.hidden) {
         lastTimestamp = null;
       }
@@ -17100,30 +17113,25 @@ function showError(message) {
   }
 
   function initAll() {
-    var tickers = document.querySelectorAll(
+    $(
       '.luongson-home-match .luongson-featured-ads-ticker, .luongson-home-match .framer-cfqyq6'
-    );
-    tickers.forEach(function (el) {
-      createFeaturedAdsTicker(el);
+    ).each(function () {
+      createFeaturedAdsTicker(this);
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAll);
-  } else {
-    initAll();
-  }
-})();
+  $(initAll);
+})(jQuery);
 
 })(window, window.jQuery || window.$, window.jQuery || window.$, window.Hls, window.Swiper);
 
 /* list-matches.js */
 (function(window, $, jQuery, Hls, Swiper) {
 /**
- * LuongSon Sport — Live matches list
+ * LuongSon Sport — Live matches list (jQuery)
  * Streams range API + load more + commentator dropdown + match-status hover modal
  */
-(function () {
+(function ($) {
   'use strict';
 
   var cfg = window.luongsonListMatches || {};
@@ -17190,14 +17198,10 @@ function showError(message) {
     totalPages: 1,
     loading: false,
     priorityCompetitions: '',
-    root: null,
-    grid: null,
-    ads: null,
+    $root: null,
+    $grid: null,
+    $ads: null,
   };
-
-  function img(file) {
-    return IMG + file;
-  }
 
   function escapeHtml(value) {
     return String(value == null ? '' : value)
@@ -17240,7 +17244,7 @@ function showError(message) {
       return window.DV2StreamLinks.getPreferredLink(links);
     }
     if (!Array.isArray(links) || !links.length) return null;
-    var streaming = links.filter(function (l) {
+    var streaming = $.grep(links, function (l) {
       return l && l.isStreaming !== false;
     });
     return (streaming.length ? streaming : links)[0] || null;
@@ -17291,11 +17295,9 @@ function showError(message) {
       hour12: false,
     });
     var parts = {};
-    var formatted = formatter.formatToParts(date);
-    var i;
-    for (i = 0; i < formatted.length; i++) {
-      if (formatted[i].type !== 'literal') parts[formatted[i].type] = formatted[i].value;
-    }
+    $.each(formatter.formatToParts(date), function (_, part) {
+      if (part.type !== 'literal') parts[part.type] = part.value;
+    });
     if (parts.hour === '24') parts.hour = '00';
     return parts;
   }
@@ -17354,10 +17356,22 @@ function showError(message) {
       if (status === 'second half' || status === 'secondhalf' || status === 'second-half' || status === 'sh') {
         return 'Hiệp 2' + minsSuffix;
       }
-      if (status === 'overtime' || status === 'overtime(deprecated)' || status === 'extra time' || status === 'extratime' || status === 'et' || status === 'ot') {
+      if (
+        status === 'overtime' ||
+        status === 'overtime(deprecated)' ||
+        status === 'extra time' ||
+        status === 'extratime' ||
+        status === 'et' ||
+        status === 'ot'
+      ) {
         return 'Hiệp phụ' + minsSuffix;
       }
-      if (status === 'penalty shoot-out' || status === 'penalty' || status === 'penalties' || status === 'penalty shootout') {
+      if (
+        status === 'penalty shoot-out' ||
+        status === 'penalty' ||
+        status === 'penalties' ||
+        status === 'penalty shootout'
+      ) {
         return 'Penalty';
       }
       if (mins != null && mins !== '') return String(mins) + "'";
@@ -17396,12 +17410,10 @@ function showError(message) {
   function flattenMatchesByDate(matchesByDate) {
     var all = [];
     if (!matchesByDate || typeof matchesByDate !== 'object') return all;
-    Object.keys(matchesByDate)
-      .sort()
-      .forEach(function (dateKey) {
-        var day = matchesByDate[dateKey];
-        if (Array.isArray(day)) all = all.concat(day);
-      });
+    $.each(Object.keys(matchesByDate).sort(), function (_, dateKey) {
+      var day = matchesByDate[dateKey];
+      if (Array.isArray(day)) all = all.concat(day);
+    });
     return all;
   }
 
@@ -17411,7 +17423,7 @@ function showError(message) {
     return String(raw)
       .split(',')
       .map(function (id) {
-        return id.trim();
+        return $.trim(id);
       })
       .filter(Boolean)
       .join(',');
@@ -17419,23 +17431,22 @@ function showError(message) {
 
   function resolvePriorityCompetitions() {
     var admin = getAdminPriorityCompetitions();
-    if (admin) return Promise.resolve(admin);
+    if (admin) return $.Deferred().resolve(admin).promise();
 
-    return fetch(HOT_COMPETITIONS_API, { method: 'GET' })
-      .then(function (res) {
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        return res.json();
-      })
+    return $.ajax({
+      url: HOT_COMPETITIONS_API,
+      method: 'GET',
+      dataType: 'json',
+    })
       .then(function (data) {
         var list = (data && data.result) || [];
-        return list
-          .map(function (item) {
-            return item && item.id ? String(item.id).trim() : '';
-          })
+        return $.map(list, function (item) {
+          return item && item.id ? String(item.id).trim() : null;
+        })
           .filter(Boolean)
           .join(',');
       })
-      .catch(function () {
+      .then(null, function () {
         return '';
       });
   }
@@ -17574,58 +17585,57 @@ function showError(message) {
     );
   }
 
-  function clearMatchCards(grid, ads) {
-    if (!grid) return;
-    Array.prototype.slice.call(grid.children).forEach(function (child) {
-      if (child !== ads && child.classList && child.classList.contains('luongson-match-card')) {
-        child.remove();
-      }
+  function clearMatchCards($grid, $ads) {
+    if (!$grid || !$grid.length) return;
+    $grid.children('.luongson-match-card').each(function () {
+      if (this !== $ads.get(0)) $(this).remove();
     });
   }
 
-  function attachMatchData(cardEl, match) {
-    if (!cardEl || !match) return;
-    cardEl.__lsMatch = match;
-    cardEl.__lsMatchStats = match.stats || null;
+  function attachMatchData($card, match) {
+    if (!$card || !$card.length || !match) return;
+    var el = $card.get(0);
+    el.__lsMatch = match;
+    el.__lsMatchStats = match.stats || null;
     if (window.LuongsonMatchStatsModal && window.LuongsonMatchStatsModal.setCardStats) {
-      window.LuongsonMatchStatsModal.setCardStats(cardEl, match.stats || null);
+      window.LuongsonMatchStatsModal.setCardStats(el, match.stats || null);
     }
   }
 
   function insertCards(matches, isFirstPage) {
-    var grid = state.grid;
-    var ads = state.ads;
-    if (!grid || !ads || !matches.length) return;
+    var $grid = state.$grid;
+    var $ads = state.$ads;
+    if (!$grid || !$ads || !matches.length) return;
 
-    var htmlParts = matches.map(buildMatchCardHtml);
+    var htmlParts = $.map(matches, buildMatchCardHtml);
     var created = [];
 
     if (isFirstPage) {
-      clearMatchCards(grid, ads);
+      clearMatchCards($grid, $ads);
       var beforeCount = Math.min(ADS_BEFORE_COUNT, matches.length);
       var i;
-      var el;
+      var $el;
 
       for (i = 0; i < beforeCount; i++) {
-        ads.insertAdjacentHTML('beforebegin', htmlParts[i]);
-        el = ads.previousElementSibling;
-        attachMatchData(el, matches[i]);
-        created.push(el);
+        $ads.before(htmlParts[i]);
+        $el = $ads.prev();
+        attachMatchData($el, matches[i]);
+        created.push($el.get(0));
       }
 
-      var insertAfter = ads;
+      var $insertAfter = $ads;
       for (i = beforeCount; i < matches.length; i++) {
-        insertAfter.insertAdjacentHTML('afterend', htmlParts[i]);
-        insertAfter = insertAfter.nextElementSibling;
-        attachMatchData(insertAfter, matches[i]);
-        created.push(insertAfter);
+        $insertAfter.after(htmlParts[i]);
+        $insertAfter = $insertAfter.next();
+        attachMatchData($insertAfter, matches[i]);
+        created.push($insertAfter.get(0));
       }
     } else {
-      htmlParts.forEach(function (html, index) {
-        grid.insertAdjacentHTML('beforeend', html);
-        var card = grid.lastElementChild;
-        attachMatchData(card, matches[index]);
-        created.push(card);
+      $.each(htmlParts, function (index, html) {
+        $grid.append(html);
+        var $card = $grid.children().last();
+        attachMatchData($card, matches[index]);
+        created.push($card.get(0));
       });
     }
 
@@ -17657,105 +17667,105 @@ function showError(message) {
     );
   }
 
-  function initCommentatorDropdown(root) {
-    var portal = document.querySelector('.luongson-commentator-portal');
-    if (!portal) {
-      portal = document.createElement('div');
-      portal.className = 'luongson-commentator-portal';
-      portal.hidden = true;
-      portal.style.cssText =
-        'display:none;opacity:0;transform:translateY(-4px) scale(0.98);transition:opacity .15s ease,transform .15s cubic-bezier(0,.8,.2,1);transform-origin:top left;';
-      portal.innerHTML = '<div class="luongson-commentator-portal__panel" data-border="true" role="listbox"></div>';
-      document.body.appendChild(portal);
+  function initCommentatorDropdown($root) {
+    var $portal = $('.luongson-commentator-portal').not('.luongson-stream-commentator-portal').first();
+    if (!$portal.length) {
+      $portal = $('<div>', {
+        class: 'luongson-commentator-portal',
+        hidden: true,
+      }).css({
+        display: 'none',
+        opacity: 0,
+        transform: 'translateY(-4px) scale(0.98)',
+        transition: 'opacity .15s ease,transform .15s cubic-bezier(0,.8,.2,1)',
+        'transform-origin': 'top left',
+      });
+      $portal.html('<div class="luongson-commentator-portal__panel" data-border="true" role="listbox"></div>');
+      $('body').append($portal);
     }
 
-    var panel = portal.querySelector('.luongson-commentator-portal__panel');
-    var activeTrigger = null;
+    var $panel = $portal.find('.luongson-commentator-portal__panel');
+    var $activeTrigger = null;
 
     function fillOptions(match) {
       var links = getSortedLinks(match);
       if (!links.length) {
-        panel.innerHTML = optionHtml('Nhà Đài', getFallbackImg());
+        $panel.html(optionHtml('Nhà Đài', getFallbackImg()));
         return;
       }
-      panel.innerHTML = links
-        .map(function (link, index) {
+      $panel.html(
+        $.map(links, function (link, index) {
           var name =
             window.DV2StreamLinks && window.DV2StreamLinks.getBlvName
               ? window.DV2StreamLinks.getBlvName(link, index)
               : link.commentator || 'Link ' + (index + 1);
           return optionHtml(name, link.avatar || getFallbackImg(), link.liveId);
-        })
-        .join('');
+        }).join('')
+      );
     }
 
-    function openDropdown(trigger) {
-      if (activeTrigger === trigger && portal.style.display !== 'none') {
+    function openDropdown($trigger) {
+      if ($activeTrigger && $activeTrigger.get(0) === $trigger.get(0) && $portal.css('display') !== 'none') {
         closeDropdown();
         return;
       }
 
-      var card = trigger.closest('.luongson-match-card');
-      fillOptions(card && card.__lsMatch);
+      var $card = $trigger.closest('.luongson-match-card');
+      fillOptions($card.length ? $card.get(0).__lsMatch : null);
 
-      activeTrigger = trigger;
-      trigger.setAttribute('aria-expanded', 'true');
-      portal.hidden = false;
-      portal.style.display = 'block';
+      $activeTrigger = $trigger;
+      $trigger.attr('aria-expanded', 'true');
+      $portal.removeAttr('hidden').css('display', 'block');
 
-      var rect = trigger.getBoundingClientRect();
+      var rect = $trigger.get(0).getBoundingClientRect();
       var w = 170;
-      var h = portal.offsetHeight || 120;
+      var h = $portal.outerHeight() || 120;
       var left = rect.left;
-      if (left + w > window.innerWidth - 10) left = window.innerWidth - w - 10;
+      if (left + w > $(window).width() - 10) left = $(window).width() - w - 10;
       if (left < 10) left = 10;
 
       var top = rect.bottom + 6;
-      if (top + h > window.innerHeight - 10 && rect.top - h - 6 > 0) {
+      if (top + h > $(window).height() - 10 && rect.top - h - 6 > 0) {
         top = rect.top - h - 6;
       }
 
-      portal.style.left = left + 'px';
-      portal.style.top = top + 'px';
+      $portal.css({ left: left + 'px', top: top + 'px' });
 
       requestAnimationFrame(function () {
-        portal.style.opacity = '1';
-        portal.style.transform = 'translateY(0) scale(1)';
+        $portal.css({ opacity: 1, transform: 'translateY(0) scale(1)' });
       });
     }
 
     function closeDropdown() {
-      if (activeTrigger) activeTrigger.setAttribute('aria-expanded', 'false');
-      portal.style.opacity = '0';
-      portal.style.transform = 'translateY(-4px) scale(0.98)';
+      if ($activeTrigger) $activeTrigger.attr('aria-expanded', 'false');
+      $portal.css({ opacity: 0, transform: 'translateY(-4px) scale(0.98)' });
       setTimeout(function () {
-        if (portal.style.opacity === '0') {
-          portal.style.display = 'none';
-          portal.hidden = true;
-          activeTrigger = null;
+        if (parseFloat($portal.css('opacity')) === 0) {
+          $portal.css('display', 'none').attr('hidden', 'hidden');
+          $activeTrigger = null;
         }
       }, 150);
     }
 
-    if (!portal.__lsPortalBound) {
-      portal.__lsPortalBound = true;
+    if (!$portal.data('lsPortalBound')) {
+      $portal.data('lsPortalBound', true);
 
-      portal.addEventListener('click', function (e) {
-        var opt = e.target.closest('.luongson-commentator-option');
-        if (!opt || !activeTrigger) return;
+      $portal.on('click', function (e) {
+        var $opt = $(e.target).closest('.luongson-commentator-option');
+        if (!$opt.length || !$activeTrigger) return;
         e.preventDefault();
         e.stopPropagation();
 
-        var card = activeTrigger.closest('.luongson-match-card');
-        var match = card && card.__lsMatch;
+        var $card = $activeTrigger.closest('.luongson-match-card');
+        var match = $card.length ? $card.get(0).__lsMatch : null;
         if (!match) {
           closeDropdown();
           return;
         }
 
         var links = getSortedLinks(match);
-        var liveId = opt.getAttribute('data-live-id');
-        var name = opt.getAttribute('data-commentator');
+        var liveId = $opt.attr('data-live-id');
+        var name = $opt.attr('data-commentator');
         var selected = null;
         var i;
 
@@ -17795,49 +17805,45 @@ function showError(message) {
         window.location.href = getDetailUrl(match, selected);
       });
 
-      document.addEventListener('click', function (e) {
+      $(document).on('click.lsListPortal', function (e) {
         if (
-          portal.style.display !== 'none' &&
-          !portal.contains(e.target) &&
-          (!activeTrigger || !activeTrigger.contains(e.target))
+          $portal.css('display') !== 'none' &&
+          !$portal.is(e.target) &&
+          !$portal.has(e.target).length &&
+          (!$activeTrigger || (!$activeTrigger.is(e.target) && !$activeTrigger.has(e.target).length))
         ) {
           closeDropdown();
         }
       });
 
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && portal.style.display !== 'none') closeDropdown();
+      $(document).on('keydown.lsListPortal', function (e) {
+        if (e.key === 'Escape' && $portal.css('display') !== 'none') closeDropdown();
       });
 
-      window.addEventListener(
-        'scroll',
-        function () {
-          if (portal.style.display === 'none' || !activeTrigger) return;
-          var rect = activeTrigger.getBoundingClientRect();
-          if (rect.bottom < 0 || rect.top > window.innerHeight) {
-            portal.style.display = 'none';
-            portal.style.opacity = '0';
-            activeTrigger.setAttribute('aria-expanded', 'false');
-            activeTrigger = null;
-          } else {
-            openDropdown(activeTrigger);
-          }
-        },
-        { passive: true }
-      );
+      $(window).on('scroll.lsListPortal', function () {
+        if ($portal.css('display') === 'none' || !$activeTrigger) return;
+        var rect = $activeTrigger.get(0).getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > $(window).height()) {
+          $portal.css({ display: 'none', opacity: 0 });
+          $activeTrigger.attr('aria-expanded', 'false');
+          $activeTrigger = null;
+        } else {
+          openDropdown($activeTrigger);
+        }
+      });
 
-      window.addEventListener('resize', function () {
-        if (portal.style.display !== 'none' && activeTrigger) openDropdown(activeTrigger);
+      $(window).on('resize.lsListPortal', function () {
+        if ($portal.css('display') !== 'none' && $activeTrigger) openDropdown($activeTrigger);
       });
     }
 
-    root.querySelectorAll('.luongson-match-commentator-trigger').forEach(function (btn) {
-      if (btn.__lsBound || btn.disabled) return;
-      btn.__lsBound = true;
-      btn.addEventListener('click', function (e) {
+    $root.find('.luongson-match-commentator-trigger').each(function () {
+      var $btn = $(this);
+      if ($btn.data('lsBound') || $btn.prop('disabled')) return;
+      $btn.data('lsBound', true).on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        openDropdown(btn);
+        openDropdown($btn);
       });
     });
   }
@@ -17846,12 +17852,12 @@ function showError(message) {
   /* Match status modal                                                       */
   /* ------------------------------------------------------------------------ */
 
-  function initMatchModal(root) {
+  function initMatchModal($root) {
     var modal = window.LuongsonMatchStatsModal;
     if (!modal) return;
 
-    modal.bindTriggers(root, '.luongson-match-status', function (trigger) {
-      var card = trigger.closest('.luongson-match-card');
+    modal.bindTriggers($root.get(0), '.luongson-match-status', function (trigger) {
+      var card = $(trigger).closest('.luongson-match-card').get(0);
       return card && card.__lsMatchStats ? card.__lsMatchStats : null;
     });
   }
@@ -17865,91 +17871,88 @@ function showError(message) {
     '<path fill-rule="evenodd" clip-rule="evenodd" d="M4.29289 8.29289C4.68342 7.90237 5.31658 7.90237 5.70711 8.29289L12 14.5858L18.2929 8.29289C18.6834 7.90237 19.3166 7.90237 19.7071 8.29289C20.0976 8.68342 20.0976 9.31658 19.7071 9.70711L12.7071 16.7071C12.3166 17.0976 11.6834 17.0976 11.2929 16.7071L4.29289 9.70711C3.90237 9.31658 3.90237 8.68342 4.29289 8.29289Z" fill="currentColor" />' +
     '</svg>';
 
-  function setLoadMoreLabel(btn, loading) {
-    if (!btn) return;
-    btn.innerHTML =
-      (loading ? 'Đang tải...' : 'Xem thêm') + (loading ? '' : LOAD_MORE_CHEVRON);
+  function setLoadMoreLabel($btn, loading) {
+    if (!$btn || !$btn.length) return;
+    $btn.html((loading ? 'Đang tải...' : 'Xem thêm') + (loading ? '' : LOAD_MORE_CHEVRON));
   }
 
-  function ensureLoadMore(root) {
-    var footer = root.querySelector('.luongson-list-matches__footer');
-    if (!footer) {
-      footer = document.createElement('div');
-      footer.className = 'luongson-list-matches__footer';
-      footer.innerHTML =
-        '<button type="button" class="luongson-list-matches__load-more" hidden>Xem thêm' +
-        LOAD_MORE_CHEVRON +
-        '</button>';
-      root.appendChild(footer);
+  function ensureLoadMore($root) {
+    var $footer = $root.find('.luongson-list-matches__footer');
+    if (!$footer.length) {
+      $footer = $(
+        '<div class="luongson-list-matches__footer">' +
+          '<button type="button" class="luongson-list-matches__load-more" hidden>Xem thêm' +
+          LOAD_MORE_CHEVRON +
+          '</button></div>'
+      );
+      $root.append($footer);
     }
-    var btn = footer.querySelector('.luongson-list-matches__load-more');
-    if (btn && !btn.querySelector('.luongson-list-matches__load-more-icon')) {
-      setLoadMoreLabel(btn, false);
+    var $btn = $footer.find('.luongson-list-matches__load-more');
+    if ($btn.length && !$btn.find('.luongson-list-matches__load-more-icon').length) {
+      setLoadMoreLabel($btn, false);
     }
-    if (btn && !btn.__lsBound) {
-      btn.__lsBound = true;
-      btn.addEventListener('click', function () {
+    if ($btn.length && !$btn.data('lsBound')) {
+      $btn.data('lsBound', true).on('click', function () {
         if (state.loading) return;
         if (state.page >= state.totalPages) return;
         loadPage(state.page + 1, false);
       });
     }
-    return btn;
+    return $btn;
   }
 
   function updateLoadMoreVisibility() {
-    var btn = state.root && ensureLoadMore(state.root);
-    if (!btn) return;
+    var $btn = state.$root && ensureLoadMore(state.$root);
+    if (!$btn || !$btn.length) return;
     var hasMore = state.page < state.totalPages;
-    btn.hidden = !hasMore;
-    btn.disabled = state.loading;
-    setLoadMoreLabel(btn, state.loading);
+    $btn.prop('hidden', !hasMore);
+    $btn.prop('disabled', state.loading);
+    setLoadMoreLabel($btn, state.loading);
   }
 
   function afterRender() {
-    if (!state.root) return;
-    initCommentatorDropdown(state.root);
-    initMatchModal(state.root);
+    if (!state.$root) return;
+    initCommentatorDropdown(state.$root);
+    initMatchModal(state.$root);
     if (window.LuongsonImageFallback && window.LuongsonImageFallback.init) {
-      window.LuongsonImageFallback.init(state.root);
+      window.LuongsonImageFallback.init(state.$root.get(0));
     }
     updateLoadMoreVisibility();
   }
 
   function showGridMessage(message) {
-    var grid = state.grid;
-    var ads = state.ads;
-    if (!grid || !ads) return;
-    clearMatchCards(grid, ads);
-    var existing = grid.querySelector('.luongson-list-matches__empty');
-    if (existing) existing.remove();
-    var el = document.createElement('div');
-    el.className = 'luongson-list-matches__empty';
-    el.textContent = message;
-    ads.insertAdjacentElement('beforebegin', el);
+    var $grid = state.$grid;
+    var $ads = state.$ads;
+    if (!$grid || !$ads) return;
+    clearMatchCards($grid, $ads);
+    $grid.find('.luongson-list-matches__empty').remove();
+    var $el = $('<div>', { class: 'luongson-list-matches__empty', text: message });
+    $ads.before($el);
   }
 
   function clearGridMessage() {
-    if (!state.grid) return;
-    var existing = state.grid.querySelector('.luongson-list-matches__empty');
-    if (existing) existing.remove();
+    if (!state.$grid) return;
+    state.$grid.find('.luongson-list-matches__empty').remove();
   }
 
   function fetchStreamsPage(page) {
     var range = getDateRange();
-    var params = new URLSearchParams();
-    params.set('from', range.from);
-    params.set('to', range.to);
-    params.set('statuses', STATUSES);
-    params.set('pageSize', String(PAGE_SIZE));
-    params.set('page', String(page));
+    var data = {
+      from: range.from,
+      to: range.to,
+      statuses: STATUSES,
+      pageSize: String(PAGE_SIZE),
+      page: String(page),
+    };
     if (state.priorityCompetitions) {
-      params.set('priorityCompetitions', state.priorityCompetitions);
+      data.priorityCompetitions = state.priorityCompetitions;
     }
 
-    return fetch(STREAMS_RANGE_API + '?' + params.toString(), { method: 'GET' }).then(function (res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return res.json();
+    return $.ajax({
+      url: STREAMS_RANGE_API,
+      method: 'GET',
+      data: data,
+      dataType: 'json',
     });
   }
 
@@ -17963,73 +17966,76 @@ function showError(message) {
     }
 
     fetchStreamsPage(page)
-      .then(function (res) {
-        if (!res || res.status !== 'success') {
-          throw new Error('Invalid response');
+      .done(function (res) {
+        try {
+          if (!res || res.status !== 'success') {
+            throw new Error('Invalid response');
+          }
+
+          var matches = flattenMatchesByDate(res.matches_by_date);
+          var pagination = res.pagination || {};
+          state.page = Number(pagination.page) || page;
+          state.totalPages = Number(pagination.totalPages) || 1;
+
+          clearGridMessage();
+
+          if (!matches.length && isFirstPage) {
+            showGridMessage('Hiện tại không có trận đấu nào.');
+            return;
+          }
+
+          insertCards(matches, isFirstPage);
+          afterRender();
+        } catch (err) {
+          console.error('[LuongSon list-matches]', err);
+          if (isFirstPage) {
+            showGridMessage('Không thể tải danh sách trận đấu.');
+          }
         }
-
-        var matches = flattenMatchesByDate(res.matches_by_date);
-        var pagination = res.pagination || {};
-        state.page = Number(pagination.page) || page;
-        state.totalPages = Number(pagination.totalPages) || 1;
-
-        clearGridMessage();
-
-        if (!matches.length && isFirstPage) {
-          showGridMessage('Hiện tại không có trận đấu nào.');
-          return;
-        }
-
-        insertCards(matches, isFirstPage);
-        afterRender();
       })
-      .catch(function (err) {
+      .fail(function (err) {
         console.error('[LuongSon list-matches]', err);
         if (isFirstPage) {
           showGridMessage('Không thể tải danh sách trận đấu.');
         }
       })
-      .finally(function () {
+      .always(function () {
         state.loading = false;
         updateLoadMoreVisibility();
       });
   }
 
   function initAll() {
-    var root = document.querySelector('.luongson-list-matches');
-    if (!root) return;
+    var $root = $('.luongson-list-matches').first();
+    if (!$root.length) return;
 
-    var grid = root.querySelector('.luongson-live-grid');
-    var ads = grid && grid.querySelector('.luongson-live-ads');
-    if (!grid || !ads) return;
+    var $grid = $root.find('.luongson-live-grid').first();
+    var $ads = $grid.find('.luongson-live-ads').first();
+    if (!$grid.length || !$ads.length) return;
 
-    state.root = root;
-    state.grid = grid;
-    state.ads = ads;
+    state.$root = $root;
+    state.$grid = $grid;
+    state.$ads = $ads;
 
-    ensureLoadMore(root);
+    ensureLoadMore($root);
 
-    resolvePriorityCompetitions().then(function (priority) {
+    resolvePriorityCompetitions().done(function (priority) {
       state.priorityCompetitions = priority || '';
       loadPage(1, true);
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAll);
-  } else {
-    initAll();
-  }
-})();
+  $(initAll);
+})(jQuery);
 
 })(window, window.jQuery || window.$, window.jQuery || window.$, window.Hls, window.Swiper);
 
 /* schedule.js */
 (function(window, $, jQuery, Hls, Swiper) {
 /**
- * LuongSon Sport — Match schedule date picker + status hover modal
+ * LuongSon Sport — Match schedule date picker + status hover modal (jQuery)
  */
-(function () {
+(function ($) {
   'use strict';
 
   var cfg = window.luongsonSchedule || {};
@@ -18168,40 +18174,40 @@ function showError(message) {
     );
   }
 
-  function renderStaticMockRows(root) {
-    if (!root || root.dataset.staticRendered) return;
-    root.dataset.staticRendered = '1';
+  function renderStaticMockRows($root) {
+    if (!$root.length || $root.data('staticRendered')) return;
+    $root.data('staticRendered', '1');
 
     var rowHtml = buildScheduleMatchRowHtml();
     var i;
     for (i = 0; i < 5; i++) {
-      root.insertAdjacentHTML('beforeend', rowHtml);
+      $root.append(rowHtml);
     }
   }
 
-  function initSchedule(root) {
-    if (!root || root.__lsScheduleInit) return;
-    root.__lsScheduleInit = true;
+  function initSchedule($root) {
+    if (!$root.length || $root.data('lsScheduleInit')) return;
+    $root.data('lsScheduleInit', true);
 
-    var label = root.querySelector('.luongson-schedule__date-label');
-    var prev = root.querySelector('[data-framer-name="Previous Day"]');
-    var next = root.querySelector('[data-framer-name="Next Day"]');
-    if (!label || !prev || !next) return;
+    var $label = $root.find('.luongson-schedule__date-label');
+    var $prev = $root.find('[data-framer-name="Previous Day"]');
+    var $next = $root.find('[data-framer-name="Next Day"]');
+    if (!$label.length || !$prev.length || !$next.length) return;
 
     var current = new Date();
     current.setHours(0, 0, 0, 0);
 
     function render() {
-      label.textContent = formatLabel(current);
+      $label.text(formatLabel(current));
     }
 
-    prev.addEventListener('click', function (e) {
+    $prev.on('click', function (e) {
       e.preventDefault();
       current.setDate(current.getDate() - 1);
       render();
     });
 
-    next.addEventListener('click', function (e) {
+    $next.on('click', function (e) {
       e.preventDefault();
       current.setDate(current.getDate() + 1);
       render();
@@ -18214,33 +18220,30 @@ function showError(message) {
   /* Match status modal (hover on live badge — same as list-matches / HTML)   */
   /* ------------------------------------------------------------------------ */
 
-  function initMatchModal(root) {
-    if (!root || root.__lsScheduleModalInit) return;
-    root.__lsScheduleModalInit = true;
+  function initMatchModal($root) {
+    if (!$root.length || $root.data('lsScheduleModalInit')) return;
+    $root.data('lsScheduleModalInit', true);
 
     var modal = window.LuongsonMatchStatsModal;
     if (!modal) return;
 
-    modal.bindTriggers(root, '.luongson-match-status, .framer-iz7ZB.framer-3i8edo', function (trigger) {
-      var card = trigger.closest('[data-match-id], .luongson-match-card, .framer-1x0sw3m');
+    modal.bindTriggers($root.get(0), '.luongson-match-status, .framer-iz7ZB.framer-3i8edo', function (trigger) {
+      var card = $(trigger).closest('[data-match-id], .luongson-match-card, .framer-1x0sw3m').get(0);
       return card && card.__lsMatchStats ? card.__lsMatchStats : null;
     });
   }
 
   function initAll() {
-    document.querySelectorAll('.luongson-schedule').forEach(function (root) {
-      renderStaticMockRows(root);
-      initSchedule(root);
-      initMatchModal(root);
+    $('.luongson-schedule').each(function () {
+      var $root = $(this);
+      renderStaticMockRows($root);
+      initSchedule($root);
+      initMatchModal($root);
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAll);
-  } else {
-    initAll();
-  }
-})();
+  $(initAll);
+})(jQuery);
 
 })(window, window.jQuery || window.$, window.jQuery || window.$, window.Hls, window.Swiper);
 
@@ -19759,10 +19762,10 @@ function showError(message) {
 /* top-commentators.js */
 (function(window, $, jQuery, Hls, Swiper) {
 /**
- * LuongSon Sport — Top bình luận viên
+ * LuongSon Sport — Top bình luận viên (jQuery)
  * Load from API + infinite horizontal ticker + Follow button toggle
  */
-(function () {
+(function ($) {
   'use strict';
 
   var MOBILE_MQ = '(max-width: 809.98px)';
@@ -19852,26 +19855,26 @@ function showError(message) {
   }
 
   function createCommentatorsTicker(container) {
-    var track = container.querySelector('.luongson-commentators-track');
-    if (!track || track.__lsSportTickerInit) return;
-    track.__lsSportTickerInit = true;
+    var $container = $(container);
+    var $track = $container.find('.luongson-commentators-track').first();
+    if (!$track.length || $track.data('lsSportTickerInit')) return;
+    $track.data('lsSportTickerInit', true);
 
-    var originalChildren = Array.prototype.slice.call(track.children).filter(function (child) {
-      return !child.classList.contains('clone-item') && child.getAttribute('aria-hidden') !== 'true';
+    var $originalChildren = $track.children().filter(function () {
+      return !$(this).hasClass('clone-item') && $(this).attr('aria-hidden') !== 'true';
     });
 
-    if (originalChildren.length === 0) return;
+    if (!$originalChildren.length) return;
 
-    Array.prototype.slice.call(track.children).forEach(function (child) {
-      if (child.classList.contains('clone-item') || child.getAttribute('aria-hidden') === 'true') {
-        child.remove();
+    $track.children().each(function () {
+      var $child = $(this);
+      if ($child.hasClass('clone-item') || $child.attr('aria-hidden') === 'true') {
+        $child.remove();
       }
     });
 
-    originalChildren.forEach(function (child) {
-      if (!child.classList.contains('ticker-item')) {
-        child.classList.add('ticker-item');
-      }
+    $originalChildren.each(function () {
+      $(this).addClass('ticker-item');
     });
 
     var speed = 35;
@@ -19888,23 +19891,21 @@ function showError(message) {
     var disabled = false;
 
     function clearInlineCardSizes() {
-      originalChildren.forEach(function (child) {
-        child.style.removeProperty('width');
-        child.style.removeProperty('flex');
-        child.style.removeProperty('min-width');
-        child.style.removeProperty('max-width');
+      $originalChildren.each(function () {
+        this.style.removeProperty('width');
+        this.style.removeProperty('flex');
+        this.style.removeProperty('min-width');
+        this.style.removeProperty('max-width');
       });
-      track.style.removeProperty('transform');
+      $track.get(0).style.removeProperty('transform');
       singleSetWidth = 0;
       currentX = 0;
     }
 
     function buildClones() {
-      Array.prototype.slice.call(track.querySelectorAll('.clone-item')).forEach(function (c) {
-        c.remove();
-      });
+      $track.find('.clone-item').remove();
 
-      if (originalChildren.length === 0) return;
+      if (!$originalChildren.length) return;
 
       if (window.matchMedia(MOBILE_MQ).matches) {
         disabled = true;
@@ -19914,23 +19915,23 @@ function showError(message) {
 
       disabled = false;
 
-      var containerWidth = container.offsetWidth || window.innerWidth;
-      var computedStyle = window.getComputedStyle(track);
+      var containerWidth = $container.outerWidth() || $(window).width();
+      var computedStyle = window.getComputedStyle($track.get(0));
       var gap = parseFloat(computedStyle.gap) || parseFloat(computedStyle.columnGap) || 10;
 
       if (containerWidth > 0) {
         var cols = containerWidth >= 1024 ? 3 : containerWidth >= 640 ? 2 : 1;
         var cardWidth = Math.floor((containerWidth - (cols - 1) * gap) / cols);
-        originalChildren.forEach(function (child) {
-          child.style.setProperty('width', cardWidth + 'px', 'important');
-          child.style.setProperty('flex', '0 0 ' + cardWidth + 'px', 'important');
-          child.style.setProperty('min-width', cardWidth + 'px', 'important');
-          child.style.setProperty('max-width', cardWidth + 'px', 'important');
+        $originalChildren.each(function () {
+          this.style.setProperty('width', cardWidth + 'px', 'important');
+          this.style.setProperty('flex', '0 0 ' + cardWidth + 'px', 'important');
+          this.style.setProperty('min-width', cardWidth + 'px', 'important');
+          this.style.setProperty('max-width', cardWidth + 'px', 'important');
         });
       }
 
-      var firstChild = originalChildren[0];
-      var lastChild = originalChildren[originalChildren.length - 1];
+      var firstChild = $originalChildren.get(0);
+      var lastChild = $originalChildren.get($originalChildren.length - 1);
       var firstRect = firstChild.getBoundingClientRect();
       var lastRect = lastChild.getBoundingClientRect();
       var gapVal = gap;
@@ -19938,12 +19939,11 @@ function showError(message) {
       if (firstRect.width > 0 && lastRect.right - firstRect.left > 0) {
         singleSetWidth = lastRect.right - firstRect.left + gapVal;
       } else {
-        singleSetWidth =
-          lastChild.offsetLeft + lastChild.offsetWidth - firstChild.offsetLeft + gapVal;
+        singleSetWidth = lastChild.offsetLeft + lastChild.offsetWidth - firstChild.offsetLeft + gapVal;
       }
 
       if (singleSetWidth <= 0 || isNaN(singleSetWidth)) {
-        singleSetWidth = originalChildren.reduce(function (acc, el) {
+        singleSetWidth = $originalChildren.toArray().reduce(function (acc, el) {
           return acc + (el.offsetWidth || 280) + gapVal;
         }, 0);
       }
@@ -19951,13 +19951,12 @@ function showError(message) {
       if (singleSetWidth <= 0) return;
 
       var neededCopies = Math.max(2, Math.ceil((containerWidth * 2) / singleSetWidth) + 1);
+      var i;
 
-      for (var i = 0; i < neededCopies; i++) {
-        originalChildren.forEach(function (child) {
-          var clone = child.cloneNode(true);
-          clone.classList.add('clone-item');
-          clone.setAttribute('aria-hidden', 'true');
-          track.appendChild(clone);
+      for (i = 0; i < neededCopies; i++) {
+        $originalChildren.each(function () {
+          var $clone = $(this).clone().addClass('clone-item').attr('aria-hidden', 'true');
+          $track.append($clone);
         });
       }
     }
@@ -19978,38 +19977,46 @@ function showError(message) {
             currentX -= singleSetWidth;
           }
         }
-        track.style.setProperty('transform', 'translate3d(' + currentX + 'px, 0, 0)', 'important');
+        $track.get(0).style.setProperty('transform', 'translate3d(' + currentX + 'px, 0, 0)', 'important');
       }
 
       rafId = requestAnimationFrame(animate);
     }
 
-    container.addEventListener('mouseenter', function () {
+    $container.on('mouseenter', function () {
       isHovered = true;
     });
-    container.addEventListener('mouseleave', function () {
+    $container.on('mouseleave', function () {
       isHovered = false;
       lastTimestamp = null;
     });
 
+    function pointerClientX(e) {
+      var oe = e.originalEvent || e;
+      if (oe.touches && oe.touches.length) return oe.touches[0].clientX;
+      if (oe.changedTouches && oe.changedTouches.length) return oe.changedTouches[0].clientX;
+      return e.clientX;
+    }
+
     function onPointerDown(e) {
       if (disabled) return;
-      if (e.target.closest('.luongson-commentator-follow-btn')) return;
+      if ($(e.target).closest('.luongson-commentator-follow-btn').length) return;
       isDragging = true;
       dragDistance = 0;
-      startX = e.type.indexOf('touch') === 0 ? e.touches[0].clientX : e.clientX;
+      startX = pointerClientX(e);
       dragStartX = currentX;
-      track.style.cursor = 'grabbing';
+      $track.css('cursor', 'grabbing');
     }
 
     function onPointerMove(e) {
       if (!isDragging || disabled) return;
-      var clientX = e.type.indexOf('touch') === 0 ? e.touches[0].clientX : e.clientX;
+      var clientX = pointerClientX(e);
       var dx = clientX - startX;
       dragDistance = Math.abs(dx);
       currentX = dragStartX + dx;
-      track.style.setProperty('transform', 'translate3d(' + currentX + 'px, 0, 0)', 'important');
-      if (e.cancelable && e.type.indexOf('touch') === 0) {
+      $track.get(0).style.setProperty('transform', 'translate3d(' + currentX + 'px, 0, 0)', 'important');
+      var oe = e.originalEvent || e;
+      if (oe.cancelable && String(e.type || '').indexOf('touch') === 0) {
         e.preventDefault();
       }
     }
@@ -20017,7 +20024,7 @@ function showError(message) {
     function onPointerUp() {
       if (!isDragging) return;
       isDragging = false;
-      track.style.cursor = '';
+      $track.css('cursor', '');
       lastTimestamp = null;
 
       if (singleSetWidth > 0) {
@@ -20026,14 +20033,24 @@ function showError(message) {
       }
     }
 
-    track.addEventListener('mousedown', onPointerDown);
-    window.addEventListener('mousemove', onPointerMove);
-    window.addEventListener('mouseup', onPointerUp);
-    track.addEventListener('touchstart', onPointerDown, { passive: true });
-    track.addEventListener('touchmove', onPointerMove, { passive: false });
-    track.addEventListener('touchend', onPointerUp);
+    var trackEl = $track.get(0);
 
-    track.addEventListener(
+    $track.on('mousedown', onPointerDown);
+    $(window).on('mousemove.lsCommentatorsTicker', onPointerMove);
+    $(window).on('mouseup.lsCommentatorsTicker', onPointerUp);
+
+    // Native listeners keep passive:false so touch drag can call preventDefault.
+    trackEl.addEventListener('touchstart', function (e) {
+      onPointerDown($.event.fix(e));
+    }, { passive: true });
+    trackEl.addEventListener('touchmove', function (e) {
+      onPointerMove($.event.fix(e));
+    }, { passive: false });
+    trackEl.addEventListener('touchend', function (e) {
+      onPointerUp($.event.fix(e));
+    });
+
+    trackEl.addEventListener(
       'click',
       function (e) {
         if (dragDistance > 6) {
@@ -20046,7 +20063,7 @@ function showError(message) {
     );
 
     var resizeTimer = null;
-    window.addEventListener('resize', function () {
+    $(window).on('resize.lsCommentatorsTicker', function () {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(function () {
         buildClones();
@@ -20054,7 +20071,7 @@ function showError(message) {
       }, 150);
     });
 
-    document.addEventListener('visibilitychange', function () {
+    $(document).on('visibilitychange.lsCommentatorsTicker', function () {
       if (document.hidden) {
         lastTimestamp = null;
       }
@@ -20069,75 +20086,63 @@ function showError(message) {
   }
 
   function initFollowButtons() {
-    if (document.__lsSportFollowInit) return;
-    document.__lsSportFollowInit = true;
+    if ($(document).data('lsSportFollowInit')) return;
+    $(document).data('lsSportFollowInit', true);
 
-    document.addEventListener('click', function (e) {
-      var btn = e.target.closest(
-        '.luongson-top-commentators .luongson-commentator-follow-btn, .luongson-top-commentators [data-framer-name="Follow Button"]'
-      );
-      if (!btn) return;
-      e.preventDefault();
-      e.stopPropagation();
+    $(document).on(
+      'click.lsSportFollow',
+      '.luongson-top-commentators .luongson-commentator-follow-btn, .luongson-top-commentators [data-framer-name="Follow Button"]',
+      function (e) {
+        e.preventDefault();
+        e.stopPropagation();
 
-      var isFollowed = btn.classList.toggle('followed');
-      var textEl = btn.querySelector('.luongson-commentator-follow-btn__label, p, span');
-      if (textEl) {
-        textEl.textContent = isFollowed ? '♥️ Đã theo dõi' : '♥️ Follow';
+        var $btn = $(this);
+        var isFollowed = $btn.toggleClass('followed').hasClass('followed');
+        var $textEl = $btn.find('.luongson-commentator-follow-btn__label, p, span').first();
+        if ($textEl.length) {
+          $textEl.text(isFollowed ? '♥️ Đã theo dõi' : '♥️ Follow');
+        }
       }
-    });
+    );
   }
 
   function initTickers() {
-    var lists = document.querySelectorAll(
-      '.luongson-top-commentators .luongson-commentators-list'
-    );
-    lists.forEach(function (list) {
-      createCommentatorsTicker(list);
+    $('.luongson-top-commentators .luongson-commentators-list').each(function () {
+      createCommentatorsTicker(this);
     });
   }
 
   function renderCommentators(commentators) {
-    var tracks = document.querySelectorAll(
-      '.luongson-top-commentators .luongson-commentators-track'
-    );
-    if (!tracks.length) return;
+    var $tracks = $('.luongson-top-commentators .luongson-commentators-track');
+    if (!$tracks.length) return;
 
-    var html = commentators
-      .map(function (blv, index) {
-        return buildCommentatorCard(blv, index);
-      })
-      .join('');
+    var html = $.map(commentators, function (blv, index) {
+      return buildCommentatorCard(blv, index);
+    }).join('');
 
-    tracks.forEach(function (track) {
-      track.innerHTML = html;
-    });
+    $tracks.html(html);
 
     initTickers();
     initFollowButtons();
   }
 
   function showTrackMessage(message) {
-    var tracks = document.querySelectorAll(
-      '.luongson-top-commentators .luongson-commentators-track'
-    );
-    tracks.forEach(function (track) {
-      track.innerHTML =
-        '<div class="luongson-commentators-empty" style="padding:24px 12px;text-align:center;color:#666;width:100%;">' +
+    $('.luongson-top-commentators .luongson-commentators-track').html(
+      '<div class="luongson-commentators-empty" style="padding:24px 12px;text-align:center;color:#666;width:100%;">' +
         escapeHtml(message) +
-        '</div>';
-    });
+        '</div>'
+    );
   }
 
   function loadCommentators() {
     showTrackMessage('Đang tải danh sách bình luận viên...');
 
-    fetch(COMMENTATORS_API, { method: 'GET' })
-      .then(function (res) {
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        return res.json();
-      })
-      .then(function (data) {
+    $.ajax({
+      url: COMMENTATORS_API,
+      method: 'GET',
+      dataType: 'json',
+    })
+      .done(function (data) {
         if (!data || data.message !== 'success' || !Array.isArray(data.commentators)) {
           showTrackMessage('Không có dữ liệu bình luận viên');
           return;
@@ -20148,24 +20153,20 @@ function showError(message) {
         }
         renderCommentators(data.commentators);
       })
-      .catch(function () {
+      .fail(function () {
         showTrackMessage('Lỗi khi tải danh sách bình luận viên');
       });
   }
 
   function initAll() {
-    if (!document.querySelector('.luongson-top-commentators .luongson-commentators-track')) {
+    if (!$('.luongson-top-commentators .luongson-commentators-track').length) {
       return;
     }
     loadCommentators();
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAll);
-  } else {
-    initAll();
-  }
-})();
+  $(initAll);
+})(jQuery);
 
 })(window, window.jQuery || window.$, window.jQuery || window.$, window.Hls, window.Swiper);
 

@@ -1,31 +1,31 @@
 /**
- * LuongSon Sport — Home Featured Match
+ * LuongSon Sport — Home Featured Match (jQuery)
  * Ads ticker infinite scroll (from themes/html/js/modules/sliders.js)
  */
-(function () {
+(function ($) {
   'use strict';
 
   function createFeaturedAdsTicker(container) {
-    var track = container.querySelector('ul');
-    if (!track || track.__lsHomeMatchTickerInit) return;
-    track.__lsHomeMatchTickerInit = true;
+    var $container = $(container);
+    var $track = $container.find('ul').first();
+    if (!$track.length || $track.data('lsHomeMatchTickerInit')) return;
+    $track.data('lsHomeMatchTickerInit', true);
 
-    var originalChildren = Array.prototype.slice.call(track.children).filter(function (child) {
-      return !child.classList.contains('clone-item') && child.getAttribute('aria-hidden') !== 'true';
+    var $originalChildren = $track.children().filter(function () {
+      return !$(this).hasClass('clone-item') && $(this).attr('aria-hidden') !== 'true';
     });
 
-    if (originalChildren.length === 0) return;
+    if (!$originalChildren.length) return;
 
-    Array.prototype.slice.call(track.children).forEach(function (child) {
-      if (child.classList.contains('clone-item') || child.getAttribute('aria-hidden') === 'true') {
-        child.remove();
+    $track.children().each(function () {
+      var $child = $(this);
+      if ($child.hasClass('clone-item') || $child.attr('aria-hidden') === 'true') {
+        $child.remove();
       }
     });
 
-    originalChildren.forEach(function (child) {
-      if (!child.classList.contains('ticker-item')) {
-        child.classList.add('ticker-item');
-      }
+    $originalChildren.each(function () {
+      $(this).addClass('ticker-item');
     });
 
     var speed = 38;
@@ -41,30 +41,27 @@
     var rafId = null;
 
     function buildClones() {
-      Array.prototype.slice.call(track.querySelectorAll('.clone-item')).forEach(function (c) {
-        c.remove();
-      });
+      $track.find('.clone-item').remove();
 
-      if (originalChildren.length === 0) return;
+      if (!$originalChildren.length) return;
 
-      var containerWidth = container.offsetWidth || window.innerWidth;
-      var computedStyle = window.getComputedStyle(track);
+      var containerWidth = $container.outerWidth() || $(window).width();
+      var computedStyle = window.getComputedStyle($track.get(0));
       var gap = parseFloat(computedStyle.gap) || parseFloat(computedStyle.columnGap) || 12;
 
-      var firstChild = originalChildren[0];
-      var lastChild = originalChildren[originalChildren.length - 1];
+      var firstChild = $originalChildren.get(0);
+      var lastChild = $originalChildren.get($originalChildren.length - 1);
       var firstRect = firstChild.getBoundingClientRect();
       var lastRect = lastChild.getBoundingClientRect();
 
       if (firstRect.width > 0 && lastRect.right - firstRect.left > 0) {
         singleSetWidth = lastRect.right - firstRect.left + gap;
       } else {
-        singleSetWidth =
-          lastChild.offsetLeft + lastChild.offsetWidth - firstChild.offsetLeft + gap;
+        singleSetWidth = lastChild.offsetLeft + lastChild.offsetWidth - firstChild.offsetLeft + gap;
       }
 
       if (singleSetWidth <= 0 || isNaN(singleSetWidth)) {
-        singleSetWidth = originalChildren.reduce(function (acc, el) {
+        singleSetWidth = $originalChildren.toArray().reduce(function (acc, el) {
           return acc + (el.offsetWidth || 80) + gap;
         }, 0);
       }
@@ -72,13 +69,12 @@
       if (singleSetWidth <= 0) return;
 
       var neededCopies = Math.max(2, Math.ceil((containerWidth * 2) / singleSetWidth) + 1);
+      var i;
 
-      for (var i = 0; i < neededCopies; i++) {
-        originalChildren.forEach(function (child) {
-          var clone = child.cloneNode(true);
-          clone.classList.add('clone-item');
-          clone.setAttribute('aria-hidden', 'true');
-          track.appendChild(clone);
+      for (i = 0; i < neededCopies; i++) {
+        $originalChildren.each(function () {
+          var $clone = $(this).clone().addClass('clone-item').attr('aria-hidden', 'true');
+          $track.append($clone);
         });
       }
     }
@@ -99,31 +95,38 @@
             currentX -= singleSetWidth;
           }
         }
-        track.style.setProperty('transform', 'translate3d(' + currentX + 'px, 0, 0)', 'important');
+        $track.get(0).style.setProperty('transform', 'translate3d(' + currentX + 'px, 0, 0)', 'important');
       }
 
       rafId = requestAnimationFrame(animate);
     }
 
-    container.addEventListener('mouseenter', function () {
+    $container.on('mouseenter', function () {
       isHovered = true;
     });
-    container.addEventListener('mouseleave', function () {
+    $container.on('mouseleave', function () {
       isHovered = false;
       lastTimestamp = null;
     });
 
+    function pointerClientX(e) {
+      var oe = e.originalEvent || e;
+      if (oe.touches && oe.touches.length) return oe.touches[0].clientX;
+      if (oe.changedTouches && oe.changedTouches.length) return oe.changedTouches[0].clientX;
+      return e.clientX;
+    }
+
     function onPointerDown(e) {
       isDragging = true;
       dragDistance = 0;
-      startX = e.type.indexOf('touch') === 0 ? e.touches[0].clientX : e.clientX;
+      startX = pointerClientX(e);
       dragStartX = currentX;
-      track.style.cursor = 'grabbing';
+      $track.css('cursor', 'grabbing');
     }
 
     function onPointerMove(e) {
       if (!isDragging) return;
-      var clientX = e.type.indexOf('touch') === 0 ? e.touches[0].clientX : e.clientX;
+      var clientX = pointerClientX(e);
       var dx = clientX - startX;
       dragDistance = Math.abs(dx);
       currentX = dragStartX + dx;
@@ -133,8 +136,9 @@
         while (currentX > 0) currentX -= singleSetWidth;
       }
 
-      track.style.setProperty('transform', 'translate3d(' + currentX + 'px, 0, 0)', 'important');
-      if (e.cancelable && e.type.indexOf('touch') === 0) {
+      $track.get(0).style.setProperty('transform', 'translate3d(' + currentX + 'px, 0, 0)', 'important');
+      var oe = e.originalEvent || e;
+      if (oe.cancelable && String(e.type || '').indexOf('touch') === 0) {
         e.preventDefault();
       }
     }
@@ -142,18 +146,28 @@
     function onPointerUp() {
       if (!isDragging) return;
       isDragging = false;
-      track.style.cursor = '';
+      $track.css('cursor', '');
       lastTimestamp = null;
     }
 
-    track.addEventListener('mousedown', onPointerDown);
-    window.addEventListener('mousemove', onPointerMove);
-    window.addEventListener('mouseup', onPointerUp);
-    track.addEventListener('touchstart', onPointerDown, { passive: true });
-    track.addEventListener('touchmove', onPointerMove, { passive: false });
-    track.addEventListener('touchend', onPointerUp);
+    var trackEl = $track.get(0);
 
-    track.addEventListener(
+    $track.on('mousedown', onPointerDown);
+    $(window).on('mousemove.lsHomeMatchTicker', onPointerMove);
+    $(window).on('mouseup.lsHomeMatchTicker', onPointerUp);
+
+    // Native listeners keep passive:false so touch drag can call preventDefault.
+    trackEl.addEventListener('touchstart', function (e) {
+      onPointerDown($.event.fix(e));
+    }, { passive: true });
+    trackEl.addEventListener('touchmove', function (e) {
+      onPointerMove($.event.fix(e));
+    }, { passive: false });
+    trackEl.addEventListener('touchend', function (e) {
+      onPointerUp($.event.fix(e));
+    });
+
+    trackEl.addEventListener(
       'click',
       function (e) {
         if (dragDistance > 6) {
@@ -166,7 +180,7 @@
     );
 
     var resizeTimer = null;
-    window.addEventListener('resize', function () {
+    $(window).on('resize.lsHomeMatchTicker', function () {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(function () {
         buildClones();
@@ -174,7 +188,7 @@
       }, 150);
     });
 
-    document.addEventListener('visibilitychange', function () {
+    $(document).on('visibilitychange.lsHomeMatchTicker', function () {
       if (document.hidden) {
         lastTimestamp = null;
       }
@@ -189,17 +203,12 @@
   }
 
   function initAll() {
-    var tickers = document.querySelectorAll(
+    $(
       '.luongson-home-match .luongson-featured-ads-ticker, .luongson-home-match .framer-cfqyq6'
-    );
-    tickers.forEach(function (el) {
-      createFeaturedAdsTicker(el);
+    ).each(function () {
+      createFeaturedAdsTicker(this);
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAll);
-  } else {
-    initAll();
-  }
-})();
+  $(initAll);
+})(jQuery);

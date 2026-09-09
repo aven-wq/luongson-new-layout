@@ -1,7 +1,7 @@
 /**
- * LuongSon Sport — Match schedule date picker + status hover modal
+ * LuongSon Sport — Match schedule date picker + status hover modal (jQuery)
  */
-(function () {
+(function ($) {
   'use strict';
 
   var cfg = window.luongsonSchedule || {};
@@ -140,40 +140,40 @@
     );
   }
 
-  function renderStaticMockRows(root) {
-    if (!root || root.dataset.staticRendered) return;
-    root.dataset.staticRendered = '1';
+  function renderStaticMockRows($root) {
+    if (!$root.length || $root.data('staticRendered')) return;
+    $root.data('staticRendered', '1');
 
     var rowHtml = buildScheduleMatchRowHtml();
     var i;
     for (i = 0; i < 5; i++) {
-      root.insertAdjacentHTML('beforeend', rowHtml);
+      $root.append(rowHtml);
     }
   }
 
-  function initSchedule(root) {
-    if (!root || root.__lsScheduleInit) return;
-    root.__lsScheduleInit = true;
+  function initSchedule($root) {
+    if (!$root.length || $root.data('lsScheduleInit')) return;
+    $root.data('lsScheduleInit', true);
 
-    var label = root.querySelector('.luongson-schedule__date-label');
-    var prev = root.querySelector('[data-framer-name="Previous Day"]');
-    var next = root.querySelector('[data-framer-name="Next Day"]');
-    if (!label || !prev || !next) return;
+    var $label = $root.find('.luongson-schedule__date-label');
+    var $prev = $root.find('[data-framer-name="Previous Day"]');
+    var $next = $root.find('[data-framer-name="Next Day"]');
+    if (!$label.length || !$prev.length || !$next.length) return;
 
     var current = new Date();
     current.setHours(0, 0, 0, 0);
 
     function render() {
-      label.textContent = formatLabel(current);
+      $label.text(formatLabel(current));
     }
 
-    prev.addEventListener('click', function (e) {
+    $prev.on('click', function (e) {
       e.preventDefault();
       current.setDate(current.getDate() - 1);
       render();
     });
 
-    next.addEventListener('click', function (e) {
+    $next.on('click', function (e) {
       e.preventDefault();
       current.setDate(current.getDate() + 1);
       render();
@@ -186,30 +186,27 @@
   /* Match status modal (hover on live badge — same as list-matches / HTML)   */
   /* ------------------------------------------------------------------------ */
 
-  function initMatchModal(root) {
-    if (!root || root.__lsScheduleModalInit) return;
-    root.__lsScheduleModalInit = true;
+  function initMatchModal($root) {
+    if (!$root.length || $root.data('lsScheduleModalInit')) return;
+    $root.data('lsScheduleModalInit', true);
 
     var modal = window.LuongsonMatchStatsModal;
     if (!modal) return;
 
-    modal.bindTriggers(root, '.luongson-match-status, .framer-iz7ZB.framer-3i8edo', function (trigger) {
-      var card = trigger.closest('[data-match-id], .luongson-match-card, .framer-1x0sw3m');
+    modal.bindTriggers($root.get(0), '.luongson-match-status, .framer-iz7ZB.framer-3i8edo', function (trigger) {
+      var card = $(trigger).closest('[data-match-id], .luongson-match-card, .framer-1x0sw3m').get(0);
       return card && card.__lsMatchStats ? card.__lsMatchStats : null;
     });
   }
 
   function initAll() {
-    document.querySelectorAll('.luongson-schedule').forEach(function (root) {
-      renderStaticMockRows(root);
-      initSchedule(root);
-      initMatchModal(root);
+    $('.luongson-schedule').each(function () {
+      var $root = $(this);
+      renderStaticMockRows($root);
+      initSchedule($root);
+      initMatchModal($root);
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAll);
-  } else {
-    initAll();
-  }
-})();
+  $(initAll);
+})(jQuery);

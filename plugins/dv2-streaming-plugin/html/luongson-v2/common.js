@@ -1,7 +1,7 @@
 /**
- * LuongSon V2 — Shared match statistics hover modal
+ * LuongSon V2 — Shared match statistics hover modal (jQuery)
  */
-(function () {
+(function ($) {
   'use strict';
 
   // Keys align with upstream match detail: stats.ft / stats.h1 (array [home, away]).
@@ -18,9 +18,9 @@
     { key: 'blockedShots', label: 'Sút bị chặn' },
   ];
 
-  var portal = null;
-  var bodyEl = null;
-  var tabs = null;
+  var $portal = null;
+  var $bodyEl = null;
+  var $tabs = null;
   var currentTrigger = null;
   var currentStats = null;
   var activeTab = 'ft';
@@ -145,7 +145,7 @@
     var tabStats = getStatsForTab(stats, activeTab);
     var html = '';
 
-    STAT_ROWS.forEach(function (row) {
+    $.each(STAT_ROWS, function (_, row) {
       var pair = getStatPair(getRowStat(tabStats, row));
       var bars = calcBarPct(pair.home, pair.away, row.isPercent);
 
@@ -163,52 +163,57 @@
   }
 
   function ensurePortal() {
-    if (portal) return portal;
+    if ($portal && $portal.length) return $portal;
 
-    portal = document.createElement('div');
-    portal.className = 'luongson-match-modal-portal';
-    portal.hidden = true;
-    portal.style.cssText =
-      'display:none;opacity:0;transform:scale(.96);transform-origin:top center;transition:opacity .15s ease,transform .15s cubic-bezier(.2,0,.2,1);';
-    portal.innerHTML =
-      '<div class="luongson-match-modal-portal__panel" role="dialog" aria-label="Thống kê trận đấu">' +
-      '<div class="luongson-match-modal-tabs">' +
-      tabHtml('ft', 'Toàn trận', true) +
-      tabHtml('h1', 'Hiệp 1', false) +
-      '</div>' +
-      '<div class="luongson-match-modal-body"></div>' +
-      '</div>';
-    document.body.appendChild(portal);
-
-    bodyEl = portal.querySelector('.luongson-match-modal-body');
-    tabs = portal.querySelectorAll('.luongson-match-modal-tab');
-
-    tabs.forEach(function (tab) {
-      tab.addEventListener('click', function (e) {
-        e.stopPropagation();
-        setActiveTab(tab.getAttribute('data-tab') || 'ft');
-      });
+    $portal = $('<div>', {
+      class: 'luongson-match-modal-portal',
+      hidden: true,
+    }).css({
+      display: 'none',
+      opacity: 0,
+      transform: 'scale(.96)',
+      'transform-origin': 'top center',
+      transition: 'opacity .15s ease,transform .15s cubic-bezier(.2,0,.2,1)',
     });
 
-    portal.addEventListener('mouseenter', function () {
+    $portal.html(
+      '<div class="luongson-match-modal-portal__panel" role="dialog" aria-label="Thống kê trận đấu">' +
+        '<div class="luongson-match-modal-tabs">' +
+        tabHtml('ft', 'Toàn trận', true) +
+        tabHtml('h1', 'Hiệp 1', false) +
+        '</div>' +
+        '<div class="luongson-match-modal-body"></div>' +
+        '</div>'
+    );
+    $('body').append($portal);
+
+    $bodyEl = $portal.find('.luongson-match-modal-body');
+    $tabs = $portal.find('.luongson-match-modal-tab');
+
+    $tabs.on('click', function (e) {
+      e.stopPropagation();
+      setActiveTab($(this).attr('data-tab') || 'ft');
+    });
+
+    $portal.on('mouseenter', function () {
       if (closeTimeout) {
         clearTimeout(closeTimeout);
         closeTimeout = null;
       }
     });
-    portal.addEventListener('mouseleave', hidePopover);
+    $portal.on('mouseleave', hidePopover);
 
     bindGlobalListeners();
-    return portal;
+    return $portal;
   }
 
   function setActiveTab(name) {
     activeTab = name === 'all' ? 'ft' : name || 'ft';
-    tabs.forEach(function (tab) {
-      tab.classList.toggle('is-active', tab.getAttribute('data-tab') === activeTab);
+    $tabs.each(function () {
+      $(this).toggleClass('is-active', $(this).attr('data-tab') === activeTab);
     });
-    if (bodyEl) bodyEl.innerHTML = renderRows(currentStats);
-    if (currentTrigger && portal && portal.style.display !== 'none') {
+    if ($bodyEl && $bodyEl.length) $bodyEl.html(renderRows(currentStats));
+    if (currentTrigger && $portal && $portal.css('display') !== 'none') {
       showPopover(currentTrigger);
     }
   }
@@ -216,7 +221,7 @@
   function updatePanel(stats) {
     ensurePortal();
     currentStats = stats || {};
-    if (bodyEl) bodyEl.innerHTML = renderRows(currentStats);
+    if ($bodyEl && $bodyEl.length) $bodyEl.html(renderRows(currentStats));
   }
 
   function showPopover(trigger) {
@@ -229,45 +234,42 @@
 
     currentTrigger = trigger;
     ensurePortal();
-    portal.hidden = false;
-    portal.style.display = 'block';
+    $portal.removeAttr('hidden').css('display', 'block');
 
     var rect = trigger.getBoundingClientRect();
-    var modalWidth = Math.min(384, window.innerWidth - 24);
-    portal.style.width = modalWidth + 'px';
-    portal.style.maxWidth = 'calc(100vw - 24px)';
-    var modalHeight = portal.offsetHeight || 440;
+    var modalWidth = Math.min(384, $(window).width() - 24);
+    $portal.css({
+      width: modalWidth + 'px',
+      maxWidth: 'calc(100vw - 24px)',
+    });
+    var modalHeight = $portal.outerHeight() || 440;
     var left = rect.left + rect.width / 2 - modalWidth / 2;
     if (left < 10) left = 10;
-    if (left + modalWidth > window.innerWidth - 10) {
-      left = window.innerWidth - modalWidth - 10;
+    if (left + modalWidth > $(window).width() - 10) {
+      left = $(window).width() - modalWidth - 10;
     }
 
     var top = rect.bottom + 4;
-    if (top + modalHeight > window.innerHeight - 10 && rect.top - modalHeight - 4 > 0) {
+    if (top + modalHeight > $(window).height() - 10 && rect.top - modalHeight - 4 > 0) {
       top = rect.top - modalHeight - 4;
     }
 
-    portal.style.left = left + 'px';
-    portal.style.top = top + 'px';
+    $portal.css({ left: left + 'px', top: top + 'px' });
 
     requestAnimationFrame(function () {
-      portal.style.opacity = '1';
-      portal.style.transform = 'scale(1)';
+      $portal.css({ opacity: 1, transform: 'scale(1)' });
     });
   }
 
   function hidePopover() {
-    if (!portal) return;
+    if (!$portal || !$portal.length) return;
 
     if (closeTimeout) clearTimeout(closeTimeout);
     closeTimeout = setTimeout(function () {
-      portal.style.opacity = '0';
-      portal.style.transform = 'scale(0.96)';
+      $portal.css({ opacity: 0, transform: 'scale(0.96)' });
       setTimeout(function () {
-        if (portal.style.opacity === '0') {
-          portal.style.display = 'none';
-          portal.hidden = true;
+        if (parseFloat($portal.css('opacity')) === 0) {
+          $portal.css('display', 'none').attr('hidden', 'hidden');
           currentTrigger = null;
         }
       }, 150);
@@ -278,24 +280,19 @@
     if (globalListenersBound) return;
     globalListenersBound = true;
 
-    window.addEventListener(
-      'scroll',
-      function () {
-        if (!portal || portal.style.display === 'none' || !currentTrigger) return;
-        var rect = currentTrigger.getBoundingClientRect();
-        if (rect.bottom < 0 || rect.top > window.innerHeight) {
-          portal.style.display = 'none';
-          portal.style.opacity = '0';
-          currentTrigger = null;
-        } else {
-          showPopover(currentTrigger);
-        }
-      },
-      { passive: true }
-    );
+    $(window).on('scroll.lsMatchModal', function () {
+      if (!$portal || $portal.css('display') === 'none' || !currentTrigger) return;
+      var rect = currentTrigger.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > $(window).height()) {
+        $portal.css({ display: 'none', opacity: 0 });
+        currentTrigger = null;
+      } else {
+        showPopover(currentTrigger);
+      }
+    });
 
-    window.addEventListener('resize', function () {
-      if (portal && portal.style.display !== 'none' && currentTrigger) {
+    $(window).on('resize.lsMatchModal', function () {
+      if ($portal && $portal.css('display') !== 'none' && currentTrigger) {
         showPopover(currentTrigger);
       }
     });
@@ -306,17 +303,21 @@
 
     ensurePortal();
 
-    root.querySelectorAll(selector).forEach(function (trigger) {
-      if (trigger.__lsStatsBound) return;
-      trigger.__lsStatsBound = true;
+    $(root)
+      .find(selector)
+      .each(function () {
+        var $trigger = $(this);
+        if ($trigger.data('lsStatsBound')) return;
+        $trigger.data('lsStatsBound', true);
 
-      trigger.addEventListener('mouseenter', function () {
-        var stats = typeof getStats === 'function' ? getStats(trigger) : null;
-        updatePanel(stats);
-        showPopover(trigger);
+        $trigger.on('mouseenter', function () {
+          var el = this;
+          var stats = typeof getStats === 'function' ? getStats(el) : null;
+          updatePanel(stats);
+          showPopover(el);
+        });
+        $trigger.on('mouseleave', hidePopover);
       });
-      trigger.addEventListener('mouseleave', hidePopover);
-    });
   }
 
   function setCardStats(cardEl, stats) {
@@ -334,12 +335,12 @@
     getStatsForTab: getStatsForTab,
     renderRows: renderRows,
   };
-})();
+})(jQuery);
 
 /**
- * LuongSon V2 — Fallback ảnh mặc định khi load lỗi
+ * LuongSon V2 — Fallback ảnh mặc định khi load lỗi (jQuery)
  */
-(function () {
+(function ($) {
   'use strict';
 
   var DEFAULT_IMG = null;
@@ -374,15 +375,15 @@
   }
 
   function applyFallback(img) {
-    if (!img || img.tagName !== 'IMG' || img.dataset.lsImgFallback === '1') return;
+    if (!img || img.tagName !== 'IMG' || $(img).data('lsImgFallback') === '1') return;
 
     var fallback = getDefaultImgUrl();
-    var currentSrc = img.getAttribute('src') || img.currentSrc || img.src || '';
+    var $img = $(img);
+    var currentSrc = $img.attr('src') || img.currentSrc || img.src || '';
 
     if (isDefaultImg(currentSrc) || currentSrc === fallback) return;
 
-    img.dataset.lsImgFallback = '1';
-    img.src = fallback;
+    $img.data('lsImgFallback', '1').attr('src', fallback);
   }
 
   function handleImgError(e) {
@@ -390,9 +391,10 @@
   }
 
   function patchBrokenImages(root) {
-    var scope = root || document;
-    scope.querySelectorAll('img').forEach(function (img) {
-      if (img.complete && img.naturalWidth === 0 && (img.getAttribute('src') || img.src)) {
+    var $scope = root ? $(root) : $(document);
+    $scope.find('img').each(function () {
+      var img = this;
+      if (img.complete && img.naturalWidth === 0 && ($(img).attr('src') || img.src)) {
         applyFallback(img);
       }
     });
@@ -401,6 +403,7 @@
   function init(root) {
     if (!initialized) {
       initialized = true;
+      // Capture phase needed so broken <img> error reaches document before bubble stop.
       document.addEventListener('error', handleImgError, true);
     }
 
@@ -413,11 +416,7 @@
     init: init,
   };
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () {
-      init();
-    });
-  } else {
+  $(function () {
     init();
-  }
-})();
+  });
+})(jQuery);
