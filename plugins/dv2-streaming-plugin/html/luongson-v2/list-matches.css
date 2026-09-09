@@ -170,9 +170,13 @@
   gap: 4px;
   padding: 3px 6px;
   border-radius: 100px;
-  background: var(--ls-live);
+  background: #9aa3af;
   cursor: pointer;
   white-space: nowrap;
+}
+
+.luongson-match-status[data-highlight="true"] {
+  background: var(--ls-live);
 }
 
 .luongson-match-status-dot {
@@ -182,6 +186,9 @@
   background: #fff;
   opacity: 0.68;
   flex: none;
+}
+
+.luongson-match-status[data-highlight="true"] .luongson-match-status-dot {
   animation: luongsonListMatchesPulse 1.4s ease-in-out infinite;
 }
 
@@ -254,14 +261,18 @@
 
 .luongson-match-team-name {
   width: 100%;
+  min-width: 0;
   text-align: center;
 }
 
 .luongson-match-team-name p {
+  margin: 0;
   font-size: 14px;
   font-weight: 700;
   text-align: center;
-  word-break: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .luongson-match-score-center {
@@ -348,7 +359,7 @@
   flex: none;
 }
 
-.luongson-match-commentator-trigger {
+.luongson-match-commentator-trigger,  .luongson-match-commentator-trigger[disabled]{
   display: flex;
   align-items: center;
   gap: 7px;
@@ -362,6 +373,7 @@
   cursor: pointer;
   font: inherit;
   margin: 0;
+  opacity: 1;
 }
 
 .luongson-match-commentator-trigger:hover,
@@ -511,6 +523,61 @@
   align-items: center;
   gap: 20px;
   width: 100%;
+}
+
+.luongson-list-matches__empty {
+  grid-column: 1 / -1;
+  padding: 28px 12px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.luongson-list-matches__footer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 20px 10px 0;
+}
+
+.luongson-list-matches__load-more {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 28px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  background: var(--ls-live, #e11d2e);
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.luongson-list-matches__load-more-icon {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  color: currentColor;
+}
+
+.luongson-list-matches__load-more:hover:not(:disabled) {
+  transform: scale(1.03);
+}
+
+.luongson-list-matches__load-more:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.luongson-list-matches__load-more[hidden] {
+  display: none !important;
 }
 
 .luongson-live-ad {

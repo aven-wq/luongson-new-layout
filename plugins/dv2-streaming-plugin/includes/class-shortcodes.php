@@ -124,8 +124,8 @@ class DV2_Shortcodes {
     /**
      * Shortcode: [danh_sach_featured_video count="3" layout="socolive" banner_zone_id="2724"]
      * Display featured streams
-     * 
-     * Available layouts: socolive, vebo, thapcam
+     *
+     * Available layouts: socolive, vebo, thapcam, luongson-v2
      */
     public function shortcode_home_featured_streams($atts) {
         $atts = shortcode_atts(array(
@@ -136,6 +136,16 @@ class DV2_Shortcodes {
         ), $atts);
 
         $atts['banner_zone_id'] = absint($atts['banner_zone_id']) ?: 2724;
+
+        $layout = sanitize_file_name((string) $atts['layout']);
+        if ($layout === 'luongson-v2') {
+            wp_enqueue_style(
+                'luongson-v2-stream-fonts',
+                'https://fonts.googleapis.com/css2?family=Anton+SC&family=Momo+Trust+Sans:wght@400;600;700;800&display=swap',
+                array(),
+                null
+            );
+        }
 
         $template_path = $this->get_template_path('home-featured-streams.block.php', $atts['layout']);
 

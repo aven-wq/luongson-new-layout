@@ -17121,113 +17121,541 @@ function showError(message) {
 (function(window, $, jQuery, Hls, Swiper) {
 /**
  * LuongSon Sport — Live matches list
- * Commentator dropdown + match-status hover modal
+ * Streams range API + load more + commentator dropdown + match-status hover modal
  */
 (function () {
   'use strict';
 
   var cfg = window.luongsonListMatches || {};
-  var IMG = cfg.imgUrl || '';
+  var pluginUrl =
+    (typeof window.DV2_STREAMING_PLUGIN_URL !== 'undefined' && window.DV2_STREAMING_PLUGIN_URL) ||
+    (window.dv2Streaming && window.dv2Streaming.pluginUrl) ||
+    '';
+  if (pluginUrl && pluginUrl.slice(-1) !== '/') pluginUrl += '/';
+
+  var IMG = pluginUrl
+    ? pluginUrl + 'html/luongson-v2/images/'
+    : cfg.imgUrl || 'images/';
+  var BET_LOGO = pluginUrl
+    ? pluginUrl + 'assets/images/luongson-v2/vic88.avif'
+    : cfg.betLogo || IMG + 'KB717wZbU63tSAHyTm9pLUqxM_b79bb177.png';
+  var LINK_BET =
+    typeof window.DV2_LINK_BET !== 'undefined' && window.DV2_LINK_BET
+      ? String(window.DV2_LINK_BET)
+      : '#';
+
+  // Server-side proxy keeps X-API-Key off the browser.
+  // Public: GET /api/dv2-streaming-plugin/streams-range
+  var PROXY_BASE =
+    typeof window.DV2_PROXY_API_BASE !== 'undefined' && window.DV2_PROXY_API_BASE
+      ? String(window.DV2_PROXY_API_BASE).replace(/\/+$/, '')
+      : '/api/dv2-streaming-plugin';
+  var STREAMS_RANGE_API = PROXY_BASE + '/streams-range';
+  var HOT_COMPETITIONS_API =
+    (window.DV2HotLeagues && window.DV2HotLeagues.DEFAULT_ENDPOINT) ||
+    'https://vsc-apidev.helizones.com/api/data/lives/competitions/hot';
+
+  var PAGE_SIZE = 33;
+  var STATUSES = '1,2'; // 1 not started, 2 live
+  var ADS_BEFORE_COUNT = 6;
+  var VN_TIMEZONE = 'Asia/Ho_Chi_Minh';
+
+  var LIVE_STATUSES = [
+    'first half',
+    'firsthalf',
+    'first-half',
+    'fh',
+    'half-time',
+    'half time',
+    'halftime',
+    'ht',
+    'second half',
+    'secondhalf',
+    'second-half',
+    'sh',
+    'extra time',
+    'extratime',
+    'et',
+    'overtime',
+    'overtime(deprecated)',
+    'ot',
+    'penalty',
+    'penalties',
+    'penalty shoot-out',
+    'penalty shootout',
+  ];
+
+  var state = {
+    page: 1,
+    totalPages: 1,
+    loading: false,
+    priorityCompetitions: '',
+    root: null,
+    grid: null,
+    ads: null,
+  };
 
   function img(file) {
     return IMG + file;
   }
 
-  /* ------------------------------------------------------------------------ */
-  /* Static mock cards (replace with API when ready)                          */
-  /* ------------------------------------------------------------------------ */
+  function escapeHtml(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
 
-  function buildMatchCardHtml() {
+  function getFallbackImg() {
+    if (window.LuongsonImageFallback && window.LuongsonImageFallback.getDefaultImgUrl) {
+      return window.LuongsonImageFallback.getDefaultImgUrl();
+    }
+    return pluginUrl ? pluginUrl + 'assets/images/default-img.png' : '../../assets/images/default-img.png';
+  }
+
+  function normalizeStatus(status) {
+    return String(status || '')
+      .toLowerCase()
+      .trim();
+  }
+
+  function isLiveStatus(status) {
+    return LIVE_STATUSES.indexOf(normalizeStatus(status)) !== -1;
+  }
+
+  function isNotStartedStatus(status) {
+    var s = normalizeStatus(status);
+    return s === 'not started' || s === 'ns' || s === '';
+  }
+
+  function getMatchId(match) {
+    return (match && (match.match_id || match.matchId || match.id || match.slug)) || '';
+  }
+
+  function getPreferredLink(match) {
+    var links = match && match.livestream && match.livestream.links;
+    if (window.DV2StreamLinks && window.DV2StreamLinks.getPreferredLink) {
+      return window.DV2StreamLinks.getPreferredLink(links);
+    }
+    if (!Array.isArray(links) || !links.length) return null;
+    var streaming = links.filter(function (l) {
+      return l && l.isStreaming !== false;
+    });
+    return (streaming.length ? streaming : links)[0] || null;
+  }
+
+  function getSortedLinks(match) {
+    var links = match && match.livestream && match.livestream.links;
+    if (window.DV2StreamLinks && window.DV2StreamLinks.sortForDetail) {
+      return window.DV2StreamLinks.sortForDetail(links);
+    }
+    return Array.isArray(links) ? links.slice() : [];
+  }
+
+  function getDetailUrl(match, link) {
+    var matchId = getMatchId(match);
+    if (!matchId) return '#';
+    if (window.DV2StreamLinks && window.DV2StreamLinks.getDetailUrl) {
+      return window.DV2StreamLinks.getDetailUrl(matchId, link || getPreferredLink(match), {
+        trailingSlash: true,
+      });
+    }
+    var liveId = link && link.liveId != null ? String(link.liveId) : '';
+    return liveId
+      ? '/streams/' + encodeURIComponent(matchId) + '/?liveId=' + encodeURIComponent(liveId)
+      : '/streams/' + encodeURIComponent(matchId) + '/';
+  }
+
+  function parseKickoffDate(kickoff) {
+    if (!kickoff) return null;
+    var str = String(kickoff).trim();
+    if (!str) return null;
+    if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(str) && !/[zZ]|[+-]\d{2}:\d{2}$/.test(str)) {
+      str += '+07:00';
+    }
+    var date = new Date(str);
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+
+  function getVnDateParts(date) {
+    if (!date) return null;
+    var formatter = new Intl.DateTimeFormat('en-GB', {
+      timeZone: VN_TIMEZONE,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
+    var parts = {};
+    var formatted = formatter.formatToParts(date);
+    var i;
+    for (i = 0; i < formatted.length; i++) {
+      if (formatted[i].type !== 'literal') parts[formatted[i].type] = formatted[i].value;
+    }
+    if (parts.hour === '24') parts.hour = '00';
+    return parts;
+  }
+
+  function formatKickoffParts(kickoff) {
+    var parts = getVnDateParts(parseKickoffDate(kickoff));
+    if (!parts) return { time: '--:--', date: '--.--' };
+    return {
+      time: parts.hour + ':' + parts.minute,
+      date: parts.day + '.' + parts.month,
+    };
+  }
+
+  function formatYmdInVn(date) {
+    var parts = getVnDateParts(date);
+    if (!parts) return '';
+    return parts.year + '-' + parts.month + '-' + parts.day;
+  }
+
+  function shiftVnDays(baseDate, dayDelta) {
+    var parts = getVnDateParts(baseDate);
+    if (!parts) return new Date(baseDate.getTime() + dayDelta * 86400000);
+    // Noon UTC+7 avoids DST edge cases when shifting calendar days.
+    var utcMs = Date.UTC(
+      Number(parts.year),
+      Number(parts.month) - 1,
+      Number(parts.day) + dayDelta,
+      5,
+      0,
+      0
+    );
+    return new Date(utcMs);
+  }
+
+  function getDateRange() {
+    var now = new Date();
+    return {
+      from: formatYmdInVn(shiftVnDays(now, -1)),
+      to: formatYmdInVn(shiftVnDays(now, 1)),
+    };
+  }
+
+  function formatStatusText(match) {
+    if (!match) return 'Chưa diễn ra';
+    var status = normalizeStatus(match.status);
+    var mins = match.currentMinutes;
+    var minsSuffix = mins != null && mins !== '' ? ' - ' + String(mins) + "'" : '';
+
+    if (isLiveStatus(status)) {
+      if (status === 'half-time' || status === 'halftime' || status === 'ht' || status === 'half time') {
+        return 'Giữa hiệp';
+      }
+      if (status === 'first half' || status === 'firsthalf' || status === 'first-half' || status === 'fh') {
+        return 'Hiệp 1' + minsSuffix;
+      }
+      if (status === 'second half' || status === 'secondhalf' || status === 'second-half' || status === 'sh') {
+        return 'Hiệp 2' + minsSuffix;
+      }
+      if (status === 'overtime' || status === 'overtime(deprecated)' || status === 'extra time' || status === 'extratime' || status === 'et' || status === 'ot') {
+        return 'Hiệp phụ' + minsSuffix;
+      }
+      if (status === 'penalty shoot-out' || status === 'penalty' || status === 'penalties' || status === 'penalty shootout') {
+        return 'Penalty';
+      }
+      if (mins != null && mins !== '') return String(mins) + "'";
+      return 'Trực tiếp';
+    }
+
+    if (isNotStartedStatus(status)) return 'Sắp diễn ra';
+    return match.status || 'Chưa diễn ra';
+  }
+
+  function formatScore(match) {
+    if (!match || isNotStartedStatus(match.status)) return 'VS';
+    var ft = match.score && match.score.fulltime;
+    if (!ft) return 'VS';
+    return (ft.home != null ? ft.home : 0) + ' - ' + (ft.away != null ? ft.away : 0);
+  }
+
+  function formatOddsVal(value) {
+    if (value == null || value === '') return '-';
+    return String(value);
+  }
+
+  function getStatPairText(match, key) {
+    var ft = match && match.stats && match.stats.ft;
+    if (!ft || ft[key] == null) return '0-0';
+    var val = ft[key];
+    if (Array.isArray(val)) {
+      return (val[0] != null ? val[0] : 0) + '-' + (val[1] != null ? val[1] : 0);
+    }
+    if (typeof val === 'object') {
+      return (val.home != null ? val.home : 0) + '-' + (val.away != null ? val.away : 0);
+    }
+    return '0-0';
+  }
+
+  function flattenMatchesByDate(matchesByDate) {
+    var all = [];
+    if (!matchesByDate || typeof matchesByDate !== 'object') return all;
+    Object.keys(matchesByDate)
+      .sort()
+      .forEach(function (dateKey) {
+        var day = matchesByDate[dateKey];
+        if (Array.isArray(day)) all = all.concat(day);
+      });
+    return all;
+  }
+
+  function getAdminPriorityCompetitions() {
+    var raw = window.DV2_STREAMING_PRIORITY_COMPETITION_IDS;
+    if (!raw) return '';
+    return String(raw)
+      .split(',')
+      .map(function (id) {
+        return id.trim();
+      })
+      .filter(Boolean)
+      .join(',');
+  }
+
+  function resolvePriorityCompetitions() {
+    var admin = getAdminPriorityCompetitions();
+    if (admin) return Promise.resolve(admin);
+
+    return fetch(HOT_COMPETITIONS_API, { method: 'GET' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        var list = (data && data.result) || [];
+        return list
+          .map(function (item) {
+            return item && item.id ? String(item.id).trim() : '';
+          })
+          .filter(Boolean)
+          .join(',');
+      })
+      .catch(function () {
+        return '';
+      });
+  }
+
+  function buildMatchCardHtml(match) {
+    var league = (match && match.league) || {};
+    var home = (match && match.teams && match.teams.home) || {};
+    var away = (match && match.teams && match.teams.away) || {};
+    var hdp = (match && match.hdp) || {};
+    var preferred = getPreferredLink(match);
+    var links = getSortedLinks(match);
+    var hasDropdown = links.length > 1;
+    var kick = formatKickoffParts(match && match.kickoff);
+    var live = isLiveStatus(match && match.status);
+    var statusText = formatStatusText(match);
+    var detailUrl = getDetailUrl(match, preferred);
+    var blvName = preferred && preferred.commentator ? preferred.commentator : 'Nhà Đài';
+    var blvAvatar = (preferred && preferred.avatar) || getFallbackImg();
+    var matchId = getMatchId(match);
+    var corner = getStatPairText(match, 'corner');
+    var yellow = getStatPairText(match, 'yellowCard');
+    var red = getStatPairText(match, 'redCard');
+
     return (
-      '<div class="luongson-match-card" data-border="true">' +
+      '<div class="luongson-match-card" data-border="true"' +
+      (matchId ? ' data-match-id="' + escapeHtml(matchId) + '"' : '') +
+      '>' +
       '<div class="luongson-match-header">' +
-      '<div class="luongson-match-league"><p>Premier League</p></div>' +
+      '<div class="luongson-match-league"><p>' +
+      escapeHtml(league.name || '—') +
+      '</p></div>' +
       '<div class="luongson-match-status-container">' +
-      '<div class="luongson-match-status" data-highlight="true">' +
+      '<div class="luongson-match-status"' +
+      (live ? ' data-highlight="true"' : '') +
+      '>' +
       '<span class="luongson-match-status-dot" aria-hidden="true"></span>' +
-      '<span class="luongson-match-status-text">Hiệp 2 - 72’</span>' +
+      '<span class="luongson-match-status-text">' +
+      escapeHtml(statusText) +
+      '</span>' +
       '</div></div>' +
       '<div class="luongson-match-time-box">' +
-      '<span class="luongson-match-time">15:30</span>' +
-      '<span class="luongson-match-date">15.08</span>' +
+      '<span class="luongson-match-time">' +
+      escapeHtml(kick.time) +
+      '</span>' +
+      '<span class="luongson-match-date">' +
+      escapeHtml(kick.date) +
+      '</span>' +
       '</div></div>' +
-      '<a class="luongson-match-body" href="#">' +
+      '<a class="luongson-match-body" href="' +
+      escapeHtml(detailUrl) +
+      '">' +
       '<div class="luongson-match-team">' +
       '<div class="luongson-match-team-logo">' +
-      '<img alt="" decoding="async" height="128" src="' +
-      img('Dq03h2PCDoRXrVQvPC7ywAo9R0_7881bb5a.png') +
+      '<img alt="' +
+      escapeHtml(home.name || '') +
+      '" decoding="async" height="128" src="' +
+      escapeHtml(home.logo || getFallbackImg()) +
       '" width="128" />' +
-      '</div><div class="luongson-match-team-name"><p>Burnley</p></div></div>' +
+      '</div><div class="luongson-match-team-name"><p>' +
+      escapeHtml(home.name || '—') +
+      '</p></div></div>' +
       '<div class="luongson-match-score-center">' +
-      '<div class="luongson-match-score-box"><p class="luongson-match-score-text">2 - 1</p></div>' +
+      '<div class="luongson-match-score-box"><p class="luongson-match-score-text">' +
+      escapeHtml(formatScore(match)) +
+      '</p></div>' +
       '<div class="luongson-match-stats">' +
       '<div class="luongson-match-stat-item">' +
       '<svg class="luongson-match-stat-flag" role="presentation" viewBox="0 0 24 24" aria-hidden="true">' +
       '<path d="M5 21V4m0 0l13 4.5L5 13V4z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />' +
-      '</svg><span class="luongson-match-stat-text">6-8</span></div>' +
+      '</svg><span class="luongson-match-stat-text">' +
+      escapeHtml(corner) +
+      '</span></div>' +
       '<div class="luongson-match-stat-item">' +
       '<span class="luongson-match-stat-card is-yellow" aria-hidden="true"></span>' +
-      '<span class="luongson-match-stat-text">2-2</span></div>' +
+      '<span class="luongson-match-stat-text">' +
+      escapeHtml(yellow) +
+      '</span></div>' +
       '<div class="luongson-match-stat-item">' +
       '<span class="luongson-match-stat-card is-red" aria-hidden="true"></span>' +
-      '<span class="luongson-match-stat-text">2-0</span></div>' +
+      '<span class="luongson-match-stat-text">' +
+      escapeHtml(red) +
+      '</span></div>' +
       '</div></div>' +
       '<div class="luongson-match-team">' +
       '<div class="luongson-match-team-logo">' +
-      '<img alt="" decoding="async" height="128" src="' +
-      img('U86AWvixUpZ9FQv4FEwV6sRB5Y_59f68630.png') +
+      '<img alt="' +
+      escapeHtml(away.name || '') +
+      '" decoding="async" height="128" src="' +
+      escapeHtml(away.logo || getFallbackImg()) +
       '" width="128" />' +
-      '</div><div class="luongson-match-team-name"><p>Wolverhampton</p></div></div>' +
+      '</div><div class="luongson-match-team-name"><p>' +
+      escapeHtml(away.name || '—') +
+      '</p></div></div>' +
       '</a>' +
       '<div class="luongson-match-footer">' +
       '<div class="luongson-match-commentator-container">' +
-      '<div class="luongson-match-commentator" data-commentator="Lưu Bang">' +
-      '<button type="button" class="luongson-match-commentator-trigger" aria-haspopup="listbox" aria-expanded="false">' +
+      '<div class="luongson-match-commentator" data-commentator="' +
+      escapeHtml(blvName) +
+      '">' +
+      '<button type="button" class="luongson-match-commentator-trigger"' +
+      (hasDropdown ? ' aria-haspopup="listbox" aria-expanded="false"' : ' disabled') +
+      '>' +
       '<span class="luongson-match-commentator-avatar" data-border="true">' +
       '<img alt="" decoding="async" height="472" src="' +
-      img('luu-bang.png') +
+      escapeHtml(blvAvatar) +
       '" width="400" />' +
-      '</span><span class="luongson-match-commentator-name">Lưu Bang</span>' +
+      '</span><span class="luongson-match-commentator-name">' +
+      escapeHtml(blvName) +
+      '</span>' +
       '<svg class="luongson-match-commentator-chevron" role="presentation" viewBox="0 0 24 24" aria-hidden="true">' +
       '<path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />' +
-      '</svg></button></div></div>' +
+      '</svg>' +
+      '</button></div></div>' +
       '<div class="luongson-match-odds-wrapper">' +
       '<div class="luongson-match-odds-box">' +
       '<div class="luongson-match-odds-type"><span>HDP FT</span></div>' +
       '<div class="luongson-match-odds-values">' +
-      '<span class="luongson-match-odds-val is-home">0.97</span>' +
-      '<span class="luongson-match-odds-val">2.5</span>' +
-      '<span class="luongson-match-odds-val is-away">0.83</span>' +
+      '<span class="luongson-match-odds-val is-home">' +
+      escapeHtml(formatOddsVal(hdp.home)) +
+      '</span>' +
+      '<span class="luongson-match-odds-val">' +
+      escapeHtml(formatOddsVal(hdp.rate)) +
+      '</span>' +
+      '<span class="luongson-match-odds-val is-away">' +
+      escapeHtml(formatOddsVal(hdp.away)) +
+      '</span>' +
       '</div></div>' +
-      '<a class="luongson-match-bet-btn" href="#" data-border="true">' +
+      '<a class="luongson-match-bet-btn" href="' +
+      escapeHtml(LINK_BET) +
+      '" target="_blank" rel="nofollow" data-border="true">' +
       '<img class="luongson-match-bet-logo" alt="" decoding="async" height="68" loading="lazy" src="' +
-      img('KB717wZbU63tSAHyTm9pLUqxM_b79bb177.png') +
+      escapeHtml(BET_LOGO) +
       '" width="280" />' +
       '<span class="luongson-match-bet-text">cược</span></a>' +
       '</div></div></div>'
     );
   }
 
-  function renderStaticMockCards(root) {
-    var grid = root.querySelector('.luongson-live-grid');
-    var ads = grid && grid.querySelector('.luongson-live-ads');
-    if (!grid || !ads || grid.dataset.staticRendered) return;
+  function clearMatchCards(grid, ads) {
+    if (!grid) return;
+    Array.prototype.slice.call(grid.children).forEach(function (child) {
+      if (child !== ads && child.classList && child.classList.contains('luongson-match-card')) {
+        child.remove();
+      }
+    });
+  }
 
-    grid.dataset.staticRendered = '1';
-    var cardHtml = buildMatchCardHtml();
-    var i;
+  function attachMatchData(cardEl, match) {
+    if (!cardEl || !match) return;
+    cardEl.__lsMatch = match;
+    cardEl.__lsMatchStats = match.stats || null;
+    if (window.LuongsonMatchStatsModal && window.LuongsonMatchStatsModal.setCardStats) {
+      window.LuongsonMatchStatsModal.setCardStats(cardEl, match.stats || null);
+    }
+  }
 
-    for (i = 0; i < 6; i++) {
-      ads.insertAdjacentHTML('beforebegin', cardHtml);
+  function insertCards(matches, isFirstPage) {
+    var grid = state.grid;
+    var ads = state.ads;
+    if (!grid || !ads || !matches.length) return;
+
+    var htmlParts = matches.map(buildMatchCardHtml);
+    var created = [];
+
+    if (isFirstPage) {
+      clearMatchCards(grid, ads);
+      var beforeCount = Math.min(ADS_BEFORE_COUNT, matches.length);
+      var i;
+      var el;
+
+      for (i = 0; i < beforeCount; i++) {
+        ads.insertAdjacentHTML('beforebegin', htmlParts[i]);
+        el = ads.previousElementSibling;
+        attachMatchData(el, matches[i]);
+        created.push(el);
+      }
+
+      var insertAfter = ads;
+      for (i = beforeCount; i < matches.length; i++) {
+        insertAfter.insertAdjacentHTML('afterend', htmlParts[i]);
+        insertAfter = insertAfter.nextElementSibling;
+        attachMatchData(insertAfter, matches[i]);
+        created.push(insertAfter);
+      }
+    } else {
+      htmlParts.forEach(function (html, index) {
+        grid.insertAdjacentHTML('beforeend', html);
+        var card = grid.lastElementChild;
+        attachMatchData(card, matches[index]);
+        created.push(card);
+      });
     }
-    for (i = 0; i < 6; i++) {
-      ads.insertAdjacentHTML('afterend', cardHtml);
-    }
+
+    return created;
   }
 
   /* ------------------------------------------------------------------------ */
   /* Commentator dropdown                                                     */
   /* ------------------------------------------------------------------------ */
+
+  function optionHtml(name, avatar, liveId) {
+    return (
+      '<button type="button" class="luongson-commentator-option" role="option" data-commentator="' +
+      escapeHtml(name) +
+      '" data-avatar="' +
+      escapeHtml(avatar || '') +
+      '" data-live-id="' +
+      escapeHtml(liveId != null ? String(liveId) : '') +
+      '">' +
+      '<span class="luongson-commentator-option__avatar">' +
+      '<img alt="" decoding="async" src="' +
+      escapeHtml(avatar || getFallbackImg()) +
+      '" />' +
+      '</span>' +
+      '<span class="luongson-commentator-option__name">' +
+      escapeHtml(name) +
+      '</span>' +
+      '</button>'
+    );
+  }
 
   function initCommentatorDropdown(root) {
     var portal = document.querySelector('.luongson-commentator-portal');
@@ -17237,43 +17665,38 @@ function showError(message) {
       portal.hidden = true;
       portal.style.cssText =
         'display:none;opacity:0;transform:translateY(-4px) scale(0.98);transition:opacity .15s ease,transform .15s cubic-bezier(0,.8,.2,1);transform-origin:top left;';
-      portal.innerHTML =
-        '<div class="luongson-commentator-portal__panel" data-border="true" role="listbox">' +
-        optionHtml('Lưu Bang', 'luu-bang.png', '45.8% 41%') +
-        optionHtml('Gia Cát Lượng', 'gia-cat-luong.png', '47.6% 11.9%') +
-        optionHtml('Shelby', 'shelby.jpg', '47.3% 26.6%') +
-        '</div>';
+      portal.innerHTML = '<div class="luongson-commentator-portal__panel" data-border="true" role="listbox"></div>';
       document.body.appendChild(portal);
     }
 
-    function optionHtml(name, file, pos) {
-      return (
-        '<button type="button" class="luongson-commentator-option" role="option" data-commentator="' +
-        name +
-        '" data-avatar="' +
-        img(file) +
-        '">' +
-        '<span class="luongson-commentator-option__avatar">' +
-        '<img alt="" decoding="async" src="' +
-        img(file) +
-        '" style="object-position:' +
-        pos +
-        '" />' +
-        '</span>' +
-        '<span class="luongson-commentator-option__name">' +
-        name +
-        '</span>' +
-        '</button>'
-      );
-    }
-
+    var panel = portal.querySelector('.luongson-commentator-portal__panel');
     var activeTrigger = null;
+
+    function fillOptions(match) {
+      var links = getSortedLinks(match);
+      if (!links.length) {
+        panel.innerHTML = optionHtml('Nhà Đài', getFallbackImg());
+        return;
+      }
+      panel.innerHTML = links
+        .map(function (link, index) {
+          var name =
+            window.DV2StreamLinks && window.DV2StreamLinks.getBlvName
+              ? window.DV2StreamLinks.getBlvName(link, index)
+              : link.commentator || 'Link ' + (index + 1);
+          return optionHtml(name, link.avatar || getFallbackImg(), link.liveId);
+        })
+        .join('');
+    }
 
     function openDropdown(trigger) {
       if (activeTrigger === trigger && portal.style.display !== 'none') {
         closeDropdown();
         return;
       }
+
+      var card = trigger.closest('.luongson-match-card');
+      fillOptions(card && card.__lsMatch);
 
       activeTrigger = trigger;
       trigger.setAttribute('aria-expanded', 'true');
@@ -17314,68 +17737,108 @@ function showError(message) {
       }, 150);
     }
 
-    portal.querySelectorAll('.luongson-commentator-option').forEach(function (opt) {
-      opt.addEventListener('click', function (e) {
+    if (!portal.__lsPortalBound) {
+      portal.__lsPortalBound = true;
+
+      portal.addEventListener('click', function (e) {
+        var opt = e.target.closest('.luongson-commentator-option');
+        if (!opt || !activeTrigger) return;
+        e.preventDefault();
         e.stopPropagation();
-        if (!activeTrigger) return;
 
+        var card = activeTrigger.closest('.luongson-match-card');
+        var match = card && card.__lsMatch;
+        if (!match) {
+          closeDropdown();
+          return;
+        }
+
+        var links = getSortedLinks(match);
+        var liveId = opt.getAttribute('data-live-id');
         var name = opt.getAttribute('data-commentator');
-        var avatar = opt.getAttribute('data-avatar');
-        var nameEl = activeTrigger.querySelector('.luongson-match-commentator-name');
-        var imgEl = activeTrigger.querySelector('.luongson-match-commentator-avatar img');
-        var wrap = activeTrigger.closest('.luongson-match-commentator');
+        var selected = null;
+        var i;
 
-        if (nameEl) nameEl.textContent = name;
-        if (imgEl) imgEl.src = avatar;
-        if (wrap) wrap.setAttribute('data-commentator', name);
+        if (liveId) {
+          for (i = 0; i < links.length; i++) {
+            if (String(links[i].liveId) === String(liveId)) {
+              selected = links[i];
+              break;
+            }
+          }
+        }
 
-        closeDropdown();
+        if (!selected && name) {
+          for (i = 0; i < links.length; i++) {
+            var linkName =
+              window.DV2StreamLinks && window.DV2StreamLinks.getBlvName
+                ? window.DV2StreamLinks.getBlvName(links[i], i)
+                : links[i].commentator || '';
+            if (linkName === name) {
+              selected = links[i];
+              break;
+            }
+          }
+        }
+
+        if (!selected && links.length) selected = links[0];
+
+        if (
+          selected &&
+          window.DV2StreamLinks &&
+          window.DV2StreamLinks.navigateForLink &&
+          window.DV2StreamLinks.navigateForLink(selected)
+        ) {
+          return;
+        }
+
+        window.location.href = getDetailUrl(match, selected);
       });
-    });
+
+      document.addEventListener('click', function (e) {
+        if (
+          portal.style.display !== 'none' &&
+          !portal.contains(e.target) &&
+          (!activeTrigger || !activeTrigger.contains(e.target))
+        ) {
+          closeDropdown();
+        }
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && portal.style.display !== 'none') closeDropdown();
+      });
+
+      window.addEventListener(
+        'scroll',
+        function () {
+          if (portal.style.display === 'none' || !activeTrigger) return;
+          var rect = activeTrigger.getBoundingClientRect();
+          if (rect.bottom < 0 || rect.top > window.innerHeight) {
+            portal.style.display = 'none';
+            portal.style.opacity = '0';
+            activeTrigger.setAttribute('aria-expanded', 'false');
+            activeTrigger = null;
+          } else {
+            openDropdown(activeTrigger);
+          }
+        },
+        { passive: true }
+      );
+
+      window.addEventListener('resize', function () {
+        if (portal.style.display !== 'none' && activeTrigger) openDropdown(activeTrigger);
+      });
+    }
 
     root.querySelectorAll('.luongson-match-commentator-trigger').forEach(function (btn) {
-      if (btn.__lsBound) return;
+      if (btn.__lsBound || btn.disabled) return;
       btn.__lsBound = true;
       btn.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
         openDropdown(btn);
       });
-    });
-
-    document.addEventListener('click', function (e) {
-      if (
-        portal.style.display !== 'none' &&
-        !portal.contains(e.target) &&
-        (!activeTrigger || !activeTrigger.contains(e.target))
-      ) {
-        closeDropdown();
-      }
-    });
-
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && portal.style.display !== 'none') closeDropdown();
-    });
-
-    window.addEventListener(
-      'scroll',
-      function () {
-        if (portal.style.display === 'none' || !activeTrigger) return;
-        var rect = activeTrigger.getBoundingClientRect();
-        if (rect.bottom < 0 || rect.top > window.innerHeight) {
-          portal.style.display = 'none';
-          portal.style.opacity = '0';
-          activeTrigger.setAttribute('aria-expanded', 'false');
-          activeTrigger = null;
-        } else {
-          openDropdown(activeTrigger);
-        }
-      },
-      { passive: true }
-    );
-
-    window.addEventListener('resize', function () {
-      if (portal.style.display !== 'none' && activeTrigger) openDropdown(activeTrigger);
     });
   }
 
@@ -17393,12 +17856,163 @@ function showError(message) {
     });
   }
 
+  /* ------------------------------------------------------------------------ */
+  /* Load more                                                                */
+  /* ------------------------------------------------------------------------ */
+
+  var LOAD_MORE_CHEVRON =
+    '<svg class="luongson-list-matches__load-more-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+    '<path fill-rule="evenodd" clip-rule="evenodd" d="M4.29289 8.29289C4.68342 7.90237 5.31658 7.90237 5.70711 8.29289L12 14.5858L18.2929 8.29289C18.6834 7.90237 19.3166 7.90237 19.7071 8.29289C20.0976 8.68342 20.0976 9.31658 19.7071 9.70711L12.7071 16.7071C12.3166 17.0976 11.6834 17.0976 11.2929 16.7071L4.29289 9.70711C3.90237 9.31658 3.90237 8.68342 4.29289 8.29289Z" fill="currentColor" />' +
+    '</svg>';
+
+  function setLoadMoreLabel(btn, loading) {
+    if (!btn) return;
+    btn.innerHTML =
+      (loading ? 'Đang tải...' : 'Xem thêm') + (loading ? '' : LOAD_MORE_CHEVRON);
+  }
+
+  function ensureLoadMore(root) {
+    var footer = root.querySelector('.luongson-list-matches__footer');
+    if (!footer) {
+      footer = document.createElement('div');
+      footer.className = 'luongson-list-matches__footer';
+      footer.innerHTML =
+        '<button type="button" class="luongson-list-matches__load-more" hidden>Xem thêm' +
+        LOAD_MORE_CHEVRON +
+        '</button>';
+      root.appendChild(footer);
+    }
+    var btn = footer.querySelector('.luongson-list-matches__load-more');
+    if (btn && !btn.querySelector('.luongson-list-matches__load-more-icon')) {
+      setLoadMoreLabel(btn, false);
+    }
+    if (btn && !btn.__lsBound) {
+      btn.__lsBound = true;
+      btn.addEventListener('click', function () {
+        if (state.loading) return;
+        if (state.page >= state.totalPages) return;
+        loadPage(state.page + 1, false);
+      });
+    }
+    return btn;
+  }
+
+  function updateLoadMoreVisibility() {
+    var btn = state.root && ensureLoadMore(state.root);
+    if (!btn) return;
+    var hasMore = state.page < state.totalPages;
+    btn.hidden = !hasMore;
+    btn.disabled = state.loading;
+    setLoadMoreLabel(btn, state.loading);
+  }
+
+  function afterRender() {
+    if (!state.root) return;
+    initCommentatorDropdown(state.root);
+    initMatchModal(state.root);
+    if (window.LuongsonImageFallback && window.LuongsonImageFallback.init) {
+      window.LuongsonImageFallback.init(state.root);
+    }
+    updateLoadMoreVisibility();
+  }
+
+  function showGridMessage(message) {
+    var grid = state.grid;
+    var ads = state.ads;
+    if (!grid || !ads) return;
+    clearMatchCards(grid, ads);
+    var existing = grid.querySelector('.luongson-list-matches__empty');
+    if (existing) existing.remove();
+    var el = document.createElement('div');
+    el.className = 'luongson-list-matches__empty';
+    el.textContent = message;
+    ads.insertAdjacentElement('beforebegin', el);
+  }
+
+  function clearGridMessage() {
+    if (!state.grid) return;
+    var existing = state.grid.querySelector('.luongson-list-matches__empty');
+    if (existing) existing.remove();
+  }
+
+  function fetchStreamsPage(page) {
+    var range = getDateRange();
+    var params = new URLSearchParams();
+    params.set('from', range.from);
+    params.set('to', range.to);
+    params.set('statuses', STATUSES);
+    params.set('pageSize', String(PAGE_SIZE));
+    params.set('page', String(page));
+    if (state.priorityCompetitions) {
+      params.set('priorityCompetitions', state.priorityCompetitions);
+    }
+
+    return fetch(STREAMS_RANGE_API + '?' + params.toString(), { method: 'GET' }).then(function (res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    });
+  }
+
+  function loadPage(page, isFirstPage) {
+    if (state.loading) return;
+    state.loading = true;
+    updateLoadMoreVisibility();
+
+    if (isFirstPage) {
+      showGridMessage('Đang tải trận đấu...');
+    }
+
+    fetchStreamsPage(page)
+      .then(function (res) {
+        if (!res || res.status !== 'success') {
+          throw new Error('Invalid response');
+        }
+
+        var matches = flattenMatchesByDate(res.matches_by_date);
+        var pagination = res.pagination || {};
+        state.page = Number(pagination.page) || page;
+        state.totalPages = Number(pagination.totalPages) || 1;
+
+        clearGridMessage();
+
+        if (!matches.length && isFirstPage) {
+          showGridMessage('Hiện tại không có trận đấu nào.');
+          return;
+        }
+
+        insertCards(matches, isFirstPage);
+        afterRender();
+      })
+      .catch(function (err) {
+        console.error('[LuongSon list-matches]', err);
+        if (isFirstPage) {
+          showGridMessage('Không thể tải danh sách trận đấu.');
+        }
+      })
+      .finally(function () {
+        state.loading = false;
+        updateLoadMoreVisibility();
+      });
+  }
+
   function initAll() {
     var root = document.querySelector('.luongson-list-matches');
     if (!root) return;
-    renderStaticMockCards(root);
-    initCommentatorDropdown(root);
-    initMatchModal(root);
+
+    var grid = root.querySelector('.luongson-live-grid');
+    var ads = grid && grid.querySelector('.luongson-live-ads');
+    if (!grid || !ads) return;
+
+    state.root = root;
+    state.grid = grid;
+    state.ads = ads;
+
+    ensureLoadMore(root);
+
+    resolvePriorityCompetitions().then(function (priority) {
+      state.priorityCompetitions = priority || '';
+      loadPage(1, true);
+    });
   }
 
   if (document.readyState === 'loading') {
