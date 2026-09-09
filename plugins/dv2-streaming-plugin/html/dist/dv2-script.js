@@ -16487,25 +16487,18 @@ function showError(message) {
 (function () {
   'use strict';
 
+  // Keys align with upstream match detail: stats.ft / stats.h1 (array [home, away]).
   var STAT_ROWS = [
-    { key: 'possession', label: 'TL kiểm soát bóng', isPercent: true },
+    { key: 'ballPossession', label: 'TL kiểm soát bóng', isPercent: true, aliases: ['possession'] },
+    { key: 'attacks', label: 'Tấn công' },
+    { key: 'dangerousAttack', label: 'Tấn công nguy hiểm' },
     { key: 'corner', label: 'Phạt góc' },
     { key: 'yellowCard', label: 'Thẻ vàng' },
     { key: 'redCard', label: 'Thẻ đỏ' },
     { key: 'shots', label: 'Sút bóng' },
     { key: 'shotsOnTarget', label: 'Sút cầu môn' },
     { key: 'shotsOffTarget', label: 'Sút ngoài cầu môn' },
-    { key: 'offside', label: 'Việt vị' },
-    { key: 'pass', label: 'Chuyền bóng' },
-    { key: 'passSuccess', label: 'Chuyền bóng thành công' },
-    { key: 'keyPasses', label: 'Chuyền bóng quyết định' },
-    { key: 'longPass', label: 'Chuyền bóng dài' },
-    { key: 'longPassSuccess', label: 'Chuyền bóng dài thành công' },
-    { key: 'save', label: 'Cản phá' },
-    { key: 'intercept', label: 'Cắt bóng' },
-    { key: 'freeKick', label: 'Đá phạt' },
-    { key: 'tackles', label: 'Tắc bóng' },
-    { key: 'clearances', label: 'Phá bóng' },
+    { key: 'blockedShots', label: 'Sút bị chặn' },
   ];
 
   var portal = null;
@@ -16513,7 +16506,7 @@ function showError(message) {
   var tabs = null;
   var currentTrigger = null;
   var currentStats = null;
-  var activeTab = 'all';
+  var activeTab = 'ft';
   var closeTimeout = null;
   var globalListenersBound = false;
 
@@ -16522,10 +16515,34 @@ function showError(message) {
     return Number.isFinite(num) ? num : 0;
   }
 
-  function getStatValue(stat, side) {
-    if (!stat) return 0;
-    if (typeof stat === 'object') return toNumber(stat[side]);
-    return 0;
+  /** Resolve a period stat: [home, away] | {home,away} | legacy object */
+  function getStatPair(stat) {
+    if (stat == null) return { home: 0, away: 0 };
+
+    if (Array.isArray(stat)) {
+      return { home: toNumber(stat[0]), away: toNumber(stat[1]) };
+    }
+
+    if (typeof stat === 'object') {
+      return {
+        home: toNumber(stat.home != null ? stat.home : stat[0]),
+        away: toNumber(stat.away != null ? stat.away : stat[1]),
+      };
+    }
+
+    return { home: 0, away: 0 };
+  }
+
+  function getRowStat(tabStats, row) {
+    if (!tabStats || !row) return null;
+    if (tabStats[row.key] != null) return tabStats[row.key];
+
+    var aliases = row.aliases || [];
+    var i;
+    for (i = 0; i < aliases.length; i++) {
+      if (tabStats[aliases[i]] != null) return tabStats[aliases[i]];
+    }
+    return null;
   }
 
   function formatValue(value, isPercent) {
@@ -16549,14 +16566,23 @@ function showError(message) {
     };
   }
 
+  /**
+   * Upstream: stats.ft (toàn trận) + stats.h1 (hiệp 1).
+   * Legacy: stats.all / stats.h2 still supported if present.
+   */
   function getStatsForTab(stats, tab) {
     if (!stats || typeof stats !== 'object') return {};
 
     if (tab === 'h1' && stats.h1) return stats.h1;
     if (tab === 'h2' && stats.h2) return stats.h2;
-    if (tab === 'all' && stats.all) return stats.all;
+    if ((tab === 'ft' || tab === 'all') && (stats.ft || stats.all)) {
+      return stats.ft || stats.all;
+    }
 
-    return stats;
+    // Flat legacy payload (no period keys) — treat as full match.
+    if (!stats.ft && !stats.h1 && !stats.h2 && !stats.all) return stats;
+
+    return {};
   }
 
   function tabHtml(id, label, active) {
@@ -16603,16 +16629,14 @@ function showError(message) {
     var html = '';
 
     STAT_ROWS.forEach(function (row) {
-      var stat = tabStats[row.key];
-      var home = getStatValue(stat, 'home');
-      var away = getStatValue(stat, 'away');
-      var bars = calcBarPct(home, away, row.isPercent);
+      var pair = getStatPair(getRowStat(tabStats, row));
+      var bars = calcBarPct(pair.home, pair.away, row.isPercent);
 
       html += rowHtml(
         row.key,
         row.label,
-        formatValue(home, row.isPercent),
-        formatValue(away, row.isPercent),
+        formatValue(pair.home, row.isPercent),
+        formatValue(pair.away, row.isPercent),
         bars.left,
         bars.right
       );
@@ -16632,9 +16656,8 @@ function showError(message) {
     portal.innerHTML =
       '<div class="luongson-match-modal-portal__panel" role="dialog" aria-label="Thống kê trận đấu">' +
       '<div class="luongson-match-modal-tabs">' +
-      tabHtml('all', 'Tất cả', true) +
+      tabHtml('ft', 'Toàn trận', true) +
       tabHtml('h1', 'Hiệp 1', false) +
-      tabHtml('h2', 'Hiệp 2', false) +
       '</div>' +
       '<div class="luongson-match-modal-body"></div>' +
       '</div>';
@@ -16646,7 +16669,7 @@ function showError(message) {
     tabs.forEach(function (tab) {
       tab.addEventListener('click', function (e) {
         e.stopPropagation();
-        setActiveTab(tab.getAttribute('data-tab') || 'all');
+        setActiveTab(tab.getAttribute('data-tab') || 'ft');
       });
     });
 
@@ -16663,7 +16686,7 @@ function showError(message) {
   }
 
   function setActiveTab(name) {
-    activeTab = name || 'all';
+    activeTab = name === 'all' ? 'ft' : name || 'ft';
     tabs.forEach(function (tab) {
       tab.classList.toggle('is-active', tab.getAttribute('data-tab') === activeTab);
     });
@@ -17632,11 +17655,13 @@ function showError(message) {
   var IMG = pluginUrl
     ? pluginUrl + 'html/luongson-v2/images/'
     : (cfg.imgUrl || 'images/');
-  var API_BASE = (
-    typeof window.BASE_API_URL !== 'undefined' && window.BASE_API_URL
-  )
-    ? String(window.BASE_API_URL).replace(/\/+$/, '') + '/api/data/lives/'
-    : (cfg.apiBase || 'https://vsc-apidev.helizones.com/api/data/lives/');
+  // Server-side proxy keeps X-API-Key off the browser.
+  // Public: GET /api/dv2-streaming-plugin/matches?id={matchId}
+  var PROXY_BASE =
+    typeof window.DV2_PROXY_API_BASE !== 'undefined' && window.DV2_PROXY_API_BASE
+      ? String(window.DV2_PROXY_API_BASE).replace(/\/+$/, '')
+      : '/api/dv2-streaming-plugin';
+  var MATCHES_API = PROXY_BASE + '/matches';
   var MATCH_ID = (
     typeof window.DV2_MATCH_ID !== 'undefined' && window.DV2_MATCH_ID
   ) || cfg.matchId || 'zp5rzghge5n8q82';
@@ -18966,8 +18991,9 @@ function showError(message) {
     setLoading(true, 'Đang tải thông tin trận đấu...');
 
     $.ajax({
-      url: API_BASE + matchId,
+      url: MATCHES_API,
       method: 'GET',
+      data: { id: matchId },
       success: function (res) {
         var data = res && res.data;
         if (!data) {

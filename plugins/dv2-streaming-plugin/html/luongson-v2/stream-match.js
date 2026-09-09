@@ -21,11 +21,13 @@
   var IMG = pluginUrl
     ? pluginUrl + 'html/luongson-v2/images/'
     : (cfg.imgUrl || 'images/');
-  var API_BASE = (
-    typeof window.BASE_API_URL !== 'undefined' && window.BASE_API_URL
-  )
-    ? String(window.BASE_API_URL).replace(/\/+$/, '') + '/api/data/lives/'
-    : (cfg.apiBase || 'https://vsc-apidev.helizones.com/api/data/lives/');
+  // Server-side proxy keeps X-API-Key off the browser.
+  // Public: GET /api/dv2-streaming-plugin/matches?id={matchId}
+  var PROXY_BASE =
+    typeof window.DV2_PROXY_API_BASE !== 'undefined' && window.DV2_PROXY_API_BASE
+      ? String(window.DV2_PROXY_API_BASE).replace(/\/+$/, '')
+      : '/api/dv2-streaming-plugin';
+  var MATCHES_API = PROXY_BASE + '/matches';
   var MATCH_ID = (
     typeof window.DV2_MATCH_ID !== 'undefined' && window.DV2_MATCH_ID
   ) || cfg.matchId || 'zp5rzghge5n8q82';
@@ -1355,8 +1357,9 @@
     setLoading(true, 'Đang tải thông tin trận đấu...');
 
     $.ajax({
-      url: API_BASE + matchId,
+      url: MATCHES_API,
       method: 'GET',
+      data: { id: matchId },
       success: function (res) {
         var data = res && res.data;
         if (!data) {
