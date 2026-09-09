@@ -140,6 +140,14 @@
   transform: scale(1.03);
 }
 
+.luongson-match-card.luongson-hot-match {
+  --border-color: #e53935;
+  --border-top-width: 1px;
+  --border-right-width: 1px;
+  --border-bottom-width: 1px;
+  --border-left-width: 1px;
+}
+
 .luongson-match-header {
   display: flex;
   align-items: center;

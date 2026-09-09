@@ -17633,6 +17633,7 @@ function showError(message) {
     renderedCount: 0,
     loading: false,
     adInsertions: new Map(),
+    priorityCompetitionIds: new Set(),
     $root: null,
     $grid: null,
   };
@@ -17696,6 +17697,45 @@ function showError(message) {
 
   function getMatchId(match) {
     return (match && (match.match_id || match.matchId || match.id || match.slug)) || '';
+  }
+
+  function parsePriorityCompetitionIds(raw) {
+    if (Array.isArray(raw)) {
+      return $.map(raw, function (id) {
+        return String(id == null ? '' : id).trim();
+      }).filter(Boolean);
+    }
+    if (raw == null || raw === '') return [];
+    return String(raw)
+      .split(',')
+      .map(function (id) {
+        return id.trim();
+      })
+      .filter(Boolean);
+  }
+
+  function syncPriorityCompetitionIds(res) {
+    var ids = parsePriorityCompetitionIds(
+      res && res.priorityCompetitions != null
+        ? res.priorityCompetitions
+        : window.DV2_STREAMING_PRIORITY_COMPETITION_IDS
+    );
+    state.priorityCompetitionIds = new Set(ids);
+  }
+
+  function isPriorityMatch(match) {
+    var leagueId = match && match.league && match.league.id;
+    if (!leagueId) return false;
+    if (state.priorityCompetitionIds.size) {
+      return state.priorityCompetitionIds.has(String(leagueId));
+    }
+    if (
+      window.DV2MatchSort &&
+      typeof window.DV2MatchSort.isPriorityCompetitionMatch === 'function'
+    ) {
+      return window.DV2MatchSort.isPriorityCompetitionMatch(match);
+    }
+    return false;
   }
 
   function getPreferredLink(match) {
@@ -17895,9 +17935,12 @@ function showError(message) {
     var corner = getStatPairText(match, 'corner');
     var yellow = getStatPairText(match, 'yellowCard');
     var red = getStatPairText(match, 'redCard');
+    var hotClass = isPriorityMatch(match) ? ' luongson-hot-match' : '';
 
     return (
-      '<div class="luongson-match-card" data-border="true"' +
+      '<div class="luongson-match-card' +
+      hotClass +
+      '" data-border="true"' +
       (matchId ? ' data-match-id="' + escapeHtml(matchId) + '"' : '') +
       '>' +
       '<div class="luongson-match-header">' +
@@ -18405,6 +18448,7 @@ function showError(message) {
       throw new Error('Invalid response');
     }
 
+    syncPriorityCompetitionIds(res);
     var matches = flattenMatchesByDate(res.matches_by_date);
     var pagination = res.pagination || {};
     state.page = Number(pagination.page) || page;
@@ -18569,7 +18613,7 @@ function showError(message) {
   var FLATPICKR_JS = 'https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js';
   var FLATPICKR_VN = 'https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/vn.js';
 
-  var PAGE_SIZE = 33;
+  var PAGE_SIZE = 50;
   var VN_TIMEZONE = 'Asia/Ho_Chi_Minh';
 
   var LIVE_STATUSES = [
@@ -18606,9 +18650,12 @@ function showError(message) {
     loading: false,
     requestId: 0,
     flatpickr: null,
+    priorityCompetitionIds: new Set(),
     $root: null,
     $list: null,
     $label: null,
+    $prev: null,
+    $next: null,
   };
 
   function escapeHtml(value) {
@@ -18644,6 +18691,45 @@ function showError(message) {
 
   function getMatchId(match) {
     return (match && (match.match_id || match.matchId || match.id || match.slug)) || '';
+  }
+
+  function parsePriorityCompetitionIds(raw) {
+    if (Array.isArray(raw)) {
+      return $.map(raw, function (id) {
+        return String(id == null ? '' : id).trim();
+      }).filter(Boolean);
+    }
+    if (raw == null || raw === '') return [];
+    return String(raw)
+      .split(',')
+      .map(function (id) {
+        return id.trim();
+      })
+      .filter(Boolean);
+  }
+
+  function syncPriorityCompetitionIds(res) {
+    var ids = parsePriorityCompetitionIds(
+      res && res.priorityCompetitions != null
+        ? res.priorityCompetitions
+        : window.DV2_STREAMING_PRIORITY_COMPETITION_IDS
+    );
+    state.priorityCompetitionIds = new Set(ids);
+  }
+
+  function isPriorityMatch(match) {
+    var leagueId = match && match.league && match.league.id;
+    if (!leagueId) return false;
+    if (state.priorityCompetitionIds.size) {
+      return state.priorityCompetitionIds.has(String(leagueId));
+    }
+    if (
+      window.DV2MatchSort &&
+      typeof window.DV2MatchSort.isPriorityCompetitionMatch === 'function'
+    ) {
+      return window.DV2MatchSort.isPriorityCompetitionMatch(match);
+    }
+    return false;
   }
 
   function getPreferredLink(match) {
@@ -18991,9 +19077,12 @@ function showError(message) {
     var statusText = formatStatusText(match);
     var detailUrl = getDetailUrl(match);
     var matchId = getMatchId(match);
+    var hotClass = isPriorityMatch(match) ? ' luongson-hot-match' : '';
 
     return (
-      '<div class="framer-w4nh6l luongson-schedule__match"' +
+      '<div class="framer-w4nh6l luongson-schedule__match' +
+      hotClass +
+      '"' +
       (matchId ? ' data-match-id="' + escapeHtml(matchId) + '"' : '') +
       '>' +
       '<div class="framer-10q8rqr" data-framer-name="Live Match Header">' +
@@ -19243,6 +19332,7 @@ function showError(message) {
       throw new Error('Invalid response');
     }
 
+    syncPriorityCompetitionIds(res);
     var matches = flattenMatchesByDate(res.matches_by_date);
     var pagination = res.pagination || {};
     state.page = Number(pagination.page) || page;
@@ -19308,12 +19398,25 @@ function showError(message) {
     }
   }
 
+  function isBeforeVnMinDate(date) {
+    return formatYmdInVn(date) < formatYmdInVn(getVnMinDate());
+  }
+
+  function getVnMinDate() {
+    return shiftVnDays(getVnToday(), -1);
+  }
+
+  function clampToMinDate(date) {
+    return isBeforeVnMinDate(date) ? getVnMinDate() : date;
+  }
+
   function setSelectedDate(date, options) {
     options = options || {};
-    state.selectedDate = date;
+    state.selectedDate = clampToMinDate(date);
     updateDateLabel();
+    updatePrevNextState();
     if (state.flatpickr && !options.fromPicker) {
-      state.flatpickr.setDate(date, false);
+      state.flatpickr.setDate(state.selectedDate, false);
     }
     if (!options.skipFetch) {
       reloadForSelectedDate();
@@ -19324,17 +19427,29 @@ function showError(message) {
   /* Date picker + nav                                                        */
   /* ------------------------------------------------------------------------ */
 
+  function updatePrevNextState() {
+    if (!state.$prev || !state.$prev.length) return;
+    var atMin = !state.selectedDate || isSameVnDay(state.selectedDate, getVnMinDate());
+    state.$prev.prop('disabled', atMin);
+    state.$prev.attr('aria-disabled', atMin ? 'true' : 'false');
+    state.$prev.toggleClass('is-disabled', atMin);
+  }
+
   function initDateControls($root) {
     var $prev = $root.find('[data-framer-name="Previous Day"]');
     var $next = $root.find('[data-framer-name="Next Day"]');
     var $pickerBtn = $root.find('[data-framer-name="Date Picker"]');
     state.$label = $root.find('.luongson-schedule__date-label');
+    state.$prev = $prev;
+    state.$next = $next;
 
     state.selectedDate = getVnToday();
     updateDateLabel();
+    updatePrevNextState();
 
     $prev.on('click', function (e) {
       e.preventDefault();
+      if (isSameVnDay(state.selectedDate, getVnMinDate())) return;
       setSelectedDate(shiftVnDays(state.selectedDate, -1));
     });
 
@@ -19347,14 +19462,21 @@ function showError(message) {
       .done(function () {
         if (!$pickerBtn.length || !window.flatpickr) return;
         var locale = (window.flatpickr.l10ns && window.flatpickr.l10ns.vn) || 'default';
+        var minDate = getVnMinDate();
         state.flatpickr = window.flatpickr($pickerBtn.get(0), {
           locale: locale,
           defaultDate: state.selectedDate,
+          minDate: minDate,
           dateFormat: 'Y-m-d',
           disableMobile: true,
           allowInput: false,
           clickOpens: true,
           position: 'auto center',
+          onReady: function (_dates, _str, instance) {
+            if (instance && instance.calendarContainer) {
+              instance.calendarContainer.classList.add('luongson-fp');
+            }
+          },
           onChange: function (selectedDates) {
             if (!selectedDates || !selectedDates[0]) return;
             var picked = selectedDates[0];

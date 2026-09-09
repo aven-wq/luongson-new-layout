@@ -17633,6 +17633,7 @@ function showError(message) {
     renderedCount: 0,
     loading: false,
     adInsertions: new Map(),
+    priorityCompetitionIds: new Set(),
     $root: null,
     $grid: null,
   };
@@ -17696,6 +17697,45 @@ function showError(message) {
 
   function getMatchId(match) {
     return (match && (match.match_id || match.matchId || match.id || match.slug)) || '';
+  }
+
+  function parsePriorityCompetitionIds(raw) {
+    if (Array.isArray(raw)) {
+      return $.map(raw, function (id) {
+        return String(id == null ? '' : id).trim();
+      }).filter(Boolean);
+    }
+    if (raw == null || raw === '') return [];
+    return String(raw)
+      .split(',')
+      .map(function (id) {
+        return id.trim();
+      })
+      .filter(Boolean);
+  }
+
+  function syncPriorityCompetitionIds(res) {
+    var ids = parsePriorityCompetitionIds(
+      res && res.priorityCompetitions != null
+        ? res.priorityCompetitions
+        : window.DV2_STREAMING_PRIORITY_COMPETITION_IDS
+    );
+    state.priorityCompetitionIds = new Set(ids);
+  }
+
+  function isPriorityMatch(match) {
+    var leagueId = match && match.league && match.league.id;
+    if (!leagueId) return false;
+    if (state.priorityCompetitionIds.size) {
+      return state.priorityCompetitionIds.has(String(leagueId));
+    }
+    if (
+      window.DV2MatchSort &&
+      typeof window.DV2MatchSort.isPriorityCompetitionMatch === 'function'
+    ) {
+      return window.DV2MatchSort.isPriorityCompetitionMatch(match);
+    }
+    return false;
   }
 
   function getPreferredLink(match) {
@@ -17895,9 +17935,12 @@ function showError(message) {
     var corner = getStatPairText(match, 'corner');
     var yellow = getStatPairText(match, 'yellowCard');
     var red = getStatPairText(match, 'redCard');
+    var hotClass = isPriorityMatch(match) ? ' luongson-hot-match' : '';
 
     return (
-      '<div class="luongson-match-card" data-border="true"' +
+      '<div class="luongson-match-card' +
+      hotClass +
+      '" data-border="true"' +
       (matchId ? ' data-match-id="' + escapeHtml(matchId) + '"' : '') +
       '>' +
       '<div class="luongson-match-header">' +
@@ -18405,6 +18448,7 @@ function showError(message) {
       throw new Error('Invalid response');
     }
 
+    syncPriorityCompetitionIds(res);
     var matches = flattenMatchesByDate(res.matches_by_date);
     var pagination = res.pagination || {};
     state.page = Number(pagination.page) || page;
@@ -18606,6 +18650,7 @@ function showError(message) {
     loading: false,
     requestId: 0,
     flatpickr: null,
+    priorityCompetitionIds: new Set(),
     $root: null,
     $list: null,
     $label: null,
@@ -18646,6 +18691,45 @@ function showError(message) {
 
   function getMatchId(match) {
     return (match && (match.match_id || match.matchId || match.id || match.slug)) || '';
+  }
+
+  function parsePriorityCompetitionIds(raw) {
+    if (Array.isArray(raw)) {
+      return $.map(raw, function (id) {
+        return String(id == null ? '' : id).trim();
+      }).filter(Boolean);
+    }
+    if (raw == null || raw === '') return [];
+    return String(raw)
+      .split(',')
+      .map(function (id) {
+        return id.trim();
+      })
+      .filter(Boolean);
+  }
+
+  function syncPriorityCompetitionIds(res) {
+    var ids = parsePriorityCompetitionIds(
+      res && res.priorityCompetitions != null
+        ? res.priorityCompetitions
+        : window.DV2_STREAMING_PRIORITY_COMPETITION_IDS
+    );
+    state.priorityCompetitionIds = new Set(ids);
+  }
+
+  function isPriorityMatch(match) {
+    var leagueId = match && match.league && match.league.id;
+    if (!leagueId) return false;
+    if (state.priorityCompetitionIds.size) {
+      return state.priorityCompetitionIds.has(String(leagueId));
+    }
+    if (
+      window.DV2MatchSort &&
+      typeof window.DV2MatchSort.isPriorityCompetitionMatch === 'function'
+    ) {
+      return window.DV2MatchSort.isPriorityCompetitionMatch(match);
+    }
+    return false;
   }
 
   function getPreferredLink(match) {
@@ -18993,9 +19077,12 @@ function showError(message) {
     var statusText = formatStatusText(match);
     var detailUrl = getDetailUrl(match);
     var matchId = getMatchId(match);
+    var hotClass = isPriorityMatch(match) ? ' luongson-hot-match' : '';
 
     return (
-      '<div class="framer-w4nh6l luongson-schedule__match"' +
+      '<div class="framer-w4nh6l luongson-schedule__match' +
+      hotClass +
+      '"' +
       (matchId ? ' data-match-id="' + escapeHtml(matchId) + '"' : '') +
       '>' +
       '<div class="framer-10q8rqr" data-framer-name="Live Match Header">' +
@@ -19245,6 +19332,7 @@ function showError(message) {
       throw new Error('Invalid response');
     }
 
+    syncPriorityCompetitionIds(res);
     var matches = flattenMatchesByDate(res.matches_by_date);
     var pagination = res.pagination || {};
     state.page = Number(pagination.page) || page;

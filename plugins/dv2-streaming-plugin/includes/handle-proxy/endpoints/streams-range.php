@@ -152,6 +152,15 @@ return array(
             }
         }
 
-        return DV2_Proxy_Client::get('/external/v1/streams/range', $query);
+        $result = DV2_Proxy_Client::get('/external/v1/streams/range', $query);
+
+        // Expose resolved priority IDs so FE can mark hot matches (same source as sort).
+        if (!empty($result['ok']) && is_array($result['json'])) {
+            $result['json']['priorityCompetitions'] = $priority !== ''
+                ? array_values(array_filter(explode(',', $priority)))
+                : array();
+        }
+
+        return $result;
     },
 );

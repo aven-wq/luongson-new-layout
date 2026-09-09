@@ -73,6 +73,7 @@
     loading: false,
     requestId: 0,
     flatpickr: null,
+    priorityCompetitionIds: new Set(),
     $root: null,
     $list: null,
     $label: null,
@@ -113,6 +114,45 @@
 
   function getMatchId(match) {
     return (match && (match.match_id || match.matchId || match.id || match.slug)) || '';
+  }
+
+  function parsePriorityCompetitionIds(raw) {
+    if (Array.isArray(raw)) {
+      return $.map(raw, function (id) {
+        return String(id == null ? '' : id).trim();
+      }).filter(Boolean);
+    }
+    if (raw == null || raw === '') return [];
+    return String(raw)
+      .split(',')
+      .map(function (id) {
+        return id.trim();
+      })
+      .filter(Boolean);
+  }
+
+  function syncPriorityCompetitionIds(res) {
+    var ids = parsePriorityCompetitionIds(
+      res && res.priorityCompetitions != null
+        ? res.priorityCompetitions
+        : window.DV2_STREAMING_PRIORITY_COMPETITION_IDS
+    );
+    state.priorityCompetitionIds = new Set(ids);
+  }
+
+  function isPriorityMatch(match) {
+    var leagueId = match && match.league && match.league.id;
+    if (!leagueId) return false;
+    if (state.priorityCompetitionIds.size) {
+      return state.priorityCompetitionIds.has(String(leagueId));
+    }
+    if (
+      window.DV2MatchSort &&
+      typeof window.DV2MatchSort.isPriorityCompetitionMatch === 'function'
+    ) {
+      return window.DV2MatchSort.isPriorityCompetitionMatch(match);
+    }
+    return false;
   }
 
   function getPreferredLink(match) {
@@ -460,9 +500,12 @@
     var statusText = formatStatusText(match);
     var detailUrl = getDetailUrl(match);
     var matchId = getMatchId(match);
+    var hotClass = isPriorityMatch(match) ? ' luongson-hot-match' : '';
 
     return (
-      '<div class="framer-w4nh6l luongson-schedule__match"' +
+      '<div class="framer-w4nh6l luongson-schedule__match' +
+      hotClass +
+      '"' +
       (matchId ? ' data-match-id="' + escapeHtml(matchId) + '"' : '') +
       '>' +
       '<div class="framer-10q8rqr" data-framer-name="Live Match Header">' +
@@ -712,6 +755,7 @@
       throw new Error('Invalid response');
     }
 
+    syncPriorityCompetitionIds(res);
     var matches = flattenMatchesByDate(res.matches_by_date);
     var pagination = res.pagination || {};
     state.page = Number(pagination.page) || page;
