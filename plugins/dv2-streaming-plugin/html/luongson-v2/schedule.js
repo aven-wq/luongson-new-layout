@@ -76,6 +76,8 @@
     $root: null,
     $list: null,
     $label: null,
+    $prev: null,
+    $next: null,
   };
 
   function escapeHtml(value) {
@@ -775,12 +777,25 @@
     }
   }
 
+  function isBeforeVnMinDate(date) {
+    return formatYmdInVn(date) < formatYmdInVn(getVnMinDate());
+  }
+
+  function getVnMinDate() {
+    return shiftVnDays(getVnToday(), -1);
+  }
+
+  function clampToMinDate(date) {
+    return isBeforeVnMinDate(date) ? getVnMinDate() : date;
+  }
+
   function setSelectedDate(date, options) {
     options = options || {};
-    state.selectedDate = date;
+    state.selectedDate = clampToMinDate(date);
     updateDateLabel();
+    updatePrevNextState();
     if (state.flatpickr && !options.fromPicker) {
-      state.flatpickr.setDate(date, false);
+      state.flatpickr.setDate(state.selectedDate, false);
     }
     if (!options.skipFetch) {
       reloadForSelectedDate();
@@ -791,17 +806,29 @@
   /* Date picker + nav                                                        */
   /* ------------------------------------------------------------------------ */
 
+  function updatePrevNextState() {
+    if (!state.$prev || !state.$prev.length) return;
+    var atMin = !state.selectedDate || isSameVnDay(state.selectedDate, getVnMinDate());
+    state.$prev.prop('disabled', atMin);
+    state.$prev.attr('aria-disabled', atMin ? 'true' : 'false');
+    state.$prev.toggleClass('is-disabled', atMin);
+  }
+
   function initDateControls($root) {
     var $prev = $root.find('[data-framer-name="Previous Day"]');
     var $next = $root.find('[data-framer-name="Next Day"]');
     var $pickerBtn = $root.find('[data-framer-name="Date Picker"]');
     state.$label = $root.find('.luongson-schedule__date-label');
+    state.$prev = $prev;
+    state.$next = $next;
 
     state.selectedDate = getVnToday();
     updateDateLabel();
+    updatePrevNextState();
 
     $prev.on('click', function (e) {
       e.preventDefault();
+      if (isSameVnDay(state.selectedDate, getVnMinDate())) return;
       setSelectedDate(shiftVnDays(state.selectedDate, -1));
     });
 
@@ -814,14 +841,21 @@
       .done(function () {
         if (!$pickerBtn.length || !window.flatpickr) return;
         var locale = (window.flatpickr.l10ns && window.flatpickr.l10ns.vn) || 'default';
+        var minDate = getVnMinDate();
         state.flatpickr = window.flatpickr($pickerBtn.get(0), {
           locale: locale,
           defaultDate: state.selectedDate,
+          minDate: minDate,
           dateFormat: 'Y-m-d',
           disableMobile: true,
           allowInput: false,
           clickOpens: true,
           position: 'auto center',
+          onReady: function (_dates, _str, instance) {
+            if (instance && instance.calendarContainer) {
+              instance.calendarContainer.classList.add('luongson-fp');
+            }
+          },
           onChange: function (selectedDates) {
             if (!selectedDates || !selectedDates[0]) return;
             var picked = selectedDates[0];
