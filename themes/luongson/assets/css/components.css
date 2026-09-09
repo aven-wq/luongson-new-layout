@@ -2777,7 +2777,7 @@ html body {
 .mobile-overlay-portal .framer-QbuP0 {
   border-radius: 20px !important;
   overflow: clip !important;
-  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.35) !important;
+  box-shadow: unset !important;
 }
 
 .framer-GRble.framer-tcv7bq {
