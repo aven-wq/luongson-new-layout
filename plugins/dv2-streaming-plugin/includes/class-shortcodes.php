@@ -213,14 +213,25 @@ class DV2_Shortcodes {
     /**
      * Shortcode: [lich_truc_tiep count="3" layout="socolive"]
      * Hiện lịch trực tiếp
-     * 
-     * Available layouts: socolive, vebo, thapcam
+     *
+     * Available layouts: socolive, vebo, thapcam, luongson-v2
+     * (luongson-v2: schedule page — schedule.js)
      */
     public function shortcode_live_calander($atts) {
         $atts = shortcode_atts(array(
             'count'  => 3,
             'layout' => 'socolive',
         ), $atts);
+
+        $layout = sanitize_file_name((string) $atts['layout']);
+        if ($layout === 'luongson-v2') {
+            wp_enqueue_style(
+                'luongson-v2-stream-fonts',
+                'https://fonts.googleapis.com/css2?family=Anton+SC&family=Momo+Trust+Sans:wght@400;600;700;800&display=swap',
+                array(),
+                null
+            );
+        }
 
         $template_path = $this->get_template_path('stream-calander.block.php', $atts['layout']);
 

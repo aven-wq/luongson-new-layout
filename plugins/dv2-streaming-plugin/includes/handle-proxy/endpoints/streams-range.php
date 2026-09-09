@@ -8,10 +8,11 @@
  * Query params:
  *   from                 YYYY-MM-DD (required)
  *   to                   YYYY-MM-DD (required)
- *   statuses             Optional comma-separated: 1 not started, 2 live, 3 finished
- *   priorityCompetitions Optional comma-separated competition ids
  *   pageSize             Optional (default upstream)
  *   page                 Optional (default 1)
+ *
+ * statuses (1,2 = not started + live) and priorityCompetitions are set server-side.
+ * Do not accept statuses or priorityCompetitions from the front-end.
  *
  * Equivalent curl:
  *   curl --location 'https://vscapiv2.cdnx.tech/external/v1/streams/range?from=…&to=…&statuses=1%2C2&priorityCompetitions=…&pageSize=33&page=1' \
@@ -23,6 +24,86 @@
 
 if (!defined('ABSPATH')) {
     exit;
+}
+
+/**
+ * Normalize comma-separated competition ids.
+ *
+ * @param string $raw
+ * @return string
+ */
+function dv2_streams_range_sanitize_priority_ids($raw) {
+    $parts = preg_split('/\s*,\s*/', trim((string) $raw));
+    if (!is_array($parts)) {
+        return '';
+    }
+
+    $ids = array();
+    foreach ($parts as $part) {
+        $id = sanitize_text_field($part);
+        if ($id !== '' && preg_match('/^[a-zA-Z0-9_-]+$/', $id)) {
+            $ids[] = $id;
+        }
+    }
+
+    return implode(',', array_values(array_unique($ids)));
+}
+
+/**
+ * Resolve priorityCompetitions: WP admin setting, else hot competitions API.
+ *
+ * @return string Comma-separated ids (may be empty)
+ */
+function dv2_streams_range_resolve_priority_competitions() {
+    if (function_exists('dv2_get_setting')) {
+        $admin = dv2_streams_range_sanitize_priority_ids(
+            (string) dv2_get_setting('dv2_priority_competition_id', '')
+        );
+        if ($admin !== '') {
+            return $admin;
+        }
+    }
+
+    $cache_key = 'dv2_proxy_hot_competition_ids';
+    $cached   = get_transient($cache_key);
+    if (is_string($cached)) {
+        return $cached;
+    }
+
+    // Hardcoded upstream (not exposed / not passed from FE).
+    $hot_url  = 'https://vsc-apidev.helizones.com/api/data/lives/competitions/hot';
+    $response = wp_remote_get(
+        $hot_url,
+        array(
+            'timeout' => 10,
+            'headers' => array(
+                'Accept' => 'application/json',
+            ),
+        )
+    );
+
+    $ids = '';
+    if (!is_wp_error($response)) {
+        $status = (int) wp_remote_retrieve_response_code($response);
+        $json   = json_decode((string) wp_remote_retrieve_body($response), true);
+        if ($status >= 200 && $status < 300 && is_array($json) && !empty($json['result']) && is_array($json['result'])) {
+            $collected = array();
+            foreach ($json['result'] as $item) {
+                if (!is_array($item) || empty($item['id'])) {
+                    continue;
+                }
+                $id = sanitize_text_field((string) $item['id']);
+                if ($id !== '' && preg_match('/^[a-zA-Z0-9_-]+$/', $id)) {
+                    $collected[] = $id;
+                }
+            }
+            $ids = implode(',', array_values(array_unique($collected)));
+        }
+    }
+
+    set_transient($cache_key, $ids, 60);
+
+    return $ids;
 }
 
 return array(
@@ -46,23 +127,15 @@ return array(
         }
 
         $query = array(
-            'from' => $from,
-            'to'   => $to,
+            'from'     => $from,
+            'to'       => $to,
+            // Hardcoded: 1 not started, 2 live (not accepted from FE).
+            'statuses' => '1,2',
         );
 
-        if (isset($_GET['statuses']) && is_string($_GET['statuses'])) {
-            $statuses = sanitize_text_field(wp_unslash($_GET['statuses']));
-            if ($statuses !== '' && preg_match('/^[0-9]+(,[0-9]+)*$/', $statuses)) {
-                $query['statuses'] = $statuses;
-            }
-        }
-
-        if (isset($_GET['priorityCompetitions']) && is_string($_GET['priorityCompetitions'])) {
-            $priority = sanitize_text_field(wp_unslash($_GET['priorityCompetitions']));
-            // Allow alphanumeric ids separated by commas.
-            if ($priority !== '' && preg_match('/^[a-zA-Z0-9_-]+(,[a-zA-Z0-9_-]+)*$/', $priority)) {
-                $query['priorityCompetitions'] = $priority;
-            }
+        $priority = dv2_streams_range_resolve_priority_competitions();
+        if ($priority !== '') {
+            $query['priorityCompetitions'] = $priority;
         }
 
         if (isset($_GET['pageSize'])) {

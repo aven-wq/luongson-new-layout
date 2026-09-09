@@ -30,12 +30,9 @@
       ? String(window.DV2_PROXY_API_BASE).replace(/\/+$/, '')
       : '/api/dv2-streaming-plugin';
   var STREAMS_RANGE_API = PROXY_BASE + '/streams-range';
-  var HOT_COMPETITIONS_API =
-    (window.DV2HotLeagues && window.DV2HotLeagues.DEFAULT_ENDPOINT) ||
-    'https://vsc-apidev.helizones.com/api/data/lives/competitions/hot';
+  // statuses + priorityCompetitions are resolved server-side in streams-range proxy.
 
   var PAGE_SIZE = 33;
-  var STATUSES = '1,2'; // 1 not started, 2 live
   var VN_TIMEZONE = 'Asia/Ho_Chi_Minh';
 
   var LIVE_STATUSES = [
@@ -69,7 +66,6 @@
     totalMatches: 0,
     renderedCount: 0,
     loading: false,
-    priorityCompetitions: '',
     adInsertions: new Map(),
     $root: null,
     $grid: null,
@@ -313,40 +309,6 @@
       if (Array.isArray(day)) all = all.concat(day);
     });
     return all;
-  }
-
-  function getAdminPriorityCompetitions() {
-    var raw = window.DV2_STREAMING_PRIORITY_COMPETITION_IDS;
-    if (!raw) return '';
-    return String(raw)
-      .split(',')
-      .map(function (id) {
-        return $.trim(id);
-      })
-      .filter(Boolean)
-      .join(',');
-  }
-
-  function resolvePriorityCompetitions() {
-    var admin = getAdminPriorityCompetitions();
-    if (admin) return $.Deferred().resolve(admin).promise();
-
-    return $.ajax({
-      url: HOT_COMPETITIONS_API,
-      method: 'GET',
-      dataType: 'json',
-    })
-      .then(function (data) {
-        var list = (data && data.result) || [];
-        return $.map(list, function (item) {
-          return item && item.id ? String(item.id).trim() : null;
-        })
-          .filter(Boolean)
-          .join(',');
-      })
-      .then(null, function () {
-        return '';
-      });
   }
 
   function buildMatchCardHtml(match) {
@@ -860,13 +822,9 @@
     var data = {
       from: range.from,
       to: range.to,
-      statuses: STATUSES,
       pageSize: String(PAGE_SIZE),
       page: String(page),
     };
-    if (state.priorityCompetitions) {
-      data.priorityCompetitions = state.priorityCompetitions;
-    }
 
     return $.ajax({
       url: STREAMS_RANGE_API,
@@ -937,20 +895,16 @@
   }
 
   function startOwnPage1Fetch(deferred) {
-    resolvePriorityCompetitions().done(function (priority) {
-      state.priorityCompetitions = priority || '';
-      fetchStreamsPage(1)
-        .done(function (res) {
-          deferred.resolve({
-            response: res,
-            priorityCompetitions: state.priorityCompetitions,
-            matches: flattenMatchesByDate(res && res.matches_by_date),
-          });
-        })
-        .fail(function (err) {
-          deferred.reject(err);
+    fetchStreamsPage(1)
+      .done(function (res) {
+        deferred.resolve({
+          response: res,
+          matches: flattenMatchesByDate(res && res.matches_by_date),
         });
-    });
+      })
+      .fail(function (err) {
+        deferred.reject(err);
+      });
   }
 
   function loadFirstPageFromSharedOrOwn() {
@@ -970,7 +924,6 @@
       window.LuongSonStreamsPage1.promise()
         .done(function (payload) {
           try {
-            state.priorityCompetitions = (payload && payload.priorityCompetitions) || '';
             applyPageResponse(payload && payload.response, 1, true);
           } catch (err) {
             console.error('[LuongSon list-matches]', err);
