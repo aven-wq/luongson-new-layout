@@ -307,8 +307,9 @@ class DV2_Shortcodes {
      * Hiện danh sách video được đề xuất
      *
      * view_more: 0 (mặc định) — tối đa 12 trận, không nút Xem thêm; 1 — phân trang + nút Xem thêm
+     * (luongson-v2: featured home match — home-match.js; view_more không dùng)
      *
-     * Available layouts: socolive, vebo, thapcam, cakhia-v2
+     * Available layouts: socolive, vebo, thapcam, cakhia-v2, luongson-v2
      */
     public function shortcode_suggested_streams($atts) {
         $atts = shortcode_atts(array(
@@ -318,6 +319,16 @@ class DV2_Shortcodes {
         ), $atts, 'de_xuat_video');
 
         $dv2_suggested_view_more = (int) $atts['view_more'] === 1 ? 1 : 0;
+
+        $layout = sanitize_file_name((string) $atts['layout']);
+        if ($layout === 'luongson-v2') {
+            wp_enqueue_style(
+                'luongson-v2-stream-fonts',
+                'https://fonts.googleapis.com/css2?family=Anton+SC&family=Momo+Trust+Sans:wght@400;600;700;800&display=swap',
+                array(),
+                null
+            );
+        }
 
         $template_path = $this->get_template_path('suggested-streams.block.php', $atts['layout']);
 

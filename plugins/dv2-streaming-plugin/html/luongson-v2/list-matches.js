@@ -75,6 +75,32 @@
     $grid: null,
   };
 
+  // Same bootstrap as home-match.js (idempotent). Page 1 is fetched once from home-match.
+  window.LuongSonStreamsPage1 =
+    window.LuongSonStreamsPage1 ||
+    (function () {
+      var deferred = $.Deferred();
+      var started = false;
+      return {
+        promise: function () {
+          return deferred.promise();
+        },
+        hasStarted: function () {
+          return started;
+        },
+        start: function (runner) {
+          if (started) return deferred.promise();
+          started = true;
+          try {
+            runner(deferred);
+          } catch (err) {
+            deferred.reject(err);
+          }
+          return deferred.promise();
+        },
+      };
+    })();
+
   function escapeHtml(value) {
     return String(value == null ? '' : value)
       .replace(/&/g, '&amp;')
@@ -850,6 +876,34 @@
     });
   }
 
+  function applyPageResponse(res, page, isFirstPage) {
+    if (!res || res.status !== 'success') {
+      throw new Error('Invalid response');
+    }
+
+    var matches = flattenMatchesByDate(res.matches_by_date);
+    var pagination = res.pagination || {};
+    state.page = Number(pagination.page) || page;
+    state.totalPages = Number(pagination.totalPages) || 1;
+    state.totalMatches = Number(pagination.total) || matches.length;
+
+    clearGridMessage();
+
+    if (isFirstPage) {
+      state.adInsertions = buildMatchListAdInsertions(
+        matches.length ? state.totalMatches : 0
+      );
+    }
+
+    if (!matches.length && isFirstPage) {
+      showGridMessage('Hiện tại không có trận đấu nào.', { withEmptyAd: true });
+      return;
+    }
+
+    insertCards(matches, isFirstPage);
+    afterRender();
+  }
+
   function loadPage(page, isFirstPage) {
     if (state.loading) return;
     state.loading = true;
@@ -862,31 +916,7 @@
     fetchStreamsPage(page)
       .done(function (res) {
         try {
-          if (!res || res.status !== 'success') {
-            throw new Error('Invalid response');
-          }
-
-          var matches = flattenMatchesByDate(res.matches_by_date);
-          var pagination = res.pagination || {};
-          state.page = Number(pagination.page) || page;
-          state.totalPages = Number(pagination.totalPages) || 1;
-          state.totalMatches = Number(pagination.total) || matches.length;
-
-          clearGridMessage();
-
-          if (isFirstPage) {
-            state.adInsertions = buildMatchListAdInsertions(
-              matches.length ? state.totalMatches : 0
-            );
-          }
-
-          if (!matches.length && isFirstPage) {
-            showGridMessage('Hiện tại không có trận đấu nào.', { withEmptyAd: true });
-            return;
-          }
-
-          insertCards(matches, isFirstPage);
-          afterRender();
+          applyPageResponse(res, page, isFirstPage);
         } catch (err) {
           console.error('[LuongSon list-matches]', err);
           if (isFirstPage) {
@@ -906,6 +936,58 @@
       });
   }
 
+  function startOwnPage1Fetch(deferred) {
+    resolvePriorityCompetitions().done(function (priority) {
+      state.priorityCompetitions = priority || '';
+      fetchStreamsPage(1)
+        .done(function (res) {
+          deferred.resolve({
+            response: res,
+            priorityCompetitions: state.priorityCompetitions,
+            matches: flattenMatchesByDate(res && res.matches_by_date),
+          });
+        })
+        .fail(function (err) {
+          deferred.reject(err);
+        });
+    });
+  }
+
+  function loadFirstPageFromSharedOrOwn() {
+    if (state.loading) return;
+    state.loading = true;
+    updateLoadMoreVisibility();
+    showGridMessage('Đang tải trận đấu...');
+
+    var hasHomeMatch = $('.luongson-home-match').length > 0;
+
+    // After all document.ready handlers (home-match starts the shared fetch first).
+    setTimeout(function () {
+      if (!hasHomeMatch || !window.LuongSonStreamsPage1.hasStarted()) {
+        window.LuongSonStreamsPage1.start(startOwnPage1Fetch);
+      }
+
+      window.LuongSonStreamsPage1.promise()
+        .done(function (payload) {
+          try {
+            state.priorityCompetitions = (payload && payload.priorityCompetitions) || '';
+            applyPageResponse(payload && payload.response, 1, true);
+          } catch (err) {
+            console.error('[LuongSon list-matches]', err);
+            showGridMessage('Không thể tải danh sách trận đấu.');
+          }
+        })
+        .fail(function (err) {
+          console.error('[LuongSon list-matches]', err);
+          showGridMessage('Không thể tải danh sách trận đấu.');
+        })
+        .always(function () {
+          state.loading = false;
+          updateLoadMoreVisibility();
+        });
+    }, 0);
+  }
+
   function initAll() {
     var $root = $('.luongson-list-matches').first();
     if (!$root.length) return;
@@ -920,11 +1002,7 @@
     state.$grid = $grid;
 
     ensureLoadMore($root);
-
-    resolvePriorityCompetitions().done(function (priority) {
-      state.priorityCompetitions = priority || '';
-      loadPage(1, true);
-    });
+    loadFirstPageFromSharedOrOwn();
   }
 
   $(initAll);

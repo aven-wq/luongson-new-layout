@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
 
 return array(
     'method'    => 'GET',
-    'cache_ttl' => 15, // Live score/stats change frequently
+    'cache_ttl' => 30, // Live score/stats change frequently
     'handle'    => function () {
         $match_id = isset($_GET['id']) ? sanitize_text_field(wp_unslash($_GET['id'])) : '';
 

@@ -173,6 +173,21 @@
   padding: 0;
   display: flex;
   position: relative !important;
+  min-width: 0;
+}
+
+/* <a> must stretch — otherwise % height on ul/li/img wrappers collapses to 0 */
+.luongson-home-match .luongson-featured-ads-ticker > a,
+.luongson-home-match .framer-cfqyq6 > a {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  height: 100%;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  color: inherit;
+  text-decoration: none;
 }
 
 .luongson-home-match .luongson-featured-ads-ticker ul,
@@ -183,7 +198,8 @@
   align-items: center !important;
   list-style: none !important;
   margin: 0 !important;
-  padding: 4px 0 !important;
+  padding: 0 !important;
+  height: 100% !important;
   width: max-content !important;
   max-width: none !important;
   gap: 12px !important;
@@ -211,13 +227,14 @@
   position: relative;
 }
 
+/* Definite box — children are position:absolute (.ls-s4), so width:auto collapses to 0 */
 .luongson-home-match :is(.framer-oterc7, .framer-52b3qw) {
-  aspect-ratio: 1.94667 / 1;
+  aspect-ratio: 292 / 150;
   flex: 0 0 auto;
-  width: auto;
-  height: 100%;
+  height: 26px;
+  width: calc(26px * 292 / 150);
   position: relative;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .luongson-home-match .framer-dhrlif {
@@ -233,6 +250,9 @@
   padding: 3px 12px 3px 3px;
   display: flex;
   position: relative;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .luongson-home-match .framer-1ls5xev {
@@ -374,7 +394,7 @@
   width: auto;
   height: auto;
   position: absolute;
-  top: 10px;
+  top: 8px;
   left: 50%;
   transform: translate(-50%);
 }
