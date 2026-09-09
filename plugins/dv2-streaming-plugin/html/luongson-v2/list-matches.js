@@ -36,7 +36,6 @@
 
   var PAGE_SIZE = 33;
   var STATUSES = '1,2'; // 1 not started, 2 live
-  var ADS_BEFORE_COUNT = 6;
   var VN_TIMEZONE = 'Asia/Ho_Chi_Minh';
 
   var LIVE_STATUSES = [
@@ -67,11 +66,13 @@
   var state = {
     page: 1,
     totalPages: 1,
+    totalMatches: 0,
+    renderedCount: 0,
     loading: false,
     priorityCompetitions: '',
+    adInsertions: new Map(),
     $root: null,
     $grid: null,
-    $ads: null,
   };
 
   function escapeHtml(value) {
@@ -456,11 +457,36 @@
     );
   }
 
-  function clearMatchCards($grid, $ads) {
-    if (!$grid || !$grid.length) return;
-    $grid.children('.luongson-match-card').each(function () {
-      if (this !== $ads.get(0)) $(this).remove();
+  function getMatchListAdBlocks() {
+    if (!window.DV2ListAds || !window.DV2ListAds.getBlocks) return [];
+    return window.DV2ListAds.getBlocks(window.DV2_SOCOLIVE_MATCH_LIST_ADS);
+  }
+
+  function buildMatchListAdInsertions(totalItems) {
+    if (!window.DV2ListAds || !window.DV2ListAds.buildInsertions) return new Map();
+    return window.DV2ListAds.buildInsertions(getMatchListAdBlocks(), totalItems, {
+      breakpoint: window.DV2_SOCOLIVE_MATCH_LIST_ADS_MOBILE_BREAKPOINT,
+      repeatCycle: window.DV2_SOCOLIVE_MATCH_LIST_ADS_REPEAT,
     });
+  }
+
+  function buildMatchListAdMarkup(adBlock) {
+    if (!window.DV2ListAds || !window.DV2ListAds.buildMarkup) return '';
+    return window.DV2ListAds.buildMarkup(adBlock, {
+      wrapperTag: 'div',
+      wrapperClass: 'dv2-ls-match-list-ad',
+    });
+  }
+
+  function refreshMatchListReviveAds($container) {
+    if (window.DV2ListAds && window.DV2ListAds.refreshReviveAds) {
+      window.DV2ListAds.refreshReviveAds($container);
+    }
+  }
+
+  function clearMatchCards($grid) {
+    if (!$grid || !$grid.length) return;
+    $grid.children('.luongson-match-card, .dv2-ls-match-list-ad').remove();
   }
 
   function attachMatchData($card, match) {
@@ -473,43 +499,36 @@
     }
   }
 
+  function appendMatchListAdAt(position) {
+    var $grid = state.$grid;
+    if (!$grid || !state.adInsertions.has(position)) return;
+    var adMarkup = buildMatchListAdMarkup(state.adInsertions.get(position));
+    if (adMarkup) $grid.append(adMarkup);
+  }
+
   function insertCards(matches, isFirstPage) {
     var $grid = state.$grid;
-    var $ads = state.$ads;
-    if (!$grid || !$ads || !matches.length) return;
+    if (!$grid || !matches.length) return;
 
-    var htmlParts = $.map(matches, buildMatchCardHtml);
     var created = [];
+    var i;
+    var $card;
 
     if (isFirstPage) {
-      clearMatchCards($grid, $ads);
-      var beforeCount = Math.min(ADS_BEFORE_COUNT, matches.length);
-      var i;
-      var $el;
-
-      for (i = 0; i < beforeCount; i++) {
-        $ads.before(htmlParts[i]);
-        $el = $ads.prev();
-        attachMatchData($el, matches[i]);
-        created.push($el.get(0));
-      }
-
-      var $insertAfter = $ads;
-      for (i = beforeCount; i < matches.length; i++) {
-        $insertAfter.after(htmlParts[i]);
-        $insertAfter = $insertAfter.next();
-        attachMatchData($insertAfter, matches[i]);
-        created.push($insertAfter.get(0));
-      }
-    } else {
-      $.each(htmlParts, function (index, html) {
-        $grid.append(html);
-        var $card = $grid.children().last();
-        attachMatchData($card, matches[index]);
-        created.push($card.get(0));
-      });
+      clearMatchCards($grid);
+      state.renderedCount = 0;
     }
 
+    for (i = 0; i < matches.length; i++) {
+      $grid.append(buildMatchCardHtml(matches[i]));
+      $card = $grid.children('.luongson-match-card').last();
+      attachMatchData($card, matches[i]);
+      created.push($card.get(0));
+      appendMatchListAdAt(state.renderedCount + i + 1);
+    }
+
+    state.renderedCount += matches.length;
+    refreshMatchListReviveAds($grid);
     return created;
   }
 
@@ -791,14 +810,18 @@
     updateLoadMoreVisibility();
   }
 
-  function showGridMessage(message) {
+  function showGridMessage(message, options) {
     var $grid = state.$grid;
-    var $ads = state.$ads;
-    if (!$grid || !$ads) return;
-    clearMatchCards($grid, $ads);
+    if (!$grid) return;
+    clearMatchCards($grid);
     $grid.find('.luongson-list-matches__empty').remove();
-    var $el = $('<div>', { class: 'luongson-list-matches__empty', text: message });
-    $ads.before($el);
+    $grid.append(
+      $('<div>', { class: 'luongson-list-matches__empty', text: message })
+    );
+    if (options && options.withEmptyAd) {
+      appendMatchListAdAt(0);
+      refreshMatchListReviveAds($grid);
+    }
   }
 
   function clearGridMessage() {
@@ -847,11 +870,18 @@
           var pagination = res.pagination || {};
           state.page = Number(pagination.page) || page;
           state.totalPages = Number(pagination.totalPages) || 1;
+          state.totalMatches = Number(pagination.total) || matches.length;
 
           clearGridMessage();
 
+          if (isFirstPage) {
+            state.adInsertions = buildMatchListAdInsertions(
+              matches.length ? state.totalMatches : 0
+            );
+          }
+
           if (!matches.length && isFirstPage) {
-            showGridMessage('Hiện tại không có trận đấu nào.');
+            showGridMessage('Hiện tại không có trận đấu nào.', { withEmptyAd: true });
             return;
           }
 
@@ -881,12 +911,13 @@
     if (!$root.length) return;
 
     var $grid = $root.find('.luongson-live-grid').first();
-    var $ads = $grid.find('.luongson-live-ads').first();
-    if (!$grid.length || !$ads.length) return;
+    if (!$grid.length) return;
+
+    // Remove legacy static ads placeholder; ads are interleaved via DV2ListAds.
+    $grid.find('.luongson-live-ads').remove();
 
     state.$root = $root;
     state.$grid = $grid;
-    state.$ads = $ads;
 
     ensureLoadMore($root);
 

@@ -419,12 +419,14 @@ class DV2_Assets_Loader {
             '@media screen and (max-width: %1$dpx) {
                 .dv2-hot-content-ad .dv2-qc-match-list-pc,
                 .dv2-vb2-match-list-ad .dv2-qc-match-list-pc,
-                .dv2-tc-match-list-ad .dv2-qc-match-list-pc {
+                .dv2-tc-match-list-ad .dv2-qc-match-list-pc,
+                .dv2-ls-match-list-ad .dv2-qc-match-list-pc {
                     display: none;
                 }
                 .dv2-hot-content-ad .dv2-qc-match-list-mobile,
                 .dv2-vb2-match-list-ad .dv2-qc-match-list-mobile,
-                .dv2-tc-match-list-ad .dv2-qc-match-list-mobile {
+                .dv2-tc-match-list-ad .dv2-qc-match-list-mobile,
+                .dv2-ls-match-list-ad .dv2-qc-match-list-mobile {
                     display: flex;
                     flex-direction: column;
                     gap: 10px;

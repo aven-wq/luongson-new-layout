@@ -15227,15 +15227,25 @@ body .ck2-modal-close {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Ads row                                                                    */
+/* Interleaved list ads (DV2ListAds)                                          */
 /* -------------------------------------------------------------------------- */
 
-.luongson-live-ads {
+.luongson-live-grid > .dv2-ls-match-list-ad {
   grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  gap: 20px;
   width: 100%;
+}
+
+.luongson-live-grid > .dv2-ls-match-list-ad .dv2-qc-match-list-pc {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.luongson-live-grid > .dv2-ls-match-list-ad .dv2-qc-match-list-mobile {
+  display: none;
 }
 
 .luongson-list-matches__empty {
@@ -15291,35 +15301,6 @@ body .ck2-modal-close {
 
 .luongson-list-matches__load-more[hidden] {
   display: none !important;
-}
-
-.luongson-live-ad {
-  position: relative;
-  display: block;
-  flex: 1 1 0;
-  min-width: 0;
-  aspect-ratio: 8.08889 / 1;
-  border-radius: 8px;
-  overflow: clip;
-  background: rgb(74, 210, 255);
-  transition: transform 0.3s ease;
-}
-
-.luongson-live-ad:hover {
-  transform: scale(1.03);
-}
-
-.luongson-live-ad--wide {
-  background: rgb(99, 141, 255);
-}
-
-.luongson-live-ad img {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -15569,24 +15550,12 @@ body .ck2-modal-close {
     grid-template-columns: repeat(3, minmax(50px, 1fr));
     gap: 12px 10px;
   }
-
-  .luongson-live-ads {
-    gap: 20px;
-  }
 }
 
 @media (min-width: 760px) and (max-width: 1439.98px) {
   .luongson-live-grid {
     grid-template-columns: repeat(2, minmax(50px, 1fr));
     gap: 12px 10px;
-  }
-
-  .luongson-live-ads {
-    gap: 8px;
-  }
-
-  .luongson-live-ad--wide {
-    display: none;
   }
 }
 
@@ -15596,20 +15565,16 @@ body .ck2-modal-close {
     gap: 10px;
   }
 
-  .luongson-live-ads {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .luongson-live-ad,
-  .luongson-live-ad--wide {
-    width: 100%;
-    flex: 0 0 auto;
-    display: block;
-  }
-
-  .luongson-live-ad--wide {
+  .luongson-live-grid > .dv2-ls-match-list-ad .dv2-qc-match-list-pc {
     display: none;
+  }
+
+  .luongson-live-grid > .dv2-ls-match-list-ad .dv2-qc-match-list-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
   }
 
   .luongson-match-odds-wrapper {

@@ -18,15 +18,7 @@ if (!defined('ABSPATH')) {
         <h2 class="luongson-list-matches__title"><?php echo esc_html__('Đang phát sóng', 'dv2-streaming'); ?></h2>
     </div>
 
-    <div class="luongson-live-grid">
-        <div class="luongson-live-ads" data-framer-name="Ads">
-            <?php
-            if (!empty($atts['ads-block-id'])) {
-                echo do_shortcode('[block id="' . esc_attr($atts['ads-block-id']) . '"]');
-            }
-            ?>
-        </div>
-    </div>
+    <div class="luongson-live-grid"></div>
 
     <div class="luongson-list-matches__footer">
         <button type="button" class="luongson-list-matches__load-more" hidden>
