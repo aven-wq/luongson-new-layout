@@ -18114,6 +18114,12 @@ body.luongson-stream-body-fs {
 }
 
 
+@media (orientation: landscape) and (max-width: 1350px) {
+  .luongson-stream-prematch__backdrop {
+    backdrop-filter: unset;
+    background: unset;
+  }
+}
 
 /* top-commentators.css */
 /**

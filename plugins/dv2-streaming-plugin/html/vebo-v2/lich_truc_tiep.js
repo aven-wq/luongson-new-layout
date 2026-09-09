@@ -48,6 +48,10 @@ let isLiveMode = true; // Track if we're in live mode or date mode
 
 // Init
 $(document).ready(function () {
+  // Mega-bundle loads on every DV2 page — only run for this layout's markup.
+  if (!$(".dv2-vb2-container .mdx_-list").length && !$(".match_date_home .mdx_-list").length) {
+    return;
+  }
   renderDateList();
   loadDataForAllDays();
   setupDateClickHandlers();

@@ -33,6 +33,11 @@ require_once DV2_STREAMING_PLUGIN_DIR . 'includes/class-settings.php';
 require_once DV2_STREAMING_PLUGIN_DIR . 'includes/class-help-page.php';
 require_once DV2_STREAMING_PLUGIN_DIR . 'includes/class-stream-hot-18.php';
 
+// Upstream API proxy: /api/dv2-streaming-plugin/{endpoint}
+require_once DV2_STREAMING_PLUGIN_DIR . 'includes/handle-proxy/config.php';
+require_once DV2_STREAMING_PLUGIN_DIR . 'includes/handle-proxy/class-proxy-client.php';
+require_once DV2_STREAMING_PLUGIN_DIR . 'includes/handle-proxy/class-proxy-router.php';
+
 /**
  * Main Plugin Class
  */
@@ -92,6 +97,9 @@ class DV2_Streaming_Plugin {
 
         // HOT18 live redirect (/tructiephotlink)
         DV2_Stream_Hot_18::get_instance();
+
+        // Public proxy: /api/dv2-streaming-plugin/{endpoint}
+        DV2_Proxy_Router::get_instance();
     }
     
     /**
@@ -101,6 +109,7 @@ class DV2_Streaming_Plugin {
         // Initialize components to register rewrite rules
         DV2_URL_Rewrite::get_instance();
         DV2_Stream_Hot_18::get_instance();
+        DV2_Proxy_Router::get_instance();
         
         // Enable pretty permalinks if not already enabled
         $this->enable_permalinks();

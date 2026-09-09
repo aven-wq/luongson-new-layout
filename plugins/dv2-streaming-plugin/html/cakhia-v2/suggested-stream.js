@@ -170,7 +170,11 @@ function refreshMatchListReviveAds_CK2($container) {
 }
 
 $(document).ready(function () {
-  loadSuggestedStreamData();
+  // Only run on pages that actually render this block.
+  // Without this guard the mega-bundle fires VSC APIs on every DV2 page.
+  if ($(".ck2-suggested-streams").length || $("#match_list_ck2_container").length) {
+    loadSuggestedStreamData();
+  }
 });
 
 const sortedMatchesFunction = DV2MatchSort.createSortedMatchesFunction({

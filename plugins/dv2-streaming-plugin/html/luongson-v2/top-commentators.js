@@ -6,11 +6,13 @@
   'use strict';
 
   var MOBILE_MQ = '(max-width: 809.98px)';
-  var BASE =
-    typeof window.BASE_API_URL !== 'undefined' && window.BASE_API_URL
-      ? String(window.BASE_API_URL).replace(/\/+$/, '')
-      : 'https://vsc-apidev.helizones.com';
-  var COMMENTATORS_API = BASE + '/api/admin/streams/commentators';
+  // Server-side proxy keeps X-API-Key off the browser.
+  // Public: GET /api/dv2-streaming-plugin/commentators
+  var PROXY_BASE =
+    typeof window.DV2_PROXY_API_BASE !== 'undefined' && window.DV2_PROXY_API_BASE
+      ? String(window.DV2_PROXY_API_BASE).replace(/\/+$/, '')
+      : '/api/dv2-streaming-plugin';
+  var COMMENTATORS_API = PROXY_BASE + '/commentators';
   var CARD_VARIANTS = ['is-blue', 'is-teal', 'is-green'];
 
   function getFallbackAvatar() {
@@ -392,6 +394,9 @@
   }
 
   function initAll() {
+    if (!document.querySelector('.luongson-top-commentators .luongson-commentators-track')) {
+      return;
+    }
     loadCommentators();
   }
 

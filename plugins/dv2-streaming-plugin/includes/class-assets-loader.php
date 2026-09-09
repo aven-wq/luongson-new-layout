@@ -375,6 +375,7 @@ class DV2_Assets_Loader {
         $js  = 'window.DV2_STREAMING_PLUGIN_URL=' . wp_json_encode($config['pluginUrl']) . ';';
         $js .= 'window.DV2_IMAGE_PATH=' . wp_json_encode($config['imagePath']) . ';';
         $js .= 'var DV2_IMAGE_PATH=window.DV2_IMAGE_PATH;';
+        $js .= 'window.DV2_PROXY_API_BASE=' . wp_json_encode(DV2_Proxy_Router::public_url()) . ';';
         $js .= 'window.DV2_LINK_BET=' . wp_json_encode($config['linkBet']) . ';';
         $js .= 'window.DV2_STREAMING_PRIORITY_COMPETITION_IDS=' . wp_json_encode($config['priorityCompetitionIds']) . ';';
         $js .= 'window.DV2_STREAMING_HOT18_COMMENTATOR_ID=' . wp_json_encode($config['hot18CommentatorId']) . ';';

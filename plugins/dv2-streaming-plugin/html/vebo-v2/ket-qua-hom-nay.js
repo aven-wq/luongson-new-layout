@@ -29,6 +29,11 @@ function sortLivestreamLinksPreferRealBlv(links) {
 
 // Init
 $(document).ready(function () {
+  // Mega-bundle loads on every DV2 page — only run for this layout's markup.
+  if (!$(".content-area.dv2-layout-vb2").length && !$(".match_date--wrapper").length) {
+    return;
+  }
+
   // Check page type from global variable or data attribute (fallback)
   if (typeof window.DV2_PAGE_TYPE === "undefined") {
     const $container = $(".content-area.dv2-layout-vb2");

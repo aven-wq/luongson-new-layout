@@ -11152,6 +11152,11 @@ function sortLivestreamLinksPreferRealBlv(links) {
 
 // Init
 $(document).ready(function () {
+  // Mega-bundle loads on every DV2 page — only run for this layout's markup.
+  if (!$(".content-area.dv2-layout-vb2").length && !$(".match_date--wrapper").length) {
+    return;
+  }
+
   // Check page type from global variable or data attribute (fallback)
   if (typeof window.DV2_PAGE_TYPE === "undefined") {
     const $container = $(".content-area.dv2-layout-vb2");
@@ -12069,6 +12074,10 @@ let isLiveMode = true; // Track if we're in live mode or date mode
 
 // Init
 $(document).ready(function () {
+  // Mega-bundle loads on every DV2 page — only run for this layout's markup.
+  if (!$(".dv2-vb2-container .mdx_-list").length && !$(".match_date_home .mdx_-list").length) {
+    return;
+  }
   renderDateList();
   loadDataForAllDays();
   setupDateClickHandlers();
@@ -16097,7 +16106,11 @@ function refreshMatchListReviveAds_CK2($container) {
 }
 
 $(document).ready(function () {
-  loadSuggestedStreamData();
+  // Only run on pages that actually render this block.
+  // Without this guard the mega-bundle fires VSC APIs on every DV2 page.
+  if ($(".ck2-suggested-streams").length || $("#match_list_ck2_container").length) {
+    loadSuggestedStreamData();
+  }
 });
 
 const sortedMatchesFunction = DV2MatchSort.createSortedMatchesFunction({
@@ -19113,11 +19126,13 @@ function showError(message) {
   'use strict';
 
   var MOBILE_MQ = '(max-width: 809.98px)';
-  var BASE =
-    typeof window.BASE_API_URL !== 'undefined' && window.BASE_API_URL
-      ? String(window.BASE_API_URL).replace(/\/+$/, '')
-      : 'https://vsc-apidev.helizones.com';
-  var COMMENTATORS_API = BASE + '/api/admin/streams/commentators';
+  // Server-side proxy keeps X-API-Key off the browser.
+  // Public: GET /api/dv2-streaming-plugin/commentators
+  var PROXY_BASE =
+    typeof window.DV2_PROXY_API_BASE !== 'undefined' && window.DV2_PROXY_API_BASE
+      ? String(window.DV2_PROXY_API_BASE).replace(/\/+$/, '')
+      : '/api/dv2-streaming-plugin';
+  var COMMENTATORS_API = PROXY_BASE + '/commentators';
   var CARD_VARIANTS = ['is-blue', 'is-teal', 'is-green'];
 
   function getFallbackAvatar() {
@@ -19499,6 +19514,9 @@ function showError(message) {
   }
 
   function initAll() {
+    if (!document.querySelector('.luongson-top-commentators .luongson-commentators-track')) {
+      return;
+    }
     loadCommentators();
   }
 
