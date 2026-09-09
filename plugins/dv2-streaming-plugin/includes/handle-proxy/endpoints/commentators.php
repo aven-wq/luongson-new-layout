@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
 
 return array(
     'method'    => 'GET',
-    'cache_ttl' => 60, // seconds — BLV list changes infrequently
+    'cache_ttl' => 12 * HOUR_IN_SECONDS, // BLV list changes infrequently
     'handle'    => function () {
         return DV2_Proxy_Client::get('/external/v1/commentators');
     },
