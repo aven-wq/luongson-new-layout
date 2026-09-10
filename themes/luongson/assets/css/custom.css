@@ -492,6 +492,14 @@ body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongs
     background-color: rgb(66, 0, 94);
 }
 
+.dv2-qc-match-list-pc img {
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+.dv2-qc-match-list-pc img:hover {
+    transform: scale(1.03);
+}
+
 .luongson-div-2-right-chat .col-inner {
     height: 100%;
     box-sizing: border-box;
