@@ -74,6 +74,7 @@
     requestId: 0,
     flatpickr: null,
     priorityCompetitionIds: new Set(),
+    priorityCompetitionIdsOrdered: [],
     $root: null,
     $list: null,
     $label: null,
@@ -137,7 +138,19 @@
         ? res.priorityCompetitions
         : window.DV2_STREAMING_PRIORITY_COMPETITION_IDS
     );
+    state.priorityCompetitionIdsOrdered = ids;
     state.priorityCompetitionIds = new Set(ids);
+    // Keep shared sorter in sync with proxy-resolved priority list.
+    if (ids.length) {
+      window.DV2_STREAMING_PRIORITY_COMPETITION_IDS = ids.join(',');
+    }
+  }
+
+  function getPriorityRank(match) {
+    var leagueId = match && match.league && match.league.id;
+    if (!leagueId || !state.priorityCompetitionIdsOrdered.length) return Infinity;
+    var index = state.priorityCompetitionIdsOrdered.indexOf(String(leagueId));
+    return index === -1 ? Infinity : index;
   }
 
   function isPriorityMatch(match) {
@@ -153,6 +166,30 @@
       return window.DV2MatchSort.isPriorityCompetitionMatch(match);
     }
     return false;
+  }
+
+  // live > priority > kickoff (live + priority always tops the list)
+  function sortMatches(matches) {
+    if (!Array.isArray(matches) || matches.length < 2) {
+      return Array.isArray(matches) ? matches.slice() : [];
+    }
+
+    return matches.slice().sort(function (a, b) {
+      var aLive = isLiveStatus(a && a.status);
+      var bLive = isLiveStatus(b && b.status);
+      if (aLive !== bLive) return aLive ? -1 : 1;
+
+      var aRank = getPriorityRank(a);
+      var bRank = getPriorityRank(b);
+      if (aRank !== bRank) return aRank - bRank;
+
+      var aKick = parseKickoffDate(a && a.kickoff);
+      var bKick = parseKickoffDate(b && b.kickoff);
+      if (!aKick && !bKick) return 0;
+      if (!aKick) return 1;
+      if (!bKick) return -1;
+      return aKick.getTime() - bKick.getTime();
+    });
   }
 
   function getPreferredLink(match) {
@@ -756,7 +793,7 @@
     }
 
     syncPriorityCompetitionIds(res);
-    var matches = flattenMatchesByDate(res.matches_by_date);
+    var matches = sortMatches(flattenMatchesByDate(res.matches_by_date));
     var pagination = res.pagination || {};
     state.page = Number(pagination.page) || page;
     state.totalPages = Number(pagination.totalPages) || 1;
