@@ -140,12 +140,6 @@ body {
    Widescreen (>= 1440px)
    -------------------------------------------------------------------------- */
 @media (min-width: 1440px) {
-  .luongson-live-grid,
-  .framer-1ths2n4 {
-    grid-template-columns: repeat(3, minmax(50px, 1fr)) !important;
-    gap: 12px 10px !important;
-  }
-
   /* Index Top Section Split */
   .framer-1talbf0 {
     display: flex !important;

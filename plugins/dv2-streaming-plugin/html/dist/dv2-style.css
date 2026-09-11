@@ -14404,6 +14404,17 @@ body .ck2-modal-close {
   position: relative;
 }
 
+.luongson-home-match .framer-woxy63 a {
+  transition: transform 0.22s ease;
+}
+
+.luongson-home-match .framer-woxy63 a:hover {
+  transform: scale(1.1);
+  background-color: rgb(255, 223, 41);
+  
+
+}
+
 /* Bet CTA — cược + xo88 logo */
 .luongson-home-match .luongson-home-bet-link {
   --border-color: #ff7d4a;
@@ -14883,6 +14894,11 @@ body .ck2-modal-close {
   --border-right-width: 1px;
   --border-bottom-width: 1px;
   --border-left-width: 1px;
+  font-family: var(--ls-font, "Momo Trust Sans", system-ui, sans-serif);
+}
+
+.luongson-live-grid, .luongson-live-grid p, .luongson-live-grid span, .luongson-live-grid strong, .luongson-live-grid label, .luongson-live-grid div {
+  font-family: var(--ls-font, "Momo Trust Sans", system-ui, sans-serif);
 }
 
 .luongson-match-header {
@@ -15039,7 +15055,7 @@ body .ck2-modal-close {
 }
 
 .luongson-match-score-text {
-  font-family: var(--ls-font-display);
+  font-family: var(--ls-font-display) !important;
   font-size: 24px;
   line-height: 1;
   color: #fff;
@@ -15270,10 +15286,10 @@ body .ck2-modal-close {
 .luongson-live-grid > .dv2-ls-match-list-ad .dv2-qc-match-list-pc {
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  gap: 20px;
   align-items: center;
   justify-content: center;
-  margin: 10px 0;
+  margin: 0;
 }
 
 .luongson-live-grid > .dv2-ls-match-list-ad .dv2-qc-match-list-mobile {
@@ -15397,6 +15413,7 @@ body .ck2-modal-close {
   font: inherit;
   text-align: left;
   box-sizing: border-box;
+  margin: 0 !important;
 }
 
 .luongson-commentator-option:hover {
@@ -15486,11 +15503,13 @@ body .ck2-modal-close {
   text-transform: capitalize;
   height: unset;
   min-height: unset;
+  margin-bottom: 0 !important;
 }
 
 .luongson-match-modal-tab.is-active, .luongson-match-modal-tab:hover {
   background: rgb(82, 125, 255);
   color: #fff;
+  margin: 0 !important;
 }
 
 .luongson-match-modal-row {
@@ -15501,6 +15520,8 @@ body .ck2-modal-close {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+  font-family: var(--ls-font, "Momo Trust Sans", system-ui, sans-serif);
+  font-weight: 500;
 }
 
 .luongson-match-modal-row__labels {
@@ -15513,9 +15534,10 @@ body .ck2-modal-close {
 }
 
 .luongson-match-modal-row__labels span {
-  font-size: 13px;
+  font-size: 14px;
   color: #000;
   min-width: 0;
+  font-weight: 600;
 }
 
 .luongson-match-modal-row__labels .is-val {
@@ -15576,13 +15598,6 @@ body .ck2-modal-close {
 /* -------------------------------------------------------------------------- */
 /* Responsive                                                                 */
 /* -------------------------------------------------------------------------- */
-
-@media (min-width: 1440px) {
-  .luongson-live-grid {
-    grid-template-columns: repeat(3, minmax(50px, 1fr));
-    gap: 12px 10px;
-  }
-}
 
 @media (min-width: 760px) and (max-width: 1439.98px) {
   .luongson-live-grid {
@@ -16623,9 +16638,10 @@ body .ck2-modal-close {
 }
 
 .luongson-match-modal-row__labels span {
-  font-size: 13px;
+  font-size: 14px;
   color: #000;
   min-width: 0;
+  font-weight: 500;
 }
 
 .luongson-match-modal-row__labels .is-val {
@@ -17054,7 +17070,7 @@ body:has(> .luongson-stream-match:only-child) {
 
 .luongson-stream-stage {
   width: 100%;
-  max-width: 1180px;
+  max-width: 1220px;
   margin: 0 auto;
 }
 
@@ -18366,9 +18382,10 @@ body.luongson-stream-body-fs {
 }
 
 .luongson-match-modal-row__labels span {
-  font-size: 13px;
+  font-size: 14px;
   color: #000;
   min-width: 0;
+  font-weight: 500;
 }
 
 .luongson-match-modal-row__labels .is-val {

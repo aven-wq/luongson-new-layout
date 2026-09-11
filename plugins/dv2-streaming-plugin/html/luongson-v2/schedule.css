@@ -996,9 +996,10 @@
 }
 
 .luongson-match-modal-row__labels span {
-  font-size: 13px;
+  font-size: 14px;
   color: #000;
   min-width: 0;
+  font-weight: 500;
 }
 
 .luongson-match-modal-row__labels .is-val {

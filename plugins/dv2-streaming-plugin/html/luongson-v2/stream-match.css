@@ -33,7 +33,7 @@ body:has(> .luongson-stream-match:only-child) {
 
 .luongson-stream-stage {
   width: 100%;
-  max-width: 1180px;
+  max-width: 1220px;
   margin: 0 auto;
 }
 
@@ -1345,9 +1345,10 @@ body.luongson-stream-body-fs {
 }
 
 .luongson-match-modal-row__labels span {
-  font-size: 13px;
+  font-size: 14px;
   color: #000;
   min-width: 0;
+  font-weight: 500;
 }
 
 .luongson-match-modal-row__labels .is-val {

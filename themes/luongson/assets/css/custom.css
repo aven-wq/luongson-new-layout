@@ -500,6 +500,10 @@ body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongs
     transform: scale(1.03);
 }
 
+.luongson-live-banner p.framer-text {
+    line-height: 1;
+}
+
 .luongson-div-2-right-chat .col-inner {
     height: 100%;
     box-sizing: border-box;
@@ -595,7 +599,7 @@ body.ai-prediction-modal-open {
     }
 
     body .row.row-collapse {
-        max-width: 1480px;
+        max-width: 1500px;
         margin: 0;
     }
 }

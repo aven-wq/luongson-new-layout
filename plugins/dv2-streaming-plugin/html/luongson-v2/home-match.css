@@ -709,6 +709,17 @@
   position: relative;
 }
 
+.luongson-home-match .framer-woxy63 a {
+  transition: transform 0.22s ease;
+}
+
+.luongson-home-match .framer-woxy63 a:hover {
+  transform: scale(1.1);
+  background-color: rgb(255, 223, 41);
+  
+
+}
+
 /* Bet CTA — cược + xo88 logo */
 .luongson-home-match .luongson-home-bet-link {
   --border-color: #ff7d4a;
