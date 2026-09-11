@@ -106,7 +106,7 @@
   grid-template-columns: repeat(3, minmax(50px, 1fr));
   gap: 20px;
   width: 100%;
-  padding: 0 10px;
+  padding: 0;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -604,19 +604,13 @@
 }
 
 /* -------------------------------------------------------------------------- */
-/* Portals                                                                    */
+/* Commentator portal                                                         */
 /* -------------------------------------------------------------------------- */
 
-.luongson-commentator-portal,
-.luongson-match-modal-portal {
+.luongson-commentator-portal {
   position: fixed;
   z-index: 99999;
   pointer-events: auto;
-}
-
-.luongson-match-modal-portal {
-  max-width: calc(100vw - 24px);
-  box-sizing: border-box;
 }
 
 .luongson-commentator-portal__panel {
@@ -638,8 +632,7 @@
   box-sizing: border-box;
 }
 
-.luongson-commentator-portal__panel[data-border="true"]::after,
-.luongson-match-modal-portal [data-border="true"]::after {
+.luongson-commentator-portal__panel[data-border="true"]::after {
   content: "";
   border-width: var(--border-top-width, 0) var(--border-right-width, 0)
     var(--border-bottom-width, 0) var(--border-left-width, 0);
@@ -696,156 +689,7 @@
   white-space: nowrap;
 }
 
-.luongson-match-modal-portal__panel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  width: min(384px, calc(100vw - 24px));
-  max-width: 100%;
-  padding: 12px 12px 20px;
-  border-radius: 20px;
-  background: #fff;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
-.luongson-match-modal-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  max-height: min(60vh, 440px);
-  overflow-x: hidden;
-  overflow-y: auto;
-  padding-right: 2px;
-  box-sizing: border-box;
-}
-
-.luongson-match-modal-tabs {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  width: 100%;
-  max-width: 100%;
-}
-
-.luongson-match-modal-tab {
-  --border-top-width: 1px;
-  --border-right-width: 1px;
-  --border-bottom-width: 1px;
-  --border-left-width: 1px;
-  --border-color: rgb(82, 125, 255);
-  --border-style: solid;
-  position: relative;
-  padding: 0px 15px;
-  border: 0;
-  border-radius: 20px;
-  background: transparent;
-  color: #000;
-  font-family: var(--ls-font, "Momo Trust Sans", system-ui, sans-serif);
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  line-height: 26px;
-  text-transform: capitalize;
-  height: unset;
-  min-height: unset;
-  margin-bottom: 0 !important;
-}
-
-.luongson-match-modal-tab.is-active, .luongson-match-modal-tab:hover {
-  background: rgb(82, 125, 255);
-  color: #fff;
-  margin: 0 !important;
-}
-
-.luongson-match-modal-row {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  font-family: var(--ls-font, "Momo Trust Sans", system-ui, sans-serif);
-  font-weight: 500;
-}
-
-.luongson-match-modal-row__labels {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  gap: 6px;
-  min-width: 0;
-}
-
-.luongson-match-modal-row__labels span {
-  font-size: 14px;
-  color: #000;
-  min-width: 0;
-  font-weight: 600;
-}
-
-.luongson-match-modal-row__labels .is-val {
-  flex: 0 0 auto;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.luongson-match-modal-row__labels .is-val:last-child {
-  text-align: right;
-}
-
-.luongson-match-modal-row__labels .is-label {
-  flex: 1 1 0;
-  min-width: 0;
-  font-weight: 500;
-  text-align: center;
-  line-height: 1.2;
-  word-break: break-word;
-}
-
-.luongson-match-modal-bars {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  min-width: 0;
-}
-
-.luongson-match-modal-bar {
-  position: relative;
-  flex: 1 1 0;
-  min-width: 0;
-  height: 10px;
-  border-radius: 8px;
-  background: rgb(204, 204, 204);
-  overflow: hidden;
-}
-
-.luongson-match-modal-bar > span {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  border-radius: 20px;
-  transition: width 0.3s ease;
-}
-
-.luongson-match-modal-bar.is-home > span {
-  right: 0;
-  background: rgb(0, 128, 255);
-}
-
-.luongson-match-modal-bar.is-away > span {
-  left: 0;
-  background: rgb(240, 36, 36);
-}
+/* Match modal styles: match-modal.css (shared with schedule / stream-match) */
 
 /* -------------------------------------------------------------------------- */
 /* Responsive                                                                 */
@@ -874,6 +718,10 @@
     gap: 10px;
     align-items: center;
     justify-content: center;
+  }
+
+  .luongson-live-grid > .dv2-ls-match-list-ad .dv2-qc-match-list-mobile img {
+    border-radius: 8px;
   }
 
   .luongson-match-odds-wrapper {

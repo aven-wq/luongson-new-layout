@@ -1,0 +1,174 @@
+/* Match stats hover modal — shared with list-matches / schedule / stream-match via common.js */
+
+.luongson-match-modal-portal {
+  position: fixed;
+  z-index: 99999;
+  pointer-events: auto;
+  max-width: calc(100vw - 24px);
+  box-sizing: border-box;
+}
+
+.luongson-match-modal-portal [data-border="true"]::after {
+  content: "";
+  border-width: var(--border-top-width, 0) var(--border-right-width, 0)
+    var(--border-bottom-width, 0) var(--border-left-width, 0);
+  border-color: var(--border-color, transparent);
+  border-style: var(--border-style, solid);
+  border-radius: inherit;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+.luongson-match-modal-portal__panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: min(384px, calc(100vw - 24px));
+  max-width: 100%;
+  padding: 0 12px 20px 12px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.luongson-match-modal-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-height: min(60vh, 440px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 2px;
+  box-sizing: border-box;
+}
+
+.luongson-match-modal-tabs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.luongson-match-modal-tab {
+  --border-top-width: 1px;
+  --border-right-width: 1px;
+  --border-bottom-width: 1px;
+  --border-left-width: 1px;
+  --border-color: rgb(82, 125, 255);
+  --border-style: solid;
+  position: relative;
+  padding: 0 15px;
+  border: 0;
+  border-radius: 20px;
+  background: transparent;
+  color: #000;
+  font-family: var(--ls-font, "Momo Trust Sans", system-ui, sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 26px;
+  text-transform: capitalize;
+  height: unset;
+  min-height: unset;
+  margin-bottom: 0 !important;
+}
+
+.luongson-match-modal-tab.is-active,
+.luongson-match-modal-tab:hover {
+  background: rgb(82, 125, 255);
+  color: #fff;
+  margin: 0 !important;
+}
+
+.luongson-match-modal-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  font-family: var(--ls-font, "Momo Trust Sans", system-ui, sans-serif);
+  font-weight: 500;
+}
+
+.luongson-match-modal-row__labels {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 6px;
+  min-width: 0;
+}
+
+.luongson-match-modal-row__labels span {
+  font-size: 13px;
+  color: #000;
+  min-width: 0;
+  font-weight: 500;
+}
+
+.luongson-match-modal-row__labels .is-val {
+  flex: 0 0 auto;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.luongson-match-modal-row__labels .is-val:last-child {
+  text-align: right;
+}
+
+.luongson-match-modal-row__labels .is-label {
+  flex: 1 1 0;
+  min-width: 0;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.2;
+  word-break: break-word;
+  font-family: var(--ls-font, "Momo Trust Sans", system-ui, sans-serif);
+}
+
+.luongson-match-modal-bars {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+.luongson-match-modal-bar {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 10px;
+  border-radius: 8px;
+  background: rgb(204, 204, 204);
+  overflow: hidden;
+}
+
+.luongson-match-modal-bar > span {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 20px;
+  transition: width 0.3s ease;
+}
+
+.luongson-match-modal-bar.is-home > span {
+  right: 0;
+  background: rgb(0, 128, 255);
+}
+
+.luongson-match-modal-bar.is-away > span {
+  left: 0;
+  background: rgb(240, 36, 36);
+}

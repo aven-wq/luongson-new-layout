@@ -2663,16 +2663,6 @@ navigationcontainer [data-framer-component-type="NavigationContainer"] > *,
   overflow: visible;
 }
 
-.framer-wh6HR .framer-18l4nza,
-.framer-wh6HR .framer-1v3vzsg {
-  aspect-ratio: 1 / 1;
-  height: auto;
-  overflow: var(--overflow-clip-fallback, clip);
-  flex: 0 0 auto;
-  width: 80px;
-  position: relative;
-}
-
 .framer-wh6HR .framer-1fo8xy6 {
   aspect-ratio: 1 / 1;
   flex: 0 0 auto;

@@ -1018,6 +1018,10 @@
 }
 
 @media (max-width: 759.98px) {
+  .luongson-home-match :is(.framer-18l4nza, .framer-1v3vzsg) {
+    width: 40px;
+  }
+
   .luongson-home-match .framer-18emxhy {
     aspect-ratio: unset;
     height: 320px;
