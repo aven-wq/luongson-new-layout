@@ -25,6 +25,8 @@
   var currentStats = null;
   var activeTab = 'ft';
   var closeTimeout = null;
+  var hideAnimTimeout = null;
+  var hideGeneration = 0;
   var globalListenersBound = false;
 
   function toNumber(value) {
@@ -174,6 +176,7 @@
       transform: 'scale(.96)',
       'transform-origin': 'top center',
       transition: 'opacity .15s ease,transform .15s cubic-bezier(.2,0,.2,1)',
+      'pointer-events': 'none',
     });
 
     $portal.html(
@@ -224,17 +227,45 @@
     if ($bodyEl && $bodyEl.length) $bodyEl.html(renderRows(currentStats));
   }
 
-  function showPopover(trigger) {
-    if (!trigger) return;
-
+  function cancelHideTimers() {
     if (closeTimeout) {
       clearTimeout(closeTimeout);
       closeTimeout = null;
     }
+    if (hideAnimTimeout) {
+      clearTimeout(hideAnimTimeout);
+      hideAnimTimeout = null;
+    }
+    hideGeneration += 1;
+  }
+
+  function forceHidePortal() {
+    if (!$portal || !$portal.length) return;
+    cancelHideTimers();
+    // Drop hit-testing immediately so an invisible portal cannot cover
+    // league links (framer-styles-preset-1kr0omk) under the live badge.
+    $portal
+      .attr('hidden', 'hidden')
+      .css({
+        display: 'none',
+        opacity: 0,
+        transform: 'scale(0.96)',
+        'pointer-events': 'none',
+      });
+    currentTrigger = null;
+  }
+
+  function showPopover(trigger) {
+    if (!trigger) return;
+
+    cancelHideTimers();
 
     currentTrigger = trigger;
     ensurePortal();
-    $portal.removeAttr('hidden').css('display', 'block');
+    $portal.removeAttr('hidden').css({
+      display: 'block',
+      'pointer-events': 'auto',
+    });
 
     var rect = trigger.getBoundingClientRect();
     var modalWidth = Math.min(384, $(window).width() - 24);
@@ -264,14 +295,21 @@
   function hidePopover() {
     if (!$portal || !$portal.length) return;
 
-    if (closeTimeout) clearTimeout(closeTimeout);
+    cancelHideTimers();
+    var generation = hideGeneration;
     closeTimeout = setTimeout(function () {
-      $portal.css({ opacity: 0, transform: 'scale(0.96)' });
-      setTimeout(function () {
-        if (parseFloat($portal.css('opacity')) === 0) {
-          $portal.css('display', 'none').attr('hidden', 'hidden');
-          currentTrigger = null;
-        }
+      closeTimeout = null;
+      if (generation !== hideGeneration) return;
+      // Disable clicks while fading out — portal sits over the match header.
+      $portal.css({
+        opacity: 0,
+        transform: 'scale(0.96)',
+        'pointer-events': 'none',
+      });
+      hideAnimTimeout = setTimeout(function () {
+        hideAnimTimeout = null;
+        if (generation !== hideGeneration) return;
+        forceHidePortal();
       }, 150);
     }, 120);
   }
@@ -284,8 +322,7 @@
       if (!$portal || $portal.css('display') === 'none' || !currentTrigger) return;
       var rect = currentTrigger.getBoundingClientRect();
       if (rect.bottom < 0 || rect.top > $(window).height()) {
-        $portal.css({ display: 'none', opacity: 0 });
-        currentTrigger = null;
+        forceHidePortal();
       } else {
         showPopover(currentTrigger);
       }
@@ -330,6 +367,7 @@
     updatePanel: updatePanel,
     showPopover: showPopover,
     hidePopover: hidePopover,
+    forceHidePortal: forceHidePortal,
     bindTriggers: bindTriggers,
     setCardStats: setCardStats,
     getStatsForTab: getStatsForTab,
