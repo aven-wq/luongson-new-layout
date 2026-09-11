@@ -16568,7 +16568,7 @@ body .ck2-modal-close {
   align-items: stretch;
   gap: 10px;
   width: 100%;
-  padding: 0 10px;
+  padding: 0;
   box-sizing: border-box;
 }
 
