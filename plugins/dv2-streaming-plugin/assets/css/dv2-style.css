@@ -15625,6 +15625,12 @@ body .ck2-modal-close {
   box-sizing: border-box;
 }
 
+/* Invisible / closing portal must never steal clicks from schedule rows. */
+.luongson-match-modal-portal[hidden] {
+  display: none !important;
+  pointer-events: none !important;
+}
+
 .luongson-match-modal-portal [data-border="true"]::after {
   content: "";
   border-width: var(--border-top-width, 0) var(--border-right-width, 0)
