@@ -307,4 +307,66 @@ class DV2_Proxy_Router {
         // Same-origin by default; allow simple CORS if needed later.
         header('X-Content-Type-Options: nosniff');
     }
+
+    /**
+     * Clear all handle-proxy caches (response transients + competitions file/transient).
+     *
+     * @return array{transients:int,competitions_file:bool}
+     */
+    public static function clear_all_cache() {
+        global $wpdb;
+
+        $transients = 0;
+
+        // Response cache keys: dv2_proxy_{endpoint}_{md5}, plus helpers like dv2_proxy_hot_competition_ids.
+        $rows = $wpdb->get_col(
+            $wpdb->prepare(
+                "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
+                $wpdb->esc_like('_transient_dv2_proxy_') . '%'
+            )
+        );
+
+        if (is_array($rows)) {
+            foreach ($rows as $option_name) {
+                if (!is_string($option_name) || strpos($option_name, '_transient_timeout_') === 0) {
+                    continue;
+                }
+                $name = substr($option_name, strlen('_transient_'));
+                if ($name !== '' && delete_transient($name)) {
+                    $transients++;
+                }
+            }
+        }
+
+        // Dedicated competitions catalog cache (file + transient, not under dv2_proxy_ prefix).
+        $competitions_file = false;
+        if (function_exists('dv2_competitions_clear_cache')) {
+            $comp_key = defined('DV2_COMPETITIONS_CACHE_KEY')
+                ? DV2_COMPETITIONS_CACHE_KEY
+                : 'dv2_competitions_all_v1';
+            $had_transient = (false !== get_transient($comp_key));
+            $competitions_file = (bool) dv2_competitions_clear_cache();
+            if ($had_transient) {
+                $transients++;
+            }
+        } else {
+            $comp_key = 'dv2_competitions_all_v1';
+            if (delete_transient($comp_key)) {
+                $transients++;
+            }
+
+            $upload = wp_upload_dir();
+            if (empty($upload['error'])) {
+                $file = trailingslashit($upload['basedir']) . 'dv2-streaming/competitions-cache.json';
+                if (file_exists($file)) {
+                    $competitions_file = (bool) @unlink($file);
+                }
+            }
+        }
+
+        return array(
+            'transients'        => $transients,
+            'competitions_file' => $competitions_file,
+        );
+    }
 }

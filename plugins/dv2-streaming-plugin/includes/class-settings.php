@@ -29,6 +29,7 @@ class DV2_Settings {
         add_action('admin_enqueue_scripts', array($this, 'enqueue_settings_assets'));
         add_action('wp_ajax_dv2_tvc_s3_upload', array($this, 'ajax_tvc_s3_upload'));
         add_action('wp_ajax_dv2_tvc_s3_register', array($this, 'ajax_tvc_s3_register'));
+        add_action('admin_post_dv2_clear_proxy_cache', array($this, 'handle_clear_proxy_cache'));
     }
     
     /**
@@ -2614,6 +2615,43 @@ class DV2_Settings {
     }
     
     /**
+     * Admin: clear all handle-proxy caches, then redirect back to settings.
+     */
+    public function handle_clear_proxy_cache() {
+        if (!current_user_can('manage_options')) {
+            wp_die(__('Bạn không có quyền thực hiện thao tác này.', 'dv2-streaming'));
+        }
+
+        check_admin_referer('dv2_clear_proxy_cache');
+
+        $result = DV2_Proxy_Router::clear_all_cache();
+        $count  = isset($result['transients']) ? (int) $result['transients'] : 0;
+        if (!empty($result['competitions_file'])) {
+            $count++;
+        }
+
+        set_transient(
+            'dv2_proxy_cache_cleared_notice',
+            array(
+                'count' => $count,
+                'time'  => time(),
+            ),
+            60
+        );
+
+        wp_safe_redirect(
+            add_query_arg(
+                array(
+                    'page'              => 'dv2-streaming',
+                    'dv2_cache_cleared' => '1',
+                ),
+                admin_url('admin.php')
+            )
+        );
+        exit;
+    }
+
+    /**
      * Render settings page
      */
     public function render_settings_page() {
@@ -2623,6 +2661,21 @@ class DV2_Settings {
         }
         
         $options = get_option($this->option_name);
+
+        if (isset($_GET['dv2_cache_cleared']) && $_GET['dv2_cache_cleared'] === '1') {
+            $notice = get_transient('dv2_proxy_cache_cleared_notice');
+            delete_transient('dv2_proxy_cache_cleared_notice');
+            $cleared = (is_array($notice) && isset($notice['count'])) ? (int) $notice['count'] : 0;
+            echo '<div class="notice notice-success is-dismissible"><p>';
+            echo esc_html(
+                sprintf(
+                    /* translators: %d: number of cache entries removed */
+                    __('Đã xóa cache proxy (%d mục).', 'dv2-streaming'),
+                    $cleared
+                )
+            );
+            echo '</p></div>';
+        }
         ?>
         <div class="wrap dv2-settings-page">
             <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
@@ -2660,6 +2713,19 @@ class DV2_Settings {
                                 <span class="dashicons dashicons-welcome-learn-more"></span>
                                 <?php echo esc_html__('Hướng dẫn sử dụng', 'dv2-streaming'); ?>
                             </a>
+                        </p>
+                        <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" onsubmit="return confirm('<?php echo esc_js(__('Xóa toàn bộ cache proxy (API)?', 'dv2-streaming')); ?>');">
+                            <input type="hidden" name="action" value="dv2_clear_proxy_cache" />
+                            <?php wp_nonce_field('dv2_clear_proxy_cache'); ?>
+                            <p>
+                                <button type="submit" class="button">
+                                    <span class="dashicons dashicons-trash" style="margin-top:3px;"></span>
+                                    <?php echo esc_html__('Clear cache proxy', 'dv2-streaming'); ?>
+                                </button>
+                            </p>
+                        </form>
+                        <p class="description">
+                            <?php echo esc_html__('Xóa transient + file cache của handle-proxy (competitions, matches, streams-range, …).', 'dv2-streaming'); ?>
                         </p>
                     </div>
                     

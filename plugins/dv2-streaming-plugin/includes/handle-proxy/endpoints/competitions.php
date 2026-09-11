@@ -1,11 +1,11 @@
 <?php
 /**
- * Proxy endpoint: all competitions (id + name), cached 7 days.
+ * Proxy endpoint: all competitions (id + name), cached 1 month.
  *
  * Public:   GET /api/dv2-streaming-plugin/competitions
  * Upstream: GET /external/v1/competitions?page=&pageSize= (all pages, no isHot filter)
  *
- * Cache: uploads/dv2-streaming/competitions-cache.json + transient (WEEK_IN_SECONDS).
+ * Cache: uploads/dv2-streaming/competitions-cache.json + transient (MONTH_IN_SECONDS).
  * After expiry the file is deleted and the full list is fetched again.
  *
  * Response shape (slim):
@@ -23,7 +23,7 @@ if (!defined('DV2_COMPETITIONS_CACHE_KEY')) {
     define('DV2_COMPETITIONS_CACHE_KEY', 'dv2_competitions_all_v1');
 }
 if (!defined('DV2_COMPETITIONS_CACHE_TTL')) {
-    define('DV2_COMPETITIONS_CACHE_TTL', WEEK_IN_SECONDS);
+    define('DV2_COMPETITIONS_CACHE_TTL', MONTH_IN_SECONDS);
 }
 if (!defined('DV2_COMPETITIONS_PAGE_SIZE')) {
     define('DV2_COMPETITIONS_PAGE_SIZE', 100);
@@ -137,7 +137,25 @@ function dv2_competitions_read_file_cache() {
 }
 
 /**
- * Persist slim competition list to file + transient (7 days).
+ * Delete competitions file + transient cache.
+ *
+ * @return bool True if a cache file existed and was removed.
+ */
+function dv2_competitions_clear_cache() {
+    $removed_file = false;
+    $file         = dv2_competitions_cache_file();
+
+    if (is_string($file) && $file !== '' && file_exists($file)) {
+        $removed_file = @unlink($file);
+    }
+
+    delete_transient(DV2_COMPETITIONS_CACHE_KEY);
+
+    return (bool) $removed_file;
+}
+
+/**
+ * Persist slim competition list to file + transient (1 month).
  *
  * @param array<int,array{id:string,name:string}> $items
  * @return void
@@ -336,7 +354,7 @@ function dv2_competitions_resolve_list() {
 }
 
 return array(
-    // Caching is handled inside the handler (file + transient, 7 days).
+    // Caching is handled inside the handler (file + transient, 1 month).
     'method'    => 'GET',
     'cache_ttl' => 0,
     'handle'    => 'dv2_competitions_resolve_list',
