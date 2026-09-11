@@ -144,6 +144,9 @@ class DV2_Help_Page {
                 <p class="description">
                     <?php echo esc_html__('URL chi tiết trận: /streams/{id} (ví dụ /streams/n54qllhn487dqvy/). Trang /streams cần shortcode [stream_detail].', 'dv2-streaming'); ?>
                 </p>
+                <p class="description">
+                    <?php echo esc_html__('Layout luongson-v2: trang chủ = [de_xuat_video] + [danh_sach_featured_video] + [danh_sach_blv_hot]; lịch = [lich_truc_tiep]; trang theo giải thêm league_filter="1".', 'dv2-streaming'); ?>
+                </p>
                 <p>
                     <a href="<?php echo esc_url(admin_url('admin.php?page=dv2-streaming')); ?>" class="button">
                         <span class="dashicons dashicons-admin-settings"></span>
@@ -237,15 +240,22 @@ class DV2_Help_Page {
                             <span class="dashicons dashicons-clipboard"></span> <?php echo esc_html__('Sao chép', 'dv2-streaming'); ?>
                         </button>
                     </div>
+                    <div class="dv2-shortcode-code">
+                        <code class="dv2-code-block">[danh_sach_featured_video layout="luongson-v2" league_filter="1"]</code>
+                        <button class="button dv2-copy-btn" data-shortcode='[danh_sach_featured_video layout="luongson-v2" league_filter="1"]'>
+                            <span class="dashicons dashicons-clipboard"></span> <?php echo esc_html__('Sao chép (luongson-v2 + lọc giải)', 'dv2-streaming'); ?>
+                        </button>
+                    </div>
                     
                     <div class="dv2-shortcode-description">
-                        <p><?php echo esc_html__('Hiển thị video/stream nổi bật (template: home-featured-streams.block.php).', 'dv2-streaming'); ?></p>
+                        <p><?php echo esc_html__('Hiển thị video/stream nổi bật (template: home-featured-streams.block.php). Layout luongson-v2 = khối “Đang phát sóng” (list-matches).', 'dv2-streaming'); ?></p>
                         <strong><?php echo esc_html__('Tham số:', 'dv2-streaming'); ?></strong>
                         <ul>
                             <li><code>count</code> — <?php echo esc_html__('Số lượng (mặc định: 3)', 'dv2-streaming'); ?></li>
-                            <li><code>layout</code> — <?php echo esc_html__('Layout (mặc định: socolive)', 'dv2-streaming'); ?></li>
+                            <li><code>layout</code> — <?php echo esc_html__('Layout (mặc định: socolive). Có luongson-v2.', 'dv2-streaming'); ?></li>
                             <li><code>ads-block-id</code> — <?php echo esc_html__('ID UX Block quảng cáo (tùy chọn)', 'dv2-streaming'); ?></li>
                             <li><code>banner_zone_id</code> — <?php echo esc_html__('Zone ID banner (mặc định: 2724)', 'dv2-streaming'); ?></li>
+                            <li><code>league_filter</code> — <?php echo esc_html__('Chỉ luongson-v2: "1" = bật Select2 lọc giải + sync URL ?competition_id= (mặc định tắt)', 'dv2-streaming'); ?></li>
                         </ul>
                     </div>
                     
@@ -270,16 +280,22 @@ class DV2_Help_Page {
                             <span class="dashicons dashicons-clipboard"></span> <?php echo esc_html__('Sao chép', 'dv2-streaming'); ?>
                         </button>
                     </div>
+                    <div class="dv2-shortcode-code">
+                        <code class="dv2-code-block">[danh_sach_blv_hot layout="luongson-v2"]</code>
+                        <button class="button dv2-copy-btn" data-shortcode='[danh_sach_blv_hot layout="luongson-v2"]'>
+                            <span class="dashicons dashicons-clipboard"></span> <?php echo esc_html__('Sao chép (luongson-v2)', 'dv2-streaming'); ?>
+                        </button>
+                    </div>
                     
                     <div class="dv2-shortcode-description">
-                        <p><?php echo esc_html__('Hiển thị danh sách BLV hot (template: hot-blv-list.block.php).', 'dv2-streaming'); ?></p>
+                        <p><?php echo esc_html__('Hiển thị danh sách BLV hot (template: hot-blv-list.block.php). Layout luongson-v2 = top commentators.', 'dv2-streaming'); ?></p>
                         <strong><?php echo esc_html__('Tham số:', 'dv2-streaming'); ?></strong>
                         <ul>
                             <li><code>count</code> — <?php echo esc_html__('Số lượng BLV (mặc định: 10)', 'dv2-streaming'); ?></li>
                             <li><code>category</code> — <?php echo esc_html__('Lọc theo danh mục (tùy chọn)', 'dv2-streaming'); ?></li>
                             <li><code>orderby</code> — <?php echo esc_html__('Sắp xếp theo (mặc định: date)', 'dv2-streaming'); ?></li>
                             <li><code>order</code> — <?php echo esc_html__('ASC hoặc DESC (mặc định: DESC)', 'dv2-streaming'); ?></li>
-                            <li><code>layout</code> — <?php echo esc_html__('Layout (mặc định: socolive)', 'dv2-streaming'); ?></li>
+                            <li><code>layout</code> — <?php echo esc_html__('Layout (mặc định: socolive). Có luongson-v2.', 'dv2-streaming'); ?></li>
                         </ul>
                     </div>
                     
@@ -335,13 +351,20 @@ class DV2_Help_Page {
                             <span class="dashicons dashicons-clipboard"></span> <?php echo esc_html__('Sao chép', 'dv2-streaming'); ?>
                         </button>
                     </div>
+                    <div class="dv2-shortcode-code">
+                        <code class="dv2-code-block">[lich_truc_tiep layout="luongson-v2" league_filter="1"]</code>
+                        <button class="button dv2-copy-btn" data-shortcode='[lich_truc_tiep layout="luongson-v2" league_filter="1"]'>
+                            <span class="dashicons dashicons-clipboard"></span> <?php echo esc_html__('Sao chép (luongson-v2 + lọc giải)', 'dv2-streaming'); ?>
+                        </button>
+                    </div>
                     
                     <div class="dv2-shortcode-description">
-                        <p><?php echo esc_html__('Hiển thị lịch thi đấu / lịch trực tiếp (template: stream-calander.block.php).', 'dv2-streaming'); ?></p>
+                        <p><?php echo esc_html__('Hiển thị lịch thi đấu / lịch trực tiếp (template: stream-calander.block.php). Layout luongson-v2 = schedule.js.', 'dv2-streaming'); ?></p>
                         <strong><?php echo esc_html__('Tham số:', 'dv2-streaming'); ?></strong>
                         <ul>
                             <li><code>count</code> — <?php echo esc_html__('Số lượng (mặc định: 3)', 'dv2-streaming'); ?></li>
-                            <li><code>layout</code> — <?php echo esc_html__('Layout (mặc định: socolive)', 'dv2-streaming'); ?></li>
+                            <li><code>layout</code> — <?php echo esc_html__('Layout (mặc định: socolive). Có luongson-v2.', 'dv2-streaming'); ?></li>
+                            <li><code>league_filter</code> — <?php echo esc_html__('Chỉ luongson-v2: "1" = lọc theo giải từ URL/event (dùng cùng featured có league_filter)', 'dv2-streaming'); ?></li>
                         </ul>
                     </div>
                     
@@ -429,14 +452,20 @@ class DV2_Help_Page {
                             <span class="dashicons dashicons-clipboard"></span> <?php echo esc_html__('Sao chép', 'dv2-streaming'); ?>
                         </button>
                     </div>
+                    <div class="dv2-shortcode-code">
+                        <code class="dv2-code-block">[de_xuat_video layout="luongson-v2"]</code>
+                        <button class="button dv2-copy-btn" data-shortcode='[de_xuat_video layout="luongson-v2"]'>
+                            <span class="dashicons dashicons-clipboard"></span> <?php echo esc_html__('Sao chép (luongson-v2 home match)', 'dv2-streaming'); ?>
+                        </button>
+                    </div>
                     
                     <div class="dv2-shortcode-description">
-                        <p><?php echo esc_html__('Hiển thị video đề xuất (template: suggested-streams.block.php).', 'dv2-streaming'); ?></p>
+                        <p><?php echo esc_html__('Hiển thị video đề xuất (template: suggested-streams.block.php). Layout luongson-v2 = khối home match nổi bật (home-match.js); view_more không dùng.', 'dv2-streaming'); ?></p>
                         <strong><?php echo esc_html__('Tham số:', 'dv2-streaming'); ?></strong>
                         <ul>
                             <li><code>count</code> — <?php echo esc_html__('Số lượng (mặc định: 3)', 'dv2-streaming'); ?></li>
-                            <li><code>layout</code> — <?php echo esc_html__('Layout (mặc định: socolive)', 'dv2-streaming'); ?></li>
-                            <li><code>view_more</code> — <?php echo esc_html__('0 = tối đa ~12 trận, không nút Xem thêm; 1 = phân trang + nút Xem thêm (mặc định: 0)', 'dv2-streaming'); ?></li>
+                            <li><code>layout</code> — <?php echo esc_html__('Layout (mặc định: socolive). Có cakhia-v2, luongson-v2.', 'dv2-streaming'); ?></li>
+                            <li><code>view_more</code> — <?php echo esc_html__('0 = tối đa ~12 trận, không nút Xem thêm; 1 = phân trang + nút Xem thêm (mặc định: 0). Không áp dụng luongson-v2.', 'dv2-streaming'); ?></li>
                         </ul>
                     </div>
                     
@@ -461,12 +490,18 @@ class DV2_Help_Page {
                             <span class="dashicons dashicons-clipboard"></span> <?php echo esc_html__('Sao chép', 'dv2-streaming'); ?>
                         </button>
                     </div>
+                    <div class="dv2-shortcode-code">
+                        <code class="dv2-code-block">[stream_detail layout="luongson-v2" shortcode_stream="dv2_livechat"]</code>
+                        <button class="button dv2-copy-btn" data-shortcode='[stream_detail layout="luongson-v2" shortcode_stream="dv2_livechat"]'>
+                            <span class="dashicons dashicons-clipboard"></span> <?php echo esc_html__('Sao chép (luongson-v2)', 'dv2-streaming'); ?>
+                        </button>
+                    </div>
                     
                     <div class="dv2-shortcode-description">
                         <p><?php echo esc_html__('Trang chi tiết livestream. Tự đọc stream ID từ rewrite /streams/{id} (query var stream_id).', 'dv2-streaming'); ?></p>
                         <strong><?php echo esc_html__('Tham số:', 'dv2-streaming'); ?></strong>
                         <ul>
-                            <li><code>layout</code> — <?php echo esc_html__('Layout (mặc định: socolive)', 'dv2-streaming'); ?></li>
+                            <li><code>layout</code> — <?php echo esc_html__('Layout (mặc định: socolive). Có luongson-v2.', 'dv2-streaming'); ?></li>
                             <li><code>shortcode_stream</code> — <?php echo esc_html__('Shortcode chat nhúng (mặc định: dv2_livechat)', 'dv2-streaming'); ?></li>
                             <li><code>banner_zone_id</code> — <?php echo esc_html__('Zone ID banner (mặc định: 2724)', 'dv2-streaming'); ?></li>
                             <li><code>ads-block-id</code> — <?php echo esc_html__('ID UX Block quảng cáo (tùy chọn)', 'dv2-streaming'); ?></li>
@@ -564,13 +599,17 @@ class DV2_Help_Page {
                             <?php endif; ?>
                         </div>
                         <div class="dv2-layout-info">
-                            <h3><?php echo esc_html(ucfirst($layout)); ?></h3>
+                            <h3><?php echo esc_html($layout); ?></h3>
                             <?php if ($is_default) : ?>
                                 <span class="dv2-badge dv2-badge-default"><?php echo esc_html__('Mặc định', 'dv2-streaming'); ?></span>
+                            <?php elseif ($layout === 'luongson-v2') : ?>
+                                <span class="dv2-badge dv2-badge-featured"><?php echo esc_html__('LuongSon', 'dv2-streaming'); ?></span>
                             <?php endif; ?>
                             <p><?php 
                                 if ($is_default) {
                                     echo esc_html__('Thiết kế hiện đại và sạch sẽ với trọng tâm vào nội dung và khả năng đọc.', 'dv2-streaming');
+                                } elseif ($layout === 'luongson-v2') {
+                                    echo esc_html__('Home match, danh sách trận, lịch, BLV, chi tiết stream. Hỗ trợ league_filter="1" (Select2 lọc giải).', 'dv2-streaming');
                                 } else {
                                     echo esc_html__('Layout với phong cách thiết kế độc đáo.', 'dv2-streaming');
                                 }
@@ -616,33 +655,76 @@ class DV2_Help_Page {
                     </button>
                 </div>
             </div>
-            
+
             <div class="dv2-example-card">
-                <h3><?php echo esc_html__('Ví dụ 2: Lịch thi đấu', 'dv2-streaming'); ?></h3>
-                <p><?php echo esc_html__('Trang /lich-thi-dau.', 'dv2-streaming'); ?></p>
+                <h3><?php echo esc_html__('Ví dụ 2: Trang chủ LuongSon V2', 'dv2-streaming'); ?></h3>
+                <p><?php echo esc_html__('Home match + danh sách trận + BLV. Không dùng league_filter trên trang chủ.', 'dv2-streaming'); ?></p>
                 
                 <div class="dv2-example-code">
-                    <pre><code>[lich_truc_tiep layout="socolive"]</code></pre>
-                    <button class="button button-primary dv2-copy-btn" data-shortcode='[lich_truc_tiep layout="socolive"]'>
-                        <span class="dashicons dashicons-clipboard"></span> <?php echo esc_html__('Sao chép', 'dv2-streaming'); ?>
+                    <pre><code>[de_xuat_video layout="luongson-v2"]
+
+[danh_sach_featured_video layout="luongson-v2"]
+
+[danh_sach_blv_hot layout="luongson-v2"]</code></pre>
+                    <button class="button button-primary dv2-copy-btn" data-shortcode='[de_xuat_video layout="luongson-v2"]
+
+[danh_sach_featured_video layout="luongson-v2"]
+
+[danh_sach_blv_hot layout="luongson-v2"]'>
+                        <span class="dashicons dashicons-clipboard"></span> <?php echo esc_html__('Sao chép tất cả', 'dv2-streaming'); ?>
                     </button>
                 </div>
             </div>
             
             <div class="dv2-example-card">
-                <h3><?php echo esc_html__('Ví dụ 3: Chi tiết stream', 'dv2-streaming'); ?></h3>
+                <h3><?php echo esc_html__('Ví dụ 3: Lịch thi đấu', 'dv2-streaming'); ?></h3>
+                <p><?php echo esc_html__('Trang /lich-thi-dau (socolive hoặc luongson-v2).', 'dv2-streaming'); ?></p>
+                
+                <div class="dv2-example-code">
+                    <pre><code>[lich_truc_tiep layout="socolive"]
+
+[lich_truc_tiep layout="luongson-v2"]</code></pre>
+                    <button class="button button-primary dv2-copy-btn" data-shortcode='[lich_truc_tiep layout="luongson-v2"]'>
+                        <span class="dashicons dashicons-clipboard"></span> <?php echo esc_html__('Sao chép luongson-v2', 'dv2-streaming'); ?>
+                    </button>
+                </div>
+            </div>
+
+            <div class="dv2-example-card">
+                <h3><?php echo esc_html__('Ví dụ 4: Lịch theo giải (LuongSon V2)', 'dv2-streaming'); ?></h3>
+                <p><?php echo esc_html__('Trang riêng: Select2 lọc giải + sync URL ?competition_id=. Cấu hình URL trang này trong Settings (dv2_league_schedule_page_url) để click tên giải trên lịch thường nhảy đúng trang.', 'dv2-streaming'); ?></p>
+                
+                <div class="dv2-example-code">
+                    <pre><code>[danh_sach_featured_video layout="luongson-v2" league_filter="1"]
+
+[lich_truc_tiep layout="luongson-v2" league_filter="1"]</code></pre>
+                    <button class="button button-primary dv2-copy-btn" data-shortcode='[danh_sach_featured_video layout="luongson-v2" league_filter="1"]
+
+[lich_truc_tiep layout="luongson-v2" league_filter="1"]'>
+                        <span class="dashicons dashicons-clipboard"></span> <?php echo esc_html__('Sao chép tất cả', 'dv2-streaming'); ?>
+                    </button>
+                </div>
+                <p class="description" style="margin-top: 12px;">
+                    <?php echo esc_html__('Deep-link ví dụ: /lich-theo-giai/?competition_id=123&competition_name=Premier%20League', 'dv2-streaming'); ?>
+                </p>
+            </div>
+            
+            <div class="dv2-example-card">
+                <h3><?php echo esc_html__('Ví dụ 5: Chi tiết stream', 'dv2-streaming'); ?></h3>
                 <p><?php echo esc_html__('Đặt trên trang /streams. Người dùng vào /streams/{id} hoặc /streams/{id}/?liveId=... để xem trận.', 'dv2-streaming'); ?></p>
                 
                 <div class="dv2-example-code">
-                    <pre><code>[stream_detail layout="socolive" shortcode_stream="dv2_livechat"]</code></pre>
-                    <button class="button button-primary dv2-copy-btn" data-shortcode='[stream_detail layout="socolive" shortcode_stream="dv2_livechat"]'>
-                        <span class="dashicons dashicons-clipboard"></span> <?php echo esc_html__('Sao chép', 'dv2-streaming'); ?>
+                    <pre><code>[stream_detail layout="socolive" shortcode_stream="dv2_livechat"]
+
+[stream_detail layout="luongson-v2" shortcode_stream="dv2_livechat"]</code></pre>
+                    <button class="button button-primary dv2-copy-btn" data-shortcode='[stream_detail layout="luongson-v2" shortcode_stream="dv2_livechat"]'>
+                        <span class="dashicons dashicons-clipboard"></span> <?php echo esc_html__('Sao chép luongson-v2', 'dv2-streaming'); ?>
                     </button>
                 </div>
             </div>
             
             <div class="dv2-example-card">
-                <h3><?php echo esc_html__('Ví dụ 4: Highlights', 'dv2-streaming'); ?></h3>
+                <h3><?php echo esc_html__('Ví dụ 6: Highlights', 'dv2-streaming'); ?></h3>
                 <p><?php echo esc_html__('Trang /highlights dùng highlights_moi_nhat; hoặc dùng shortcode highlights riêng (layout cakhia-v2).', 'dv2-streaming'); ?></p>
                 
                 <div class="dv2-example-code">
@@ -662,7 +744,7 @@ class DV2_Help_Page {
             </div>
             
             <div class="dv2-example-card">
-                <h3><?php echo esc_html__('Ví dụ 5: Kết quả hôm nay', 'dv2-streaming'); ?></h3>
+                <h3><?php echo esc_html__('Ví dụ 7: Kết quả hôm nay', 'dv2-streaming'); ?></h3>
                 <p><?php echo esc_html__('Trang /ket-qua-hom-nay.', 'dv2-streaming'); ?></p>
                 
                 <div class="dv2-example-code">
@@ -674,7 +756,7 @@ class DV2_Help_Page {
             </div>
 
             <div class="dv2-example-card">
-                <h3><?php echo esc_html__('Ví dụ 6: Trộn layout', 'dv2-streaming'); ?></h3>
+                <h3><?php echo esc_html__('Ví dụ 8: Trộn layout', 'dv2-streaming'); ?></h3>
                 <p><?php echo esc_html__('Chỉ dùng layout đã có thư mục trong includes/layouts/.', 'dv2-streaming'); ?></p>
                 
                 <div class="dv2-example-code">
@@ -741,13 +823,35 @@ class DV2_Help_Page {
             <div class="dv2-faq-item">
                 <h3><?php echo esc_html__('Layout là gì?', 'dv2-streaming'); ?></h3>
                 <div class="dv2-faq-answer">
-                    <p><?php echo esc_html__('Mỗi layout là một thư mục trong includes/layouts/ (ví dụ socolive, vebo, thapcam, cakhia, cakhia-v2, vebo-v2, luongson).', 'dv2-streaming'); ?></p>
+                    <p><?php echo esc_html__('Mỗi layout là một thư mục trong includes/layouts/ (ví dụ socolive, vebo, thapcam, cakhia, cakhia-v2, vebo-v2, luongson, luongson-v2).', 'dv2-streaming'); ?></p>
                     <ul>
                         <?php foreach ($this->get_available_layouts() as $layout) : ?>
-                            <li><strong><?php echo esc_html($layout); ?></strong><?php echo ($layout === 'socolive') ? ' — ' . esc_html__('mặc định cho hầu hết shortcode', 'dv2-streaming') : ''; ?></li>
+                            <li><strong><?php echo esc_html($layout); ?></strong><?php
+                                if ($layout === 'socolive') {
+                                    echo ' — ' . esc_html__('mặc định cho hầu hết shortcode', 'dv2-streaming');
+                                } elseif ($layout === 'luongson-v2') {
+                                    echo ' — ' . esc_html__('home match, list matches, schedule, BLV, stream detail; league_filter', 'dv2-streaming');
+                                }
+                            ?></li>
                         <?php endforeach; ?>
                     </ul>
                     <p><?php echo esc_html__('Thiếu template cho layout đó → plugin fallback về socolive (hoặc cakhia-v2 với shortcode [highlights]).', 'dv2-streaming'); ?></p>
+                </div>
+            </div>
+
+            <div class="dv2-faq-item">
+                <h3><?php echo esc_html__('league_filter="1" dùng thế nào?', 'dv2-streaming'); ?></h3>
+                <div class="dv2-faq-answer">
+                    <p><?php echo esc_html__('Chỉ layout luongson-v2. Đặt trên trang “lịch theo giải” cùng lúc:', 'dv2-streaming'); ?></p>
+                    <p><code>[danh_sach_featured_video layout="luongson-v2" league_filter="1"]</code></p>
+                    <p><code>[lich_truc_tiep layout="luongson-v2" league_filter="1"]</code></p>
+                    <ul>
+                        <li><?php echo esc_html__('Featured hiện Select2 (danh sách giải từ /api/.../competitions, cache 7 ngày).', 'dv2-streaming'); ?></li>
+                        <li><?php echo esc_html__('URL là nguồn sự thật: ?competition_id=... — F5/share vẫn đúng.', 'dv2-streaming'); ?></li>
+                        <li><?php echo esc_html__('Hai shortcode sync qua URL + event luongson:competition-change.', 'dv2-streaming'); ?></li>
+                        <li><?php echo esc_html__('Trang chủ / lịch thường: không thêm attribute → hành vi cũ.', 'dv2-streaming'); ?></li>
+                    </ul>
+                    <p><?php echo esc_html__('Trong Settings, điền URL trang league (vd. /lich-theo-giai/) để click tên giải trên lịch nhảy đúng trang.', 'dv2-streaming'); ?></p>
                 </div>
             </div>
             
@@ -761,13 +865,14 @@ class DV2_Help_Page {
                         <li><strong>Highlights</strong> — <code>/highlights</code></li>
                         <li><strong>Kết quả hôm nay</strong> — <code>/ket-qua-hom-nay</code></li>
                     </ul>
+                    <p><?php echo esc_html__('Trang lịch theo giải (league_filter) không tạo tự động — tự tạo trang WP rồi gắn shortcode như ví dụ 4.', 'dv2-streaming'); ?></p>
                 </div>
             </div>
 
             <div class="dv2-faq-item">
                 <h3><?php echo esc_html__('Cài đặt plugin gồm những gì?', 'dv2-streaming'); ?></h3>
                 <div class="dv2-faq-answer">
-                    <p><?php echo esc_html__('Vào DV2 Streaming → Settings để cấu hình link đặt cược, quảng cáo Vebo V2 (header/footer/góc), bảng kèo, pre-roll TVC, và các nút cược Socolive (home/detail).', 'dv2-streaming'); ?></p>
+                    <p><?php echo esc_html__('Vào DV2 Streaming → Settings: link đặt cược, quảng cáo Vebo V2, bảng kèo, pre-roll TVC, nút cược Socolive, URL trang lịch theo giải (luongson-v2), và nút xóa cache proxy (competitions, streams-range, …).', 'dv2-streaming'); ?></p>
                     <p><a href="<?php echo esc_url(admin_url('admin.php?page=dv2-streaming')); ?>"><?php echo esc_html__('Mở Cài đặt DV2', 'dv2-streaming'); ?></a></p>
                 </div>
             </div>
@@ -775,7 +880,7 @@ class DV2_Help_Page {
             <div class="dv2-faq-item">
                 <h3><?php echo esc_html__('CSS/JS có load trên mọi trang không?', 'dv2-streaming'); ?></h3>
                 <div class="dv2-faq-answer">
-                    <p><?php echo esc_html__('Không. Asset chỉ enqueue khi trang có shortcode DV2, là trang plugin đã tạo, hoặc URL /streams/{id}. HLS.js chỉ load ở trang chi tiết stream. Có thể ép load bằng filter dv2_should_enqueue_assets.', 'dv2-streaming'); ?></p>
+                    <p><?php echo esc_html__('Không. Asset chỉ enqueue khi trang có shortcode DV2, là trang plugin đã tạo, hoặc URL /streams/{id}. HLS.js chỉ load ở trang chi tiết stream. Select2 chỉ load khi featured có league_filter="1". Có thể ép load bằng filter dv2_should_enqueue_assets.', 'dv2-streaming'); ?></p>
                 </div>
             </div>
             
