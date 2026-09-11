@@ -14713,6 +14713,10 @@ body .ck2-modal-close {
 }
 
 @media (max-width: 759.98px) {
+  .luongson-home-match :is(.framer-18l4nza, .framer-1v3vzsg) {
+    width: 40px;
+  }
+
   .luongson-home-match .framer-18emxhy {
     aspect-ratio: unset;
     height: 320px;
@@ -14854,7 +14858,7 @@ body .ck2-modal-close {
   grid-template-columns: repeat(3, minmax(50px, 1fr));
   gap: 20px;
   width: 100%;
-  padding: 0 10px;
+  padding: 0;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -15124,7 +15128,7 @@ body .ck2-modal-close {
   display: flex;
   align-items: center;
   gap: 7px;
-  width: 140px;
+  /* width: 140px; */
   height: 28px;
   padding: 2px 8px 2px 2px;
   border: 0;
@@ -15468,6 +15472,10 @@ body .ck2-modal-close {
     justify-content: center;
   }
 
+  .luongson-live-grid > .dv2-ls-match-list-ad .dv2-qc-match-list-mobile img {
+    border-radius: 8px;
+  }
+
   .luongson-match-odds-wrapper {
     width: auto;
     flex: 1 1 auto;
@@ -15513,7 +15521,7 @@ body .ck2-modal-close {
   gap: 12px;
   width: min(384px, calc(100vw - 24px));
   max-width: 100%;
-  padding: 12px 12px 20px;
+  padding: 0 12px 20px 12px;
   border-radius: 20px;
   background: #fff;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
@@ -15597,10 +15605,10 @@ body .ck2-modal-close {
 }
 
 .luongson-match-modal-row__labels span {
-  font-size: 14px;
+  font-size: 13px;
   color: #000;
   min-width: 0;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .luongson-match-modal-row__labels .is-val {
@@ -15620,6 +15628,7 @@ body .ck2-modal-close {
   text-align: center;
   line-height: 1.2;
   word-break: break-word;
+  font-family: var(--ls-font, "Momo Trust Sans", system-ui, sans-serif);
 }
 
 .luongson-match-modal-bars {
@@ -16559,7 +16568,7 @@ body .ck2-modal-close {
   align-items: stretch;
   gap: 10px;
   width: 100%;
-  padding: 0 10px;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -16872,7 +16881,9 @@ span.flatpickr-weekday {
 
 @media (max-width: 480px) {
   .flatpickr-calendar {
-    width: min(100vw - 16px, 340px);
+    /* Keep inset so clamp has room; avoid growing past ~viewport-16 */
+    width: min(320px, calc(100vw - 16px));
+    max-width: calc(100vw - 16px);
   }
 
   .flatpickr-day {

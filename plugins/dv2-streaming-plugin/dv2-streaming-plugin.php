@@ -3,7 +3,7 @@
  * Plugin Name: DV2 Streaming Plugin
  * Plugin URI: https://wp.dep2.vip/dv2-streaming-plugin
  * Description: A comprehensive streaming plugin with streaming shortcodes and custom layouts.
- * Version: 2.0.7
+ * Version: 2.0.8
  * Author: DEV2
  * Author URI: https://wp.dev2.vip
  * License: GPL v2 or later
@@ -17,7 +17,7 @@ if (!defined('WPINC')) {
 }
 
 // Define plugin constants
-define('DV2_STREAMING_VERSION', '2.0.7');
+define('DV2_STREAMING_VERSION', '2.0.8');
 define('DV2_STREAMING_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('DV2_STREAMING_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('DV2_STREAMING_PLUGIN_FILE', __FILE__);

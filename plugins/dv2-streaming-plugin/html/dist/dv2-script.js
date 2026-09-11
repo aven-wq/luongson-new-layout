@@ -19439,6 +19439,59 @@ function showError(message) {
     state.$prev.toggleClass('is-disabled', atMin);
   }
 
+  /* Keep flatpickr inside the viewport — "auto center" overflows on mobile
+     when the trigger sits near the left edge of the stacked header. */
+  function clampFlatpickrToViewport(instance) {
+    if (!instance || !instance.calendarContainer) return;
+    var el = instance.calendarContainer;
+    if (!el.classList.contains('open')) return;
+
+    var margin = 8;
+    var rect = el.getBoundingClientRect();
+    var vw = window.innerWidth || document.documentElement.clientWidth || 0;
+    var vh = window.innerHeight || document.documentElement.clientHeight || 0;
+    if (!vw || !vh || !rect.width || !rect.height) return;
+
+    var left = rect.left;
+    var top = rect.top;
+    var changed = false;
+
+    if (left + rect.width > vw - margin) {
+      left = vw - margin - rect.width;
+      changed = true;
+    }
+    if (left < margin) {
+      left = margin;
+      changed = true;
+    }
+    if (top + rect.height > vh - margin) {
+      top = vh - margin - rect.height;
+      changed = true;
+    }
+    if (top < margin) {
+      top = margin;
+      changed = true;
+    }
+    if (!changed) return;
+
+    var scrollX = window.pageXOffset || document.documentElement.scrollLeft || 0;
+    var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+    el.style.left = left + scrollX + 'px';
+    el.style.top = top + scrollY + 'px';
+    el.style.right = 'auto';
+  }
+
+  function bindFlatpickrViewportClamp(instance) {
+    if (!instance || typeof instance._positionCalendar !== 'function') return;
+    if (instance._lsViewportClampBound) return;
+    instance._lsViewportClampBound = true;
+    var originalPosition = instance._positionCalendar.bind(instance);
+    instance._positionCalendar = function () {
+      originalPosition();
+      clampFlatpickrToViewport(instance);
+    };
+  }
+
   function initDateControls($root) {
     var $prev = $root.find('[data-framer-name="Previous Day"]');
     var $next = $root.find('[data-framer-name="Next Day"]');
@@ -19480,6 +19533,12 @@ function showError(message) {
             if (instance && instance.calendarContainer) {
               instance.calendarContainer.classList.add('luongson-fp');
             }
+            bindFlatpickrViewportClamp(instance);
+          },
+          onOpen: function (_dates, _str, instance) {
+            requestAnimationFrame(function () {
+              clampFlatpickrToViewport(instance);
+            });
           },
           onChange: function (selectedDates) {
             if (!selectedDates || !selectedDates[0]) return;

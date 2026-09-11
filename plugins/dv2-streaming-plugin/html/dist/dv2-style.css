@@ -16881,7 +16881,9 @@ span.flatpickr-weekday {
 
 @media (max-width: 480px) {
   .flatpickr-calendar {
-    width: min(100vw - 16px, 340px);
+    /* Keep inset so clamp has room; avoid growing past ~viewport-16 */
+    width: min(320px, calc(100vw - 16px));
+    max-width: calc(100vw - 16px);
   }
 
   .flatpickr-day {
