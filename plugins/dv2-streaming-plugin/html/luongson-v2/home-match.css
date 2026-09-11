@@ -365,6 +365,25 @@
   position: relative;
 }
 
+/* Team names: stay inside column; wrap long names instead of clipping */
+.luongson-home-match :is(.framer-14gk5iy, .framer-146zqku) {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: normal;
+}
+
+.luongson-home-match :is(.framer-14gk5iy, .framer-146zqku) .framer-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  line-height: 1.2em;
+}
+
 .luongson-home-match .framer-v3u6ml {
   flex-flow: column;
   flex: 0 0 auto;
@@ -1034,6 +1053,8 @@
 
   .luongson-home-match .framer-17ntzdd {
     width: 100%;
+    gap: 4px;
+    padding: 28px 8px 16px;
   }
 
   .luongson-home-match .framer-6ym17g {
@@ -1045,7 +1066,15 @@
   }
 
   .luongson-home-match :is(.framer-11ivf5z, .framer-1g7hg3k) {
-    width: min(180px, 38vw);
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    gap: 6px;
+  }
+
+  .luongson-home-match .ls-s44 {
+    --framer-font-size: 12px !important;
   }
 
   .luongson-home-match .framer-woxy63 {

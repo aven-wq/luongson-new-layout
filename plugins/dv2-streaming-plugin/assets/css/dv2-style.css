@@ -14060,6 +14060,25 @@ body .ck2-modal-close {
   position: relative;
 }
 
+/* Team names: stay inside column; wrap long names instead of clipping */
+.luongson-home-match :is(.framer-14gk5iy, .framer-146zqku) {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: normal;
+}
+
+.luongson-home-match :is(.framer-14gk5iy, .framer-146zqku) .framer-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  line-height: 1.2em;
+}
+
 .luongson-home-match .framer-v3u6ml {
   flex-flow: column;
   flex: 0 0 auto;
@@ -14729,6 +14748,8 @@ body .ck2-modal-close {
 
   .luongson-home-match .framer-17ntzdd {
     width: 100%;
+    gap: 4px;
+    padding: 28px 8px 16px;
   }
 
   .luongson-home-match .framer-6ym17g {
@@ -14740,7 +14761,15 @@ body .ck2-modal-close {
   }
 
   .luongson-home-match :is(.framer-11ivf5z, .framer-1g7hg3k) {
-    width: min(180px, 38vw);
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    gap: 6px;
+  }
+
+  .luongson-home-match .ls-s44 {
+    --framer-font-size: 12px !important;
   }
 
   .luongson-home-match .framer-woxy63 {
@@ -15379,6 +15408,30 @@ body .ck2-modal-close {
   font-size: 9px;
   line-height: 1;
   text-align: center;
+}
+
+.luongson-match-card .luongson-match-odds-type, .luongson-match-card .luongson-match-odds-values {
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+  height: min-content;
+  padding: 0px;
+  display: flex;
+  position: relative;
+  overflow: visible;
+}
+
+.luongson-match-card .luongson-match-league, .luongson-match-card .luongson-match-odds-type-text, .luongson-match-card .luongson-match-odds-val {
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  flex: 1 0 0px;
+  width: 1px;
+  height: auto;
+  position: relative;
 }
 
 .luongson-match-odds-val.is-home {
@@ -16487,7 +16540,7 @@ body .ck2-modal-close {
 
 .luongson-schedule .ls-ltd-s4 {
   display: block;
-  width: 100%;
+  width: auto;
   height: 100%;
   border-radius: inherit;
   corner-shape: inherit;
