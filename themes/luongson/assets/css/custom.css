@@ -611,7 +611,7 @@ body.ai-prediction-modal-open {
         font-size: 2.5rem;
     }
 
-    body .luongson-div-2 .luongson-div-2-right {
+    body .luongson-div-2 .luongson-div-2-right .top-prediction {
         display: none;
     }
 
