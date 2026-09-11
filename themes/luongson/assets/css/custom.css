@@ -584,12 +584,18 @@ body.ai-prediction-modal-open {
 }
 
 
-
+.luongson-div-2-left-league .luongson-live-grid .dv2-qc-match-list-pc a:last-child {
+    display: none;
+}
 @media (min-width: 850px) {
     body .luongson-div-2 .luongson-div-2-left {
         flex-basis: calc(100% - 280px);
         max-width: calc(100% - 280px);
         padding-right: 10px !important;
+    }
+
+    .luongson-div-2-left-league .luongson-live-grid {
+        grid-template-columns: repeat(2, minmax(50px, 1fr));
     }
 
     body .luongson-div-2 .luongson-div-2-right {
