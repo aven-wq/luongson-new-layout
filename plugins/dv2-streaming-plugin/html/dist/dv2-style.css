@@ -15521,7 +15521,7 @@ body .ck2-modal-close {
   gap: 12px;
   width: min(384px, calc(100vw - 24px));
   max-width: 100%;
-  padding: 0 12px 20px 12px;
+  padding: 12px 20px 12px;
   border-radius: 20px;
   background: #fff;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
