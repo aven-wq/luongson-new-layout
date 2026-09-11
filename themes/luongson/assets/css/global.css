@@ -2480,353 +2480,6 @@ navigationcontainer [data-framer-component-type="NavigationContainer"] > *,
   overflow: visible;
 }
 
-/* ========================================================
-   LUONGSON MATCH CARD STYLES (.luongson-match-card)
-   ======================================================== */
-.luongson-match-card {
-  --border-bottom-width: 1px;
-  --border-color: #82828252;
-  --border-left-width: 1px;
-  --border-right-width: 1px;
-  --border-style: solid;
-  --border-top-width: 1px;
-  cursor: pointer;
-  min-width: 0px;
-  height: min-content;
-  overflow: var(--overflow-clip-fallback, clip);
-  will-change: var(--framer-will-change-effect-override, transform);
-  background-color: rgb(245, 245, 245);
-  border-radius: 16px;
-  flex-flow: column;
-  flex: 0 0 auto;
-  place-content: flex-start center;
-  place-self: start;
-  align-items: flex-start;
-  gap: 20px;
-  width: 100%;
-  padding: 12px;
-  display: flex;
-  position: relative;
-}
-
-.luongson-match-card .luongson-match-header {
-  flex-flow: row;
-  flex: 0 0 auto;
-  place-content: center space-between;
-  align-items: center;
-  width: 100%;
-  height: min-content;
-  padding: 0px;
-  display: flex;
-  position: relative;
-}
-
-.luongson-match-card .luongson-match-league,
-.luongson-match-card .luongson-match-odds-type-text,
-.luongson-match-card .luongson-match-odds-val {
-  white-space: pre-wrap;
-  word-break: break-word;
-  overflow-wrap: break-word;
-  flex: 1 0 0px;
-  width: 1px;
-  height: auto;
-  position: relative;
-}
-
-.luongson-match-card .luongson-match-status-container,
-.luongson-match-card .luongson-match-commentator-container {
-  flex: 0 0 auto;
-  width: auto;
-  height: auto;
-  position: relative;
-}
-
-.luongson-match-card .luongson-match-status-dot,
-.luongson-match-card .framer-9wekp1 {
-  aspect-ratio: 1 / 1;
-  flex: 0 0 auto;
-  width: 8px;
-  height: auto;
-  position: relative;
-}
-
-.luongson-match-card .luongson-match-status-text,
-.luongson-match-card .framer-oy32wj {
-  white-space: pre;
-  flex: 0 0 auto;
-  width: auto;
-  height: auto;
-  position: relative;
-}
-
-.luongson-match-card .luongson-match-time-box {
-  flex-flow: row;
-  flex: 1 0 0px;
-  place-content: center flex-end;
-  align-items: center;
-  gap: 4px;
-  width: 1px;
-  height: min-content;
-  padding: 0px;
-  display: flex;
-  position: relative;
-}
-
-.luongson-match-card .luongson-match-time,
-.luongson-match-card .luongson-match-date,
-.luongson-match-card .luongson-match-score-text,
-.luongson-match-card .luongson-match-stat-text {
-  white-space: pre;
-  flex: 0 0 auto;
-  width: auto;
-  height: auto;
-  position: relative;
-}
-
-.luongson-match-card .luongson-match-body {
-  flex-flow: row;
-  flex: 0 0 auto;
-  place-content: center space-between;
-  align-items: center;
-  width: 100%;
-  height: min-content;
-  padding: 0px;
-  text-decoration: none;
-  display: flex;
-  position: relative;
-}
-
-.luongson-match-card .luongson-match-team {
-  flex-flow: column;
-  flex: 1 0 0px;
-  place-content: center;
-  align-items: center;
-  gap: 8px;
-  width: 1px;
-  height: min-content;
-  padding: 0px;
-  display: flex;
-  position: relative;
-}
-
-.luongson-match-card .luongson-match-team-logo {
-  aspect-ratio: 1 / 1;
-  border-radius: 100px;
-  flex-flow: column;
-  flex: 0 0 auto;
-  place-content: center;
-  align-items: center;
-  gap: 0px;
-  width: 60px;
-  height: auto;
-  padding: 0px;
-  display: flex;
-  position: relative;
-}
-
-.luongson-match-card .luongson-match-team-logo-inner {
-  aspect-ratio: 1 / 1;
-  flex: 0 0 auto;
-  width: 60px;
-  height: auto;
-  position: relative;
-  overflow: visible;
-}
-
-.luongson-match-card .luongson-match-team-name {
-  white-space: pre-wrap;
-  word-break: break-word;
-  overflow-wrap: break-word;
-  flex: 0 0 auto;
-  width: 100%;
-  height: auto;
-  position: relative;
-}
-
-.luongson-match-card .luongson-match-score-center {
-  flex-flow: column;
-  flex: 0 0 auto;
-  place-content: center;
-  align-items: center;
-  gap: 8px;
-  width: min-content;
-  height: min-content;
-  padding: 0px;
-  display: flex;
-  position: relative;
-  overflow: visible;
-}
-
-.luongson-match-card .luongson-match-score-box {
-  background-color: rgb(46, 88, 255);
-  border-radius: 12px;
-  flex-flow: row;
-  flex: 0 0 auto;
-  place-content: center;
-  align-items: center;
-  gap: 12px;
-  width: 76px;
-  height: min-content;
-  padding: 10px;
-  display: flex;
-  position: relative;
-}
-
-.luongson-match-card .luongson-match-stats {
-  flex-flow: row;
-  flex: 0 0 auto;
-  place-content: center space-between;
-  align-items: center;
-  width: 76px;
-  height: min-content;
-  padding: 0px 6px 0px 4px;
-  display: flex;
-  position: relative;
-}
-
-.luongson-match-card .luongson-match-stat-item {
-  flex-flow: row;
-  flex: 0 0 auto;
-  place-content: center;
-  align-items: center;
-  gap: 2px;
-  width: min-content;
-  height: min-content;
-  padding: 0px;
-  display: flex;
-  position: relative;
-  overflow: visible;
-}
-
-.luongson-match-card .luongson-match-stat-flag {
-  --1m6trwb: 0.2;
-  --21h8s6: #0051ff;
-  --pgex8v: 1.5;
-  aspect-ratio: 1 / 1;
-  flex: 0 0 auto;
-  width: 8px;
-  height: auto;
-  position: relative;
-}
-
-.luongson-match-card .luongson-match-stat-card {
-  width: 6px;
-  height: 8px;
-  position: relative;
-}
-
-.luongson-match-card .luongson-match-footer {
-  flex-flow: row;
-  flex: 0 0 auto;
-  place-content: center space-between;
-  align-items: center;
-  width: 100%;
-  height: min-content;
-  padding: 0px;
-  display: flex;
-  position: relative;
-  overflow: visible;
-}
-
-.luongson-match-card .luongson-match-odds-wrapper {
-  flex-flow: row;
-  flex: 0 0 auto;
-  place-content: center flex-end;
-  align-items: center;
-  gap: 4px;
-  width: 60%;
-  height: min-content;
-  padding: 0px;
-  display: flex;
-  position: relative;
-  overflow: visible;
-}
-
-.luongson-match-card .luongson-match-odds-box {
-  --corner-shape-fallback: 0.796;
-  border-bottom-left-radius: calc(12px * var(--one-if-corner-shape-supported, var(--corner-shape-fallback, 1)));
-  border-bottom-right-radius: calc(12px * var(--one-if-corner-shape-supported, var(--corner-shape-fallback, 1)));
-  border-top-left-radius: calc(12px * var(--one-if-corner-shape-supported, var(--corner-shape-fallback, 1)));
-  border-top-right-radius: calc(12px * var(--one-if-corner-shape-supported, var(--corner-shape-fallback, 1)));
-  corner-shape: superellipse(1.4);
-  background-color: rgb(255, 255, 255);
-  flex-flow: column;
-  flex: 1 0 0px;
-  place-content: center;
-  align-items: center;
-  gap: 2px;
-  width: 1px;
-  height: 28px;
-  padding: 0px 4px;
-  display: flex;
-  position: relative;
-}
-
-.luongson-match-card .luongson-match-odds-type,
-.luongson-match-card .luongson-match-odds-values {
-  flex-flow: row;
-  flex: 0 0 auto;
-  place-content: center;
-  align-items: center;
-  gap: 2px;
-  width: 100%;
-  height: min-content;
-  padding: 0px;
-  display: flex;
-  position: relative;
-  overflow: visible;
-}
-
-.luongson-match-card .luongson-match-bet-btn {
-  --border-bottom-width: 1px;
-  --border-color: #4aff6b;
-  --border-left-width: 1px;
-  --border-right-width: 1px;
-  --border-style: solid;
-  --border-top-width: 1px;
-  --corner-shape-fallback: 0.796;
-  aspect-ratio: 3.88889 / 1;
-  border-bottom-left-radius: calc(12px * var(--one-if-corner-shape-supported, var(--corner-shape-fallback, 1)));
-  border-bottom-right-radius: calc(12px * var(--one-if-corner-shape-supported, var(--corner-shape-fallback, 1)));
-  border-top-left-radius: calc(12px * var(--one-if-corner-shape-supported, var(--corner-shape-fallback, 1)));
-  border-top-right-radius: calc(12px * var(--one-if-corner-shape-supported, var(--corner-shape-fallback, 1)));
-  corner-shape: superellipse(1.4);
-  cursor: pointer;
-  height: auto;
-  overflow: var(--overflow-clip-fallback, clip);
-  will-change: var(--framer-will-change-effect-override, transform);
-  background-color: rgb(0, 38, 18);
-  flex: 0 0 auto;
-  width: 109px;
-  position: relative;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 2px;
-}
-
-.luongson-match-card .luongson-match-bet-logo {
-  aspect-ratio: 4.11765 / 1;
-  flex: 0 0 auto;
-  width: 62px;
-  height: auto;
-  position: absolute;
-  top: 50%;
-  left: 40px;
-  overflow: visible;
-  transform: translateY(-50%);
-}
-
-.luongson-match-card .luongson-match-bet-text {
-  --framer-link-text-color: #09f;
-  --framer-link-text-decoration: underline;
-  white-space: pre;
-  flex: 0 0 auto;
-  width: auto;
-  height: auto;
-  position: absolute;
-  top: 50%;
-  left: 8px;
-  transform: translateY(-50%);
-}
-
 .framer-wh6HR .framer-hdbb3f {
   height: min-content;
   overflow: var(--overflow-clip-fallback, clip);
@@ -2887,8 +2540,7 @@ navigationcontainer [data-framer-component-type="NavigationContainer"] > *,
   position: relative;
 }
 
-.framer-wh6HR .framer-24z3t0,
-.framer-wh6HR .luongson-commentator-card {
+.framer-wh6HR .framer-24z3t0 {
   height: 80px;
   overflow: var(--overflow-clip-fallback, clip);
   will-change: var(--framer-will-change-override, transform);
@@ -2904,8 +2556,7 @@ navigationcontainer [data-framer-component-type="NavigationContainer"] > *,
   position: relative;
 }
 
-.framer-wh6HR .framer-hgq8kk,
-.framer-wh6HR .luongson-commentator-avatar {
+.framer-wh6HR .framer-hgq8kk {
   --border-bottom-width: 1px;
   --border-color: #fff3;
   --border-left-width: 1px;
@@ -2922,8 +2573,7 @@ navigationcontainer [data-framer-component-type="NavigationContainer"] > *,
   position: relative;
 }
 
-.framer-wh6HR .framer-154d6k3,
-.framer-wh6HR .luongson-commentator-info {
+.framer-wh6HR .framer-154d6k3 {
   flex-flow: column;
   flex: 1 0 0px;
   place-content: flex-start center;
@@ -2936,8 +2586,7 @@ navigationcontainer [data-framer-component-type="NavigationContainer"] > *,
   position: relative;
 }
 
-.framer-wh6HR .framer-1tp7z3x,
-.framer-wh6HR .luongson-commentator-follow-btn {
+.framer-wh6HR .framer-1tp7z3x {
   cursor: pointer;
   will-change: var(--framer-will-change-effect-override, transform);
   background-color: rgb(255, 255, 255);
@@ -3255,8 +2904,7 @@ navigationcontainer [data-framer-component-type="NavigationContainer"] > *,
   .framer-wh6HR .framer-3bgk2l {
     order: 5;
   }
-  .framer-wh6HR .framer-24z3t0,
-  .framer-wh6HR .luongson-commentator-card {
+  .framer-wh6HR .framer-24z3t0 {
     flex: 0 0 auto;
   }
   .framer-wh6HR .framer-1gg3oxg,
@@ -3501,8 +3149,7 @@ navigationcontainer [data-framer-component-type="NavigationContainer"] > *,
   .framer-wh6HR .framer-5zry8q {
     flex-direction: column;
   }
-  .framer-wh6HR .framer-24z3t0,
-  .framer-wh6HR .luongson-commentator-card {
+  .framer-wh6HR .framer-24z3t0 {
     flex: 0 0 auto;
   }
   .framer-wh6HR .framer-1gg3oxg,

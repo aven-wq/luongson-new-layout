@@ -15381,6 +15381,30 @@ body .ck2-modal-close {
   text-align: center;
 }
 
+.luongson-match-card .luongson-match-odds-type, .luongson-match-card .luongson-match-odds-values {
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+  height: min-content;
+  padding: 0px;
+  display: flex;
+  position: relative;
+  overflow: visible;
+}
+
+.luongson-match-card .luongson-match-league, .luongson-match-card .luongson-match-odds-type-text, .luongson-match-card .luongson-match-odds-val {
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  flex: 1 0 0px;
+  width: 1px;
+  height: auto;
+  position: relative;
+}
+
 .luongson-match-odds-val.is-home {
   font-weight: 700;
   color: var(--ls-odds-home);

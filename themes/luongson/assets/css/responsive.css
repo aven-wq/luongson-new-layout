@@ -788,7 +788,6 @@ body {
   }
 
   /* Commentators List Vertical Stack */
-  .luongson-commentators-list,
   .framer-3bgk2l {
     display: flex !important;
     flex-direction: column !important;
@@ -796,7 +795,6 @@ body {
     width: 100% !important;
   }
 
-  .luongson-commentators-list .framer-5zry8q,
   .framer-3bgk2l .framer-5zry8q {
     display: flex !important;
     flex-flow: column !important;
@@ -804,7 +802,6 @@ body {
     gap: 10px !important;
   }
 
-  .luongson-commentators-list .framer-5zry8q > *,
   .framer-3bgk2l .framer-5zry8q > * {
     width: 100% !important;
     height: 80px !important;
