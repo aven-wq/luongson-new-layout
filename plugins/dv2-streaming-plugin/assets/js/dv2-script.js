@@ -17217,11 +17217,9 @@ function showError(message) {
     return (match && (match.match_id || match.matchId || match.id || match.slug)) || '';
   }
 
+  // Prefer first streaming link in API order (no client-side link sort).
   function getPreferredLink(match) {
     var links = match && match.livestream && match.livestream.links;
-    if (window.DV2StreamLinks && window.DV2StreamLinks.getPreferredLink) {
-      return window.DV2StreamLinks.getPreferredLink(links);
-    }
     if (!Array.isArray(links) || !links.length) return null;
     var streaming = $.grep(links, function (l) {
       return l && l.isStreaming !== false;
@@ -17229,11 +17227,8 @@ function showError(message) {
     return (streaming.length ? streaming : links)[0] || null;
   }
 
-  function getSortedLinks(match) {
+  function getMatchLinks(match) {
     var links = match && match.livestream && match.livestream.links;
-    if (window.DV2StreamLinks && window.DV2StreamLinks.sortForDetail) {
-      return window.DV2StreamLinks.sortForDetail(links);
-    }
     return Array.isArray(links) ? links.slice() : [];
   }
 
@@ -17342,12 +17337,9 @@ function showError(message) {
     return all;
   }
 
+  // Featured = first match in API order (no client-side re-rank).
   function pickFeaturedMatch(matches) {
     if (!Array.isArray(matches) || !matches.length) return null;
-    var i;
-    for (i = 0; i < matches.length; i++) {
-      if (isLiveStatus(matches[i] && matches[i].status)) return matches[i];
-    }
     return matches[0];
   }
 
@@ -17411,7 +17403,7 @@ function showError(message) {
     var $wrap = $root.find('.framer-woxy63').first();
     if (!$wrap.length) return;
 
-    var links = getSortedLinks(match);
+    var links = getMatchLinks(match);
     if (!links.length) {
       $wrap.empty();
       return;
@@ -17745,11 +17737,9 @@ function showError(message) {
     return false;
   }
 
+  // Prefer first streaming link in API order (no client-side link sort).
   function getPreferredLink(match) {
     var links = match && match.livestream && match.livestream.links;
-    if (window.DV2StreamLinks && window.DV2StreamLinks.getPreferredLink) {
-      return window.DV2StreamLinks.getPreferredLink(links);
-    }
     if (!Array.isArray(links) || !links.length) return null;
     var streaming = $.grep(links, function (l) {
       return l && l.isStreaming !== false;
@@ -17757,11 +17747,8 @@ function showError(message) {
     return (streaming.length ? streaming : links)[0] || null;
   }
 
-  function getSortedLinks(match) {
+  function getMatchLinks(match) {
     var links = match && match.livestream && match.livestream.links;
-    if (window.DV2StreamLinks && window.DV2StreamLinks.sortForDetail) {
-      return window.DV2StreamLinks.sortForDetail(links);
-    }
     return Array.isArray(links) ? links.slice() : [];
   }
 
@@ -17931,7 +17918,7 @@ function showError(message) {
     var away = (match && match.teams && match.teams.away) || {};
     var hdp = (match && match.hdp) || {};
     var preferred = getPreferredLink(match);
-    var links = getSortedLinks(match);
+    var links = getMatchLinks(match);
     var hasDropdown = links.length > 1;
     var kick = formatKickoffParts(match && match.kickoff);
     var live = isLiveStatus(match && match.status);
@@ -18183,7 +18170,7 @@ function showError(message) {
     var $activeTrigger = null;
 
     function fillOptions(match) {
-      var links = getSortedLinks(match);
+      var links = getMatchLinks(match);
       if (!links.length) {
         $panel.html(optionHtml('Nhà Đài', getFallbackImg()));
         return;
@@ -18258,7 +18245,7 @@ function showError(message) {
           return;
         }
 
-        var links = getSortedLinks(match);
+        var links = getMatchLinks(match);
         var liveId = $opt.attr('data-live-id');
         var name = $opt.attr('data-commentator');
         var selected = null;

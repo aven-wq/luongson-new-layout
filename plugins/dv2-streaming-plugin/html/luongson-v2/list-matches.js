@@ -178,11 +178,9 @@
     return false;
   }
 
+  // Prefer first streaming link in API order (no client-side link sort).
   function getPreferredLink(match) {
     var links = match && match.livestream && match.livestream.links;
-    if (window.DV2StreamLinks && window.DV2StreamLinks.getPreferredLink) {
-      return window.DV2StreamLinks.getPreferredLink(links);
-    }
     if (!Array.isArray(links) || !links.length) return null;
     var streaming = $.grep(links, function (l) {
       return l && l.isStreaming !== false;
@@ -190,11 +188,8 @@
     return (streaming.length ? streaming : links)[0] || null;
   }
 
-  function getSortedLinks(match) {
+  function getMatchLinks(match) {
     var links = match && match.livestream && match.livestream.links;
-    if (window.DV2StreamLinks && window.DV2StreamLinks.sortForDetail) {
-      return window.DV2StreamLinks.sortForDetail(links);
-    }
     return Array.isArray(links) ? links.slice() : [];
   }
 
@@ -364,7 +359,7 @@
     var away = (match && match.teams && match.teams.away) || {};
     var hdp = (match && match.hdp) || {};
     var preferred = getPreferredLink(match);
-    var links = getSortedLinks(match);
+    var links = getMatchLinks(match);
     var hasDropdown = links.length > 1;
     var kick = formatKickoffParts(match && match.kickoff);
     var live = isLiveStatus(match && match.status);
@@ -616,7 +611,7 @@
     var $activeTrigger = null;
 
     function fillOptions(match) {
-      var links = getSortedLinks(match);
+      var links = getMatchLinks(match);
       if (!links.length) {
         $panel.html(optionHtml('Nhà Đài', getFallbackImg()));
         return;
@@ -691,7 +686,7 @@
           return;
         }
 
-        var links = getSortedLinks(match);
+        var links = getMatchLinks(match);
         var liveId = $opt.attr('data-live-id');
         var name = $opt.attr('data-commentator');
         var selected = null;

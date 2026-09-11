@@ -307,11 +307,9 @@
     return (match && (match.match_id || match.matchId || match.id || match.slug)) || '';
   }
 
+  // Prefer first streaming link in API order (no client-side link sort).
   function getPreferredLink(match) {
     var links = match && match.livestream && match.livestream.links;
-    if (window.DV2StreamLinks && window.DV2StreamLinks.getPreferredLink) {
-      return window.DV2StreamLinks.getPreferredLink(links);
-    }
     if (!Array.isArray(links) || !links.length) return null;
     var streaming = $.grep(links, function (l) {
       return l && l.isStreaming !== false;
@@ -319,11 +317,8 @@
     return (streaming.length ? streaming : links)[0] || null;
   }
 
-  function getSortedLinks(match) {
+  function getMatchLinks(match) {
     var links = match && match.livestream && match.livestream.links;
-    if (window.DV2StreamLinks && window.DV2StreamLinks.sortForDetail) {
-      return window.DV2StreamLinks.sortForDetail(links);
-    }
     return Array.isArray(links) ? links.slice() : [];
   }
 
@@ -432,12 +427,9 @@
     return all;
   }
 
+  // Featured = first match in API order (no client-side re-rank).
   function pickFeaturedMatch(matches) {
     if (!Array.isArray(matches) || !matches.length) return null;
-    var i;
-    for (i = 0; i < matches.length; i++) {
-      if (isLiveStatus(matches[i] && matches[i].status)) return matches[i];
-    }
     return matches[0];
   }
 
@@ -501,7 +493,7 @@
     var $wrap = $root.find('.framer-woxy63').first();
     if (!$wrap.length) return;
 
-    var links = getSortedLinks(match);
+    var links = getMatchLinks(match);
     if (!links.length) {
       $wrap.empty();
       return;
