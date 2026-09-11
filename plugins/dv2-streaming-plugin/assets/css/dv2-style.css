@@ -14829,7 +14829,6 @@ body .ck2-modal-close {
   width: 100%;
   padding: 10px 10px 0;
   margin-bottom: 10px;
-  flex-wrap: wrap;
 }
 
 .luongson-list-matches__live-dot {
@@ -14848,6 +14847,13 @@ body .ck2-modal-close {
   font-weight: 700;
   line-height: 1.2;
   color: #000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.luongson-list-matches__title span {
+  display: block;
 }
 
 /* League filter dropdown (league_filter="1" only) — pill like commentator */
@@ -14876,6 +14882,7 @@ body .ck2-modal-close {
   background: var(--ls-commentator);
   cursor: pointer;
   transition: background 0.15s ease;
+  margin: 0;
 }
 
 .luongson-list-matches__league-btn:hover:not(:disabled),
@@ -14906,6 +14913,8 @@ body .ck2-modal-close {
   transform: rotate(180deg);
 }
 
+/* Must beat `.luongson-list-matches [data-border="true"] { position: relative }` */
+.luongson-list-matches__league-menu[data-border="true"],
 .luongson-list-matches__league-menu {
   --border-top-width: 1px;
   --border-right-width: 1px;
@@ -15597,6 +15606,10 @@ body .ck2-modal-close {
 
   .luongson-match-card .luongson-match-footer {
     gap: 0;
+  }
+
+  .luongson-list-matches__header {
+    flex-direction: column;
   }
 }
 

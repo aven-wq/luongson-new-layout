@@ -14913,6 +14913,8 @@ body .ck2-modal-close {
   transform: rotate(180deg);
 }
 
+/* Must beat `.luongson-list-matches [data-border="true"] { position: relative }` */
+.luongson-list-matches__league-menu[data-border="true"],
 .luongson-list-matches__league-menu {
   --border-top-width: 1px;
   --border-right-width: 1px;
