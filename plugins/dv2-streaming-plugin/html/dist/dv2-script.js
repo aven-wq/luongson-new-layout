@@ -18226,8 +18226,6 @@ function showError(message) {
     var away = (match && match.teams && match.teams.away) || {};
     var hdp = (match && match.hdp) || {};
     var preferred = getPreferredLink(match);
-    var links = getMatchLinks(match);
-    var hasDropdown = links.length > 1;
     var kick = formatKickoffParts(match && match.kickoff);
     var live = isLiveStatus(match && match.status);
     var statusText = formatStatusText(match);
@@ -18318,9 +18316,7 @@ function showError(message) {
       '<div class="luongson-match-commentator" data-commentator="' +
       escapeHtml(blvName) +
       '">' +
-      '<button type="button" class="luongson-match-commentator-trigger"' +
-      (hasDropdown ? ' aria-haspopup="listbox" aria-expanded="false"' : ' disabled') +
-      '>' +
+      '<button type="button" class="luongson-match-commentator-trigger" aria-haspopup="listbox" aria-expanded="false">' +
       '<span class="luongson-match-commentator-avatar" data-border="true">' +
       '<img alt="" decoding="async" height="472" src="' +
       escapeHtml(blvAvatar) +
@@ -18457,7 +18453,19 @@ function showError(message) {
     );
   }
 
-  function initCommentatorDropdown($root) {
+  /* Module-level portal controller — survives card re-renders / afterRender */
+  var commentatorPortal = {
+    $portal: null,
+    $panel: null,
+    $activeTrigger: null,
+    bound: false,
+  };
+
+  function ensureCommentatorPortal() {
+    if (commentatorPortal.$portal && commentatorPortal.$portal.length) {
+      return commentatorPortal.$portal;
+    }
+
     var $portal = $('.luongson-commentator-portal').not('.luongson-stream-commentator-portal').first();
     if (!$portal.length) {
       $portal = $('<div>', {
@@ -18474,166 +18482,202 @@ function showError(message) {
       $('body').append($portal);
     }
 
-    var $panel = $portal.find('.luongson-commentator-portal__panel');
-    var $activeTrigger = null;
+    commentatorPortal.$portal = $portal;
+    commentatorPortal.$panel = $portal.find('.luongson-commentator-portal__panel');
+    return $portal;
+  }
 
-    function fillOptions(match) {
+  function fillCommentatorOptions(match) {
+    var $panel = commentatorPortal.$panel;
+    if (!$panel || !$panel.length) return;
+    var links = getMatchLinks(match);
+    if (!links.length) {
+      $panel.html(optionHtml('Nhà Đài', getFallbackImg()));
+      return;
+    }
+    $panel.html(
+      $.map(links, function (link, index) {
+        var name =
+          window.DV2StreamLinks && window.DV2StreamLinks.getBlvName
+            ? window.DV2StreamLinks.getBlvName(link, index)
+            : link.commentator || 'Link ' + (index + 1);
+        return optionHtml(name, link.avatar || getFallbackImg(), link.liveId);
+      }).join('')
+    );
+  }
+
+  function positionCommentatorPortal($trigger) {
+    var $portal = commentatorPortal.$portal;
+    if (!$portal || !$portal.length || !$trigger || !$trigger.length) return;
+
+    var rect = $trigger.get(0).getBoundingClientRect();
+    var w = 170;
+    var h = $portal.outerHeight() || 120;
+    var left = rect.left;
+    if (left + w > $(window).width() - 10) left = $(window).width() - w - 10;
+    if (left < 10) left = 10;
+
+    var top = rect.bottom + 6;
+    if (top + h > $(window).height() - 10 && rect.top - h - 6 > 0) {
+      top = rect.top - h - 6;
+    }
+
+    $portal.css({ left: left + 'px', top: top + 'px' });
+  }
+
+  function closeCommentatorDropdown() {
+    var $portal = commentatorPortal.$portal;
+    var $activeTrigger = commentatorPortal.$activeTrigger;
+    if (!$portal || !$portal.length) return;
+
+    if ($activeTrigger) $activeTrigger.attr('aria-expanded', 'false');
+    $portal.css({ opacity: 0, transform: 'translateY(-4px) scale(0.98)' });
+    setTimeout(function () {
+      if (parseFloat($portal.css('opacity')) === 0) {
+        $portal.css('display', 'none').attr('hidden', 'hidden');
+        commentatorPortal.$activeTrigger = null;
+      }
+    }, 150);
+  }
+
+  function openCommentatorDropdown($trigger) {
+    ensureCommentatorPortal();
+    var $portal = commentatorPortal.$portal;
+    var $activeTrigger = commentatorPortal.$activeTrigger;
+
+    if (
+      $activeTrigger &&
+      $activeTrigger.get(0) === $trigger.get(0) &&
+      $portal.css('display') !== 'none'
+    ) {
+      closeCommentatorDropdown();
+      return;
+    }
+
+    if ($activeTrigger && $activeTrigger.get(0) !== $trigger.get(0)) {
+      $activeTrigger.attr('aria-expanded', 'false');
+    }
+
+    var $card = $trigger.closest('.luongson-match-card');
+    fillCommentatorOptions($card.length ? $card.get(0).__lsMatch : null);
+
+    commentatorPortal.$activeTrigger = $trigger;
+    $trigger.attr('aria-expanded', 'true');
+    $portal.removeAttr('hidden').css('display', 'block');
+    positionCommentatorPortal($trigger);
+
+    requestAnimationFrame(function () {
+      $portal.css({ opacity: 1, transform: 'translateY(0) scale(1)' });
+    });
+  }
+
+  function bindCommentatorPortalOnce() {
+    if (commentatorPortal.bound) return;
+    commentatorPortal.bound = true;
+
+    var $portal = ensureCommentatorPortal();
+
+    $portal.on('click', function (e) {
+      var $opt = $(e.target).closest('.luongson-commentator-option');
+      var $activeTrigger = commentatorPortal.$activeTrigger;
+      if (!$opt.length || !$activeTrigger) return;
+      e.preventDefault();
+      e.stopPropagation();
+
+      var $card = $activeTrigger.closest('.luongson-match-card');
+      var match = $card.length ? $card.get(0).__lsMatch : null;
+      if (!match) {
+        closeCommentatorDropdown();
+        return;
+      }
+
       var links = getMatchLinks(match);
-      if (!links.length) {
-        $panel.html(optionHtml('Nhà Đài', getFallbackImg()));
-        return;
+      var liveId = $opt.attr('data-live-id');
+      var name = $opt.attr('data-commentator');
+      var selected = null;
+      var i;
+
+      if (liveId) {
+        for (i = 0; i < links.length; i++) {
+          if (String(links[i].liveId) === String(liveId)) {
+            selected = links[i];
+            break;
+          }
+        }
       }
-      $panel.html(
-        $.map(links, function (link, index) {
-          var name =
+
+      if (!selected && name) {
+        for (i = 0; i < links.length; i++) {
+          var linkName =
             window.DV2StreamLinks && window.DV2StreamLinks.getBlvName
-              ? window.DV2StreamLinks.getBlvName(link, index)
-              : link.commentator || 'Link ' + (index + 1);
-          return optionHtml(name, link.avatar || getFallbackImg(), link.liveId);
-        }).join('')
-      );
-    }
+              ? window.DV2StreamLinks.getBlvName(links[i], i)
+              : links[i].commentator || '';
+          if (linkName === name) {
+            selected = links[i];
+            break;
+          }
+        }
+      }
 
-    function openDropdown($trigger) {
-      if ($activeTrigger && $activeTrigger.get(0) === $trigger.get(0) && $portal.css('display') !== 'none') {
-        closeDropdown();
+      if (!selected && links.length) selected = links[0];
+
+      if (
+        selected &&
+        window.DV2StreamLinks &&
+        window.DV2StreamLinks.navigateForLink &&
+        window.DV2StreamLinks.navigateForLink(selected)
+      ) {
         return;
       }
 
-      var $card = $trigger.closest('.luongson-match-card');
-      fillOptions($card.length ? $card.get(0).__lsMatch : null);
+      window.location.href = getDetailUrl(match, selected);
+    });
 
-      $activeTrigger = $trigger;
-      $trigger.attr('aria-expanded', 'true');
-      $portal.removeAttr('hidden').css('display', 'block');
-
-      var rect = $trigger.get(0).getBoundingClientRect();
-      var w = 170;
-      var h = $portal.outerHeight() || 120;
-      var left = rect.left;
-      if (left + w > $(window).width() - 10) left = $(window).width() - w - 10;
-      if (left < 10) left = 10;
-
-      var top = rect.bottom + 6;
-      if (top + h > $(window).height() - 10 && rect.top - h - 6 > 0) {
-        top = rect.top - h - 6;
+    $(document).on('click.lsListPortal', function (e) {
+      var $portalEl = commentatorPortal.$portal;
+      var $activeTrigger = commentatorPortal.$activeTrigger;
+      if (!$portalEl || !$portalEl.length || $portalEl.css('display') === 'none') return;
+      if (
+        !$portalEl.is(e.target) &&
+        !$portalEl.has(e.target).length &&
+        (!$activeTrigger || (!$activeTrigger.is(e.target) && !$activeTrigger.has(e.target).length))
+      ) {
+        closeCommentatorDropdown();
       }
+    });
 
-      $portal.css({ left: left + 'px', top: top + 'px' });
+    $(document).on('keydown.lsListPortal', function (e) {
+      var $portalEl = commentatorPortal.$portal;
+      if (e.key === 'Escape' && $portalEl && $portalEl.css('display') !== 'none') {
+        closeCommentatorDropdown();
+      }
+    });
 
-      requestAnimationFrame(function () {
-        $portal.css({ opacity: 1, transform: 'translateY(0) scale(1)' });
-      });
-    }
+    $(window).on('scroll.lsListPortal resize.lsListPortal', function () {
+      var $portalEl = commentatorPortal.$portal;
+      var $activeTrigger = commentatorPortal.$activeTrigger;
+      if (!$portalEl || $portalEl.css('display') === 'none' || !$activeTrigger) return;
+      var rect = $activeTrigger.get(0).getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > $(window).height()) {
+        $portalEl.css({ display: 'none', opacity: 0 });
+        $activeTrigger.attr('aria-expanded', 'false');
+        commentatorPortal.$activeTrigger = null;
+      } else {
+        positionCommentatorPortal($activeTrigger);
+      }
+    });
+  }
 
-    function closeDropdown() {
-      if ($activeTrigger) $activeTrigger.attr('aria-expanded', 'false');
-      $portal.css({ opacity: 0, transform: 'translateY(-4px) scale(0.98)' });
-      setTimeout(function () {
-        if (parseFloat($portal.css('opacity')) === 0) {
-          $portal.css('display', 'none').attr('hidden', 'hidden');
-          $activeTrigger = null;
-        }
-      }, 150);
-    }
-
-    if (!$portal.data('lsPortalBound')) {
-      $portal.data('lsPortalBound', true);
-
-      $portal.on('click', function (e) {
-        var $opt = $(e.target).closest('.luongson-commentator-option');
-        if (!$opt.length || !$activeTrigger) return;
-        e.preventDefault();
-        e.stopPropagation();
-
-        var $card = $activeTrigger.closest('.luongson-match-card');
-        var match = $card.length ? $card.get(0).__lsMatch : null;
-        if (!match) {
-          closeDropdown();
-          return;
-        }
-
-        var links = getMatchLinks(match);
-        var liveId = $opt.attr('data-live-id');
-        var name = $opt.attr('data-commentator');
-        var selected = null;
-        var i;
-
-        if (liveId) {
-          for (i = 0; i < links.length; i++) {
-            if (String(links[i].liveId) === String(liveId)) {
-              selected = links[i];
-              break;
-            }
-          }
-        }
-
-        if (!selected && name) {
-          for (i = 0; i < links.length; i++) {
-            var linkName =
-              window.DV2StreamLinks && window.DV2StreamLinks.getBlvName
-                ? window.DV2StreamLinks.getBlvName(links[i], i)
-                : links[i].commentator || '';
-            if (linkName === name) {
-              selected = links[i];
-              break;
-            }
-          }
-        }
-
-        if (!selected && links.length) selected = links[0];
-
-        if (
-          selected &&
-          window.DV2StreamLinks &&
-          window.DV2StreamLinks.navigateForLink &&
-          window.DV2StreamLinks.navigateForLink(selected)
-        ) {
-          return;
-        }
-
-        window.location.href = getDetailUrl(match, selected);
-      });
-
-      $(document).on('click.lsListPortal', function (e) {
-        if (
-          $portal.css('display') !== 'none' &&
-          !$portal.is(e.target) &&
-          !$portal.has(e.target).length &&
-          (!$activeTrigger || (!$activeTrigger.is(e.target) && !$activeTrigger.has(e.target).length))
-        ) {
-          closeDropdown();
-        }
-      });
-
-      $(document).on('keydown.lsListPortal', function (e) {
-        if (e.key === 'Escape' && $portal.css('display') !== 'none') closeDropdown();
-      });
-
-      $(window).on('scroll.lsListPortal', function () {
-        if ($portal.css('display') === 'none' || !$activeTrigger) return;
-        var rect = $activeTrigger.get(0).getBoundingClientRect();
-        if (rect.bottom < 0 || rect.top > $(window).height()) {
-          $portal.css({ display: 'none', opacity: 0 });
-          $activeTrigger.attr('aria-expanded', 'false');
-          $activeTrigger = null;
-        } else {
-          openDropdown($activeTrigger);
-        }
-      });
-
-      $(window).on('resize.lsListPortal', function () {
-        if ($portal.css('display') !== 'none' && $activeTrigger) openDropdown($activeTrigger);
-      });
-    }
+  function initCommentatorDropdown($root) {
+    bindCommentatorPortalOnce();
 
     $root.find('.luongson-match-commentator-trigger').each(function () {
       var $btn = $(this);
-      if ($btn.data('lsBound') || $btn.prop('disabled')) return;
+      if ($btn.data('lsBound')) return;
       $btn.data('lsBound', true).on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        openDropdown($btn);
+        openCommentatorDropdown($btn);
       });
     });
   }
