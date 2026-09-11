@@ -17331,11 +17331,12 @@ function showError(message) {
     return (ft.home != null ? ft.home : 0) + ' - ' + (ft.away != null ? ft.away : 0);
   }
 
+  // v2: matches_by_date is a flat array in API order (not grouped by date).
   function flattenMatchesByDate(matchesByDate) {
+    if (Array.isArray(matchesByDate)) return matchesByDate.slice();
     var all = [];
     if (!matchesByDate || typeof matchesByDate !== 'object') return all;
-    $.each(Object.keys(matchesByDate).sort(), function (_, dateKey) {
-      var day = matchesByDate[dateKey];
+    $.each(matchesByDate, function (_, day) {
       if (Array.isArray(day)) all = all.concat(day);
     });
     return all;
@@ -17723,17 +17724,10 @@ function showError(message) {
     );
     state.priorityCompetitionIdsOrdered = ids;
     state.priorityCompetitionIds = new Set(ids);
-    // Keep shared sorter in sync with proxy-resolved priority list.
+    // Keep priority list available for hot-match marking.
     if (ids.length) {
       window.DV2_STREAMING_PRIORITY_COMPETITION_IDS = ids.join(',');
     }
-  }
-
-  function getPriorityRank(match) {
-    var leagueId = match && match.league && match.league.id;
-    if (!leagueId || !state.priorityCompetitionIdsOrdered.length) return Infinity;
-    var index = state.priorityCompetitionIdsOrdered.indexOf(String(leagueId));
-    return index === -1 ? Infinity : index;
   }
 
   function isPriorityMatch(match) {
@@ -17749,30 +17743,6 @@ function showError(message) {
       return window.DV2MatchSort.isPriorityCompetitionMatch(match);
     }
     return false;
-  }
-
-  // live > priority > kickoff (live + priority always tops the list)
-  function sortMatches(matches) {
-    if (!Array.isArray(matches) || matches.length < 2) {
-      return Array.isArray(matches) ? matches.slice() : [];
-    }
-
-    return matches.slice().sort(function (a, b) {
-      var aLive = isLiveStatus(a && a.status);
-      var bLive = isLiveStatus(b && b.status);
-      if (aLive !== bLive) return aLive ? -1 : 1;
-
-      var aRank = getPriorityRank(a);
-      var bRank = getPriorityRank(b);
-      if (aRank !== bRank) return aRank - bRank;
-
-      var aKick = parseKickoffDate(a && a.kickoff);
-      var bKick = parseKickoffDate(b && b.kickoff);
-      if (!aKick && !bKick) return 0;
-      if (!aKick) return 1;
-      if (!bKick) return -1;
-      return aKick.getTime() - bKick.getTime();
-    });
   }
 
   function getPreferredLink(match) {
@@ -17944,11 +17914,12 @@ function showError(message) {
     return '0-0';
   }
 
+  // v2: matches_by_date is a flat array in API order (not grouped by date).
   function flattenMatchesByDate(matchesByDate) {
+    if (Array.isArray(matchesByDate)) return matchesByDate.slice();
     var all = [];
     if (!matchesByDate || typeof matchesByDate !== 'object') return all;
-    $.each(Object.keys(matchesByDate).sort(), function (_, dateKey) {
-      var day = matchesByDate[dateKey];
+    $.each(matchesByDate, function (_, day) {
       if (Array.isArray(day)) all = all.concat(day);
     });
     return all;
@@ -18486,7 +18457,8 @@ function showError(message) {
     }
 
     syncPriorityCompetitionIds(res);
-    var matches = sortMatches(flattenMatchesByDate(res.matches_by_date));
+    // Keep API order — no client-side re-sort.
+    var matches = flattenMatchesByDate(res.matches_by_date);
     var pagination = res.pagination || {};
     state.page = Number(pagination.page) || page;
     state.totalPages = Number(pagination.totalPages) || 1;
@@ -18754,17 +18726,10 @@ function showError(message) {
     );
     state.priorityCompetitionIdsOrdered = ids;
     state.priorityCompetitionIds = new Set(ids);
-    // Keep shared sorter in sync with proxy-resolved priority list.
+    // Keep priority list available for hot-match marking.
     if (ids.length) {
       window.DV2_STREAMING_PRIORITY_COMPETITION_IDS = ids.join(',');
     }
-  }
-
-  function getPriorityRank(match) {
-    var leagueId = match && match.league && match.league.id;
-    if (!leagueId || !state.priorityCompetitionIdsOrdered.length) return Infinity;
-    var index = state.priorityCompetitionIdsOrdered.indexOf(String(leagueId));
-    return index === -1 ? Infinity : index;
   }
 
   function isPriorityMatch(match) {
@@ -18780,30 +18745,6 @@ function showError(message) {
       return window.DV2MatchSort.isPriorityCompetitionMatch(match);
     }
     return false;
-  }
-
-  // live > priority > kickoff (live + priority always tops the list)
-  function sortMatches(matches) {
-    if (!Array.isArray(matches) || matches.length < 2) {
-      return Array.isArray(matches) ? matches.slice() : [];
-    }
-
-    return matches.slice().sort(function (a, b) {
-      var aLive = isLiveStatus(a && a.status);
-      var bLive = isLiveStatus(b && b.status);
-      if (aLive !== bLive) return aLive ? -1 : 1;
-
-      var aRank = getPriorityRank(a);
-      var bRank = getPriorityRank(b);
-      if (aRank !== bRank) return aRank - bRank;
-
-      var aKick = parseKickoffDate(a && a.kickoff);
-      var bKick = parseKickoffDate(b && b.kickoff);
-      if (!aKick && !bKick) return 0;
-      if (!aKick) return 1;
-      if (!bKick) return -1;
-      return aKick.getTime() - bKick.getTime();
-    });
   }
 
   function getPreferredLink(match) {
@@ -18978,11 +18919,12 @@ function showError(message) {
     return '0';
   }
 
+  // v2: matches_by_date is a flat array in API order (not grouped by date).
   function flattenMatchesByDate(matchesByDate) {
+    if (Array.isArray(matchesByDate)) return matchesByDate.slice();
     var all = [];
     if (!matchesByDate || typeof matchesByDate !== 'object') return all;
-    $.each(Object.keys(matchesByDate).sort(), function (_, dateKey) {
-      var day = matchesByDate[dateKey];
+    $.each(matchesByDate, function (_, day) {
       if (Array.isArray(day)) all = all.concat(day);
     });
     return all;
@@ -19407,7 +19349,8 @@ function showError(message) {
     }
 
     syncPriorityCompetitionIds(res);
-    var matches = sortMatches(flattenMatchesByDate(res.matches_by_date));
+    // Keep API order — no client-side re-sort.
+    var matches = flattenMatchesByDate(res.matches_by_date);
     var pagination = res.pagination || {};
     state.page = Number(pagination.page) || page;
     state.totalPages = Number(pagination.totalPages) || 1;

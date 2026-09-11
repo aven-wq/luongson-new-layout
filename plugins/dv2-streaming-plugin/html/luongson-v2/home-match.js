@@ -421,11 +421,12 @@
     return (ft.home != null ? ft.home : 0) + ' - ' + (ft.away != null ? ft.away : 0);
   }
 
+  // v2: matches_by_date is a flat array in API order (not grouped by date).
   function flattenMatchesByDate(matchesByDate) {
+    if (Array.isArray(matchesByDate)) return matchesByDate.slice();
     var all = [];
     if (!matchesByDate || typeof matchesByDate !== 'object') return all;
-    $.each(Object.keys(matchesByDate).sort(), function (_, dateKey) {
-      var day = matchesByDate[dateKey];
+    $.each(matchesByDate, function (_, day) {
       if (Array.isArray(day)) all = all.concat(day);
     });
     return all;

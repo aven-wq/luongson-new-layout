@@ -3,7 +3,7 @@
  * Proxy endpoint: streams range (paginated match list)
  *
  * Public:   GET /api/dv2-streaming-plugin/streams-range
- * Upstream: GET https://vscapiv2.cdnx.tech/external/v1/streams/range
+ * Upstream: GET https://vscapiv2.cdnx.tech/external/v2/streams/range
  *
  * Query params:
  *   from                 YYYY-MM-DD (required)
@@ -13,9 +13,10 @@
  *
  * statuses (1,2 = not started + live) and priorityCompetitions are set server-side.
  * Do not accept statuses or priorityCompetitions from the front-end.
+ * Response matches_by_date is a flat array (API order; not grouped by date).
  *
  * Equivalent curl:
- *   curl --location 'https://vscapiv2.cdnx.tech/external/v1/streams/range?from=…&to=…&statuses=1%2C2&priorityCompetitions=…&pageSize=33&page=1' \
+ *   curl --location 'https://vscapiv2.cdnx.tech/external/v2/streams/range?from=…&to=…&statuses=1%2C2&priorityCompetitions=…&pageSize=33&page=1' \
  *     --header 'Accept: application/json' \
  *     --header 'X-API-Key: …'
  *
@@ -127,10 +128,11 @@ return array(
         }
 
         $query = array(
-            'from'     => $from,
-            'to'       => $to,
+            'from'         => $from,
+            'to'           => $to,
             // Hardcoded: 1 not started, 2 live (not accepted from FE).
-            'statuses' => '1,2',
+            'statuses'     => '1,2',
+            'priorityLive' => 'true',
         );
 
         $priority = dv2_streams_range_resolve_priority_competitions();
@@ -152,9 +154,9 @@ return array(
             }
         }
 
-        $result = DV2_Proxy_Client::get('/external/v1/streams/range', $query);
+        $result = DV2_Proxy_Client::get('/external/v2/streams/range', $query);
 
-        // Expose resolved priority IDs so FE can mark hot matches (same source as sort).
+        // Expose resolved priority IDs so FE can mark hot matches.
         if (!empty($result['ok']) && is_array($result['json'])) {
             $result['json']['priorityCompetitions'] = $priority !== ''
                 ? array_values(array_filter(explode(',', $priority)))
