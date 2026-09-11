@@ -72,37 +72,33 @@ function dv2_streams_range_resolve_priority_competitions() {
     }
 
     // Hardcoded upstream (not exposed / not passed from FE).
-    $hot_url  = 'https://vsc-apidev.helizones.com/api/data/lives/competitions/hot';
-    $response = wp_remote_get(
-        $hot_url,
+    // Same source as GET /api/dv2-streaming-plugin/competitions-hot
+    $response = DV2_Proxy_Client::get(
+        '/external/v1/competitions',
         array(
-            'timeout' => 10,
-            'headers' => array(
-                'Accept' => 'application/json',
-            ),
-        )
+            'isHot'    => 'true',
+            'page'     => 1,
+            'pageSize' => 50,
+        ),
+        DV2_Proxy_Client::hot_competitions_args()
     );
 
     $ids = '';
-    if (!is_wp_error($response)) {
-        $status = (int) wp_remote_retrieve_response_code($response);
-        $json   = json_decode((string) wp_remote_retrieve_body($response), true);
-        if ($status >= 200 && $status < 300 && is_array($json) && !empty($json['result']) && is_array($json['result'])) {
-            $collected = array();
-            foreach ($json['result'] as $item) {
-                if (!is_array($item) || empty($item['id'])) {
-                    continue;
-                }
-                $id = sanitize_text_field((string) $item['id']);
-                if ($id !== '' && preg_match('/^[a-zA-Z0-9_-]+$/', $id)) {
-                    $collected[] = $id;
-                }
+    if (!empty($response['ok']) && is_array($response['json']) && !empty($response['json']['result']) && is_array($response['json']['result'])) {
+        $collected = array();
+        foreach ($response['json']['result'] as $item) {
+            if (!is_array($item) || empty($item['id'])) {
+                continue;
             }
-            $ids = implode(',', array_values(array_unique($collected)));
+            $id = sanitize_text_field((string) $item['id']);
+            if ($id !== '' && preg_match('/^[a-zA-Z0-9_-]+$/', $id)) {
+                $collected[] = $id;
+            }
         }
+        $ids = implode(',', array_values(array_unique($collected)));
     }
 
-    set_transient($cache_key, $ids, 60);
+    set_transient($cache_key, $ids, DAY_IN_SECONDS);
 
     return $ids;
 }

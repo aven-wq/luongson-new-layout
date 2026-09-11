@@ -56,10 +56,16 @@ class DV2_Proxy_Client {
      * @return array{ok:bool,status:int,body:string,json:mixed,error:?string}
      */
     public static function request($method, $path, $query = array(), $body = null, $args = array()) {
-        $url = self::build_url($path, $query);
+        $base_url = DV2_PROXY_UPSTREAM_BASE;
+        if (!empty($args['base_url']) && is_string($args['base_url'])) {
+            $base_url = $args['base_url'];
+            unset($args['base_url']);
+        }
+
+        $url = self::build_url($path, $query, $base_url);
 
         $headers = array(
-            'Accept'   => 'application/json',
+            'Accept'    => 'application/json',
             'X-API-Key' => DV2_PROXY_UPSTREAM_API_KEY,
         );
 
@@ -111,16 +117,32 @@ class DV2_Proxy_Client {
      *
      * @param string              $path
      * @param array<string,mixed> $query
+     * @param string|null         $base   Optional host override (defaults to DV2_PROXY_UPSTREAM_BASE)
      * @return string
      */
-    public static function build_url($path, $query = array()) {
+    public static function build_url($path, $query = array(), $base = null) {
         $path = '/' . ltrim((string) $path, '/');
-        $url  = rtrim(DV2_PROXY_UPSTREAM_BASE, '/') . $path;
+        $host = $base !== null && $base !== '' ? $base : DV2_PROXY_UPSTREAM_BASE;
+        $url  = rtrim((string) $host, '/') . $path;
 
         if (!empty($query) && is_array($query)) {
             $url = add_query_arg($query, $url);
         }
 
         return $url;
+    }
+
+    /**
+     * Shared args for hot competitions upstream (staging host + key).
+     *
+     * @return array{base_url:string,headers:array{X-API-Key:string}}
+     */
+    public static function hot_competitions_args() {
+        return array(
+            'base_url' => DV2_PROXY_HOT_COMPETITIONS_BASE,
+            'headers'  => array(
+                'X-API-Key' => DV2_PROXY_HOT_COMPETITIONS_API_KEY,
+            ),
+        );
     }
 }

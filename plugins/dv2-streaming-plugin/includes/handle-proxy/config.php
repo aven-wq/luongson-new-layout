@@ -30,6 +30,18 @@ if (!defined('DV2_PROXY_UPSTREAM_API_KEY')) {
     );
 }
 
+/** Hot competitions upstream (staging host; may differ from DV2_PROXY_UPSTREAM_BASE). */
+if (!defined('DV2_PROXY_HOT_COMPETITIONS_BASE')) {
+    define('DV2_PROXY_HOT_COMPETITIONS_BASE', 'https://vscapiv2stg.growix.dev');
+}
+
+if (!defined('DV2_PROXY_HOT_COMPETITIONS_API_KEY')) {
+    define(
+        'DV2_PROXY_HOT_COMPETITIONS_API_KEY',
+        'vsc_live_ck_961c3b8bdafee4f5_bKU2thGr8hdadVllx-lE8iWhYApppJ1v_EmMvNxynX8'
+    );
+}
+
 /** Default timeout for upstream requests (seconds). */
 if (!defined('DV2_PROXY_TIMEOUT')) {
     define('DV2_PROXY_TIMEOUT', 20);
