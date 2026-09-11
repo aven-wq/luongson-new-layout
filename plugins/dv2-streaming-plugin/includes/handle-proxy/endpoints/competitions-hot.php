@@ -1,13 +1,11 @@
 <?php
 /**
- * Proxy endpoint: hot competitions
+ * Proxy endpoint: hot competitions (priority / streams-range only)
  *
  * Public:   GET /api/dv2-streaming-plugin/competitions-hot
- * Upstream: GET https://vscapiv2stg.growix.dev/external/v1/competitions?isHot=true&page=1&pageSize=50
+ * Upstream: GET …/external/v1/competitions?isHot=true&page=1&pageSize=50
  *
- * Equivalent curl:
- *   curl --location 'https://vscapiv2stg.growix.dev/external/v1/competitions?isHot=true&page=1&pageSize=50' \
- *     --header 'X-API-Key: …'
+ * Note: League Select2 uses GET /competitions (full catalog, 7-day cache) instead.
  *
  * @package DV2_Streaming
  */

@@ -63,9 +63,10 @@ class DV2_Assets_Loader {
         $needs_swiper     = $this->page_needs_swiper();
         $needs_hls        = $is_stream_detail;
         $needs_fa         = $this->page_needs_fontawesome();
+        $needs_select2    = $this->page_needs_select2();
 
         $this->register_vendor_assets();
-        $this->enqueue_local_assets($needs_swiper, $needs_hls, $needs_fa);
+        $this->enqueue_local_assets($needs_swiper, $needs_hls, $needs_fa, $needs_select2);
         $this->print_runtime_config($is_stream_detail);
     }
 
@@ -200,6 +201,27 @@ class DV2_Assets_Loader {
     }
 
     /**
+     * Select2 only when featured list enables league_filter="1".
+     *
+     * @return bool
+     */
+    private function page_needs_select2() {
+        $post = $this->get_primary_post();
+        if (!$post instanceof WP_Post || $post->post_content === '') {
+            return false;
+        }
+
+        if (!has_shortcode($post->post_content, 'danh_sach_featured_video')) {
+            return false;
+        }
+
+        return (bool) preg_match(
+            '/\[danh_sach_featured_video[^\]]*league_filter\s*=\s*(["\']?)1\1/i',
+            $post->post_content
+        );
+    }
+
+    /**
      * @return WP_Post|null
      */
     private function get_primary_post() {
@@ -254,12 +276,27 @@ class DV2_Assets_Loader {
             '11.0.5',
             true
         );
+
+        wp_register_style(
+            'dv2-select2',
+            $libs_url . 'select2-4.1.0-rc.0/select2.min.css',
+            array(),
+            '4.1.0-rc.0'
+        );
+
+        wp_register_script(
+            'dv2-select2',
+            $libs_url . 'select2-4.1.0-rc.0/select2.full.min.js',
+            array('jquery'),
+            '4.1.0-rc.0',
+            true
+        );
     }
 
     /**
      * Enqueue plugin CSS/JS with optional vendors
      */
-    private function enqueue_local_assets($needs_swiper, $needs_hls, $needs_fa) {
+    private function enqueue_local_assets($needs_swiper, $needs_hls, $needs_fa, $needs_select2 = false) {
         $style_deps  = array();
         $script_deps = array('jquery');
 
@@ -278,6 +315,13 @@ class DV2_Assets_Loader {
         if ($needs_hls) {
             wp_enqueue_script('dv2-hls');
             $script_deps[] = 'dv2-hls';
+        }
+
+        if ($needs_select2) {
+            wp_enqueue_style('dv2-select2');
+            wp_enqueue_script('dv2-select2');
+            $style_deps[]  = 'dv2-select2';
+            $script_deps[] = 'dv2-select2';
         }
 
         wp_enqueue_style(
