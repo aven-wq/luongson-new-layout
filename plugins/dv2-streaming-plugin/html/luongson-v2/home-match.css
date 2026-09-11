@@ -772,6 +772,10 @@
   margin: 0 !important;
 }
 
+.luongson-home-match .framer-1fo8xy6 :is(.ls-s5,.ls-s40) {
+  width: auto !important;
+}
+
 .luongson-home-match .ls-s20 {
   transform: translateX(-50%) !important;
 }
