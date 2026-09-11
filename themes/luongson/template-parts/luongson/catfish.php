@@ -25,9 +25,10 @@ $catfish_right_id = luongson_get_promo_image_id( 'catfish_right' );
 						<img
 							class="ls-s5"
 							alt=""
-							decoding="auto"
+							decoding="async"
+							loading="lazy"
 							height="135"
-							sizes="(min-width: 1440px) max((max(min(100vw, 1920px) - 540px, 1px) - 10px) / 2, 1px), (min-width: 1280px) and (max-width: 1439.98px) max((max(min(100vw, 1920px) - 540px, 1px) - 10px) / 2, 1px), (max-width: 759.98px) max((max(min(100vw, 1920px) - 540px, 1px) - 10px) / 2, 1px), (min-width: 760px) and (max-width: 959.98px) max((max(min(100vw, 1920px) - 20px, 1px) - 10px) / 2, 1px), (min-width: 960px) and (max-width: 1279.98px) max((max(min(100vw, 1920px) - 230px, 1px) - 10px) / 2, 1px)"
+							sizes="(max-width: 759px) 100vw, (max-width: 1279px) 50vw, 540px"
 							src="<?php echo esc_url( luongson_get_promo_image_url( 'catfish_left' ) ); ?>"
 							<?php if ( $srcset = wp_get_attachment_image_srcset( $catfish_left_id, 'full' ) ) : ?>
 							srcset="<?php echo esc_attr( $srcset ); ?>"
@@ -48,9 +49,10 @@ $catfish_right_id = luongson_get_promo_image_id( 'catfish_right' );
 						<img
 							class="ls-s5"
 							alt=""
-							decoding="auto"
+							decoding="async"
+							loading="lazy"
 							height="180"
-							sizes="(min-width: 1440px) max(max((max(min(max(100vw - 220px, 1px), 1500px), 0px) - 40px) / 3, 1px), max((max((max(min(max(100vw - 220px, 1px), 1500px), 0px) - 60px) / 3, 50px) * 3 - 0px) / 3, 1px), max((max(min(100vw, 1920px) - 540px, 1px) - 10px) / 2, 1px)), (min-width: 1280px) and (max-width: 1439.98px) max(max((max(min(max(100vw - 220px, 1px), 1500px), 0px) - 40px) / 3, 1px), max((max((max(min(max(100vw - 220px, 1px), 1500px), 0px) - 40px) / 2, 50px) * 2 - 20px) / 3, 1px), max((max(min(100vw, 1920px) - 540px, 1px) - 10px) / 2, 1px)), (min-width: 760px) and (max-width: 959.98px) max(max((max(min(max(100vw, 1px), 1500px), 0px) - 30px) / 2, 1px), max((max((max(min(max(100vw, 1px), 1500px), 0px) - 30px) / 2, 50px) * 2 + 2px) / 2, 1px), max((max(min(100vw, 1920px) - 20px, 1px) - 10px) / 2, 1px)), (min-width: 960px) and (max-width: 1279.98px) max(max((max(min(max(100vw - 220px, 1px), 1500px), 0px) - 30px) / 2, 1px), max((max((max(min(max(100vw - 220px, 1px), 1500px), 0px) - 40px) / 2, 50px) * 2 - 0px) / 2, 1px), max((max(min(100vw, 1920px) - 230px, 1px) - 10px) / 2, 1px)), (max-width: 759.98px) max(calc(max(min(100vw, 1500px), 0px) - 8px), max(max(min(100vw, 1500px), 0px) - 20px, 50px), min(100vw, 1920px))"
+							sizes="(max-width: 759px) 100vw, (max-width: 1279px) 50vw, 540px"
 							src="<?php echo esc_url( luongson_get_promo_image_url( 'catfish_right' ) ); ?>"
 							<?php if ( $srcset = wp_get_attachment_image_srcset( $catfish_right_id, 'full' ) ) : ?>
 							srcset="<?php echo esc_attr( $srcset ); ?>"

@@ -176,13 +176,13 @@ function luongson_enqueue_news_archive_assets() {
 	}
 
 	$theme_ver = wp_get_theme()->get( 'Version' );
-	$css_path  = get_stylesheet_directory() . '/assets/css/blog.css';
+	$asset     = luongson_resolve_css_asset( 'blog.css' );
 
 	wp_enqueue_style(
 		'luongson-news-archive',
-		luongson_asset_uri( 'css/blog.css' ),
+		$asset['uri'],
 		array( 'luongson-custom' ),
-		file_exists( $css_path ) ? (string) filemtime( $css_path ) : $theme_ver
+		$asset['ver'] ? $asset['ver'] : $theme_ver
 	);
 }
 add_action( 'wp_enqueue_scripts', 'luongson_enqueue_news_archive_assets', 100 );

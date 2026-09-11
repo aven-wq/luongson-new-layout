@@ -23,7 +23,8 @@ $logo_h   = $logo ? $logo['height'] : 142;
 							<img
 								class="ls-s5"
 								alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>"
-								decoding="auto"
+								decoding="async"
+								fetchpriority="high"
 								height="<?php echo esc_attr( (string) $logo_h ); ?>"
 								width="<?php echo esc_attr( (string) $logo_w ); ?>"
 								src="<?php echo esc_url( $logo_url ); ?>"

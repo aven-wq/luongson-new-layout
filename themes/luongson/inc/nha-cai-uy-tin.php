@@ -258,14 +258,14 @@ function luongson_enqueue_nha_cai_uy_tin_assets() {
 
 	$enqueued  = true;
 	$theme_ver = wp_get_theme()->get( 'Version' );
-	$css_path  = get_stylesheet_directory() . '/assets/css/nha-cai-uy-tin.css';
+	$css       = luongson_resolve_css_asset( 'nha-cai-uy-tin.css' );
 	$js_path   = get_stylesheet_directory() . '/assets/js/nha-cai-uy-tin.js';
 
 	wp_enqueue_style(
 		'luongson-nha-cai-uy-tin',
-		luongson_asset_uri( 'css/nha-cai-uy-tin.css' ),
+		$css['uri'],
 		array( 'luongson-custom' ),
-		file_exists( $css_path ) ? (string) filemtime( $css_path ) : $theme_ver
+		$css['ver'] ? $css['ver'] : $theme_ver
 	);
 
 	wp_enqueue_script(

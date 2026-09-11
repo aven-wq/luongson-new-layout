@@ -51,14 +51,14 @@ function luongson_enqueue_blv_form_assets() {
 
 	$enqueued  = true;
 	$theme_ver = wp_get_theme()->get( 'Version' );
-	$css_path  = get_stylesheet_directory() . '/assets/css/blv-form.css';
+	$css       = luongson_resolve_css_asset( 'blv-form.css' );
 	$js_path   = get_stylesheet_directory() . '/assets/js/blv-form.js';
 
 	wp_enqueue_style(
 		'luongson-blv-form',
-		luongson_asset_uri( 'css/blv-form.css' ),
+		$css['uri'],
 		array( 'luongson-custom' ),
-		file_exists( $css_path ) ? (string) filemtime( $css_path ) : $theme_ver
+		$css['ver'] ? $css['ver'] : $theme_ver
 	);
 
 	wp_enqueue_script(

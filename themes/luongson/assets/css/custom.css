@@ -523,11 +523,12 @@ body .framer-Q1644 .luongson-single-featured .ls-blog-s88, .framer-Q1644 .luongs
 }
 
 @media (min-width: 1300px) {
-    .home ai-prediction-widget {
-        /* min-height set by custom.js */
+    .home .luongson-div-2-right ai-prediction-widget {
+        /* height set by custom.js to match left column */
+        display: block;
         background: white;
         border-radius: 16px;
-        overflow: scroll;
+        overflow: auto;
     }
 }
 

@@ -1,4 +1,10 @@
-jQuery(function ($) {
+/**
+ * LuongSon notice marquee + home AI prediction height helper.
+ * Vanilla JS (no jQuery) — scoped observers, skip work when markup absent.
+ */
+(function () {
+	'use strict';
+
 	function setNoticeMarqueeTransform(track, x) {
 		track.style.setProperty('transform', 'translate3d(' + x + 'px,0,0)', 'important');
 	}
@@ -208,12 +214,18 @@ jQuery(function ($) {
 	}
 
 	function bootLuongsonNoticeMarquee() {
+		var roots = document.querySelectorAll('.luongson-notice .gwd-dynamic-html-wrapper');
+		if (!roots.length) {
+			return;
+		}
+
 		var attempts = 0;
 
 		function run() {
 			var pending = false;
 
-			document.querySelectorAll('.luongson-notice .gwd-dynamic-html-wrapper').forEach(function (wrapper) {
+			roots = document.querySelectorAll('.luongson-notice .gwd-dynamic-html-wrapper');
+			roots.forEach(function (wrapper) {
 				if (!initLuongsonNoticeMarqueeWrapper(wrapper)) {
 					pending = true;
 				}
@@ -228,54 +240,117 @@ jQuery(function ($) {
 		run();
 	}
 
-	bootLuongsonNoticeMarquee();
-	$(window).on('load', bootLuongsonNoticeMarquee);
-
-	if (typeof MutationObserver !== 'undefined') {
-		var marqueeObserver = new MutationObserver(function () {
-			bootLuongsonNoticeMarquee();
-		});
-
-		marqueeObserver.observe(document.body, {
-			childList: true,
-			subtree: true
-		});
+	function onReady(fn) {
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', fn);
+		} else {
+			fn();
+		}
 	}
 
-	$(window).on('resize', function () {
-		document.querySelectorAll('.luongson-notice .gwd-dynamic-html-wrapper').forEach(function (wrapper) {
-			if (!wrapper.__lsNoticeMarqueeState) {
-				return;
-			}
+	onReady(function () {
+		var noticeRoot = document.querySelector('.luongson-notice');
+		bootLuongsonNoticeMarquee();
+		window.addEventListener('load', bootLuongsonNoticeMarquee, { once: true });
 
-			var track = wrapper.querySelector('.gwd-marquee-track');
-			if (!track) {
-				return;
-			}
+		if (noticeRoot && typeof MutationObserver !== 'undefined') {
+			var marqueeObserver = new MutationObserver(function () {
+				bootLuongsonNoticeMarquee();
+			});
 
-			remeasureNoticeMarqueeLoop(track, wrapper.__lsNoticeMarqueeState);
+			marqueeObserver.observe(noticeRoot, {
+				childList: true,
+				subtree: true
+			});
+		}
+
+		var resizeTimer = 0;
+		window.addEventListener('resize', function () {
+			window.clearTimeout(resizeTimer);
+			resizeTimer = window.setTimeout(function () {
+				document.querySelectorAll('.luongson-notice .gwd-dynamic-html-wrapper').forEach(function (wrapper) {
+					if (!wrapper.__lsNoticeMarqueeState) {
+						return;
+					}
+
+					var track = wrapper.querySelector('.gwd-marquee-track');
+					if (!track) {
+						return;
+					}
+
+					remeasureNoticeMarqueeLoop(track, wrapper.__lsNoticeMarqueeState);
+				});
+			}, 100);
 		});
 	});
 
 	function setAiPredictionMinHeight() {
-		var $widget = $('.home ai-prediction-widget');
-		if (!$widget.length) {
+		if (!document.body.classList.contains('home')) {
 			return;
 		}
 
-		if (window.innerWidth <= 1300) {
-			$widget.css('height', auto);
+		// Sidebar widget only — header modal also has <ai-prediction-widget>.
+		var widget = document.querySelector('.home .luongson-div-2-right ai-prediction-widget');
+		if (!widget) {
 			return;
 		}
 
-		var leftHeight = $('.home .luongson-div-2-left .col-inner').outerHeight() || 0;
-		var predictionHeight = $('.home .luongson-div-2-right .top-prediction').outerHeight() || 0;
-		var bannerHeight = $('.home .luongson-div-2-right .luongson-live-banner').outerHeight() || 0;
-		var minHeight = leftHeight - predictionHeight - bannerHeight - 20;
+		// Match CSS @media (min-width: 1300px).
+		if (window.innerWidth < 1300) {
+			widget.style.height = '';
+			return;
+		}
 
-		$widget.css('height', minHeight > 0 ? minHeight + 'px' : '');
+		var leftCol = document.querySelector('.home .luongson-div-2-left .col-inner');
+		var rightCol = document.querySelector('.home .luongson-div-2-right .col-inner') ||
+			document.querySelector('.home .luongson-div-2-right');
+		var prediction = document.querySelector('.home .luongson-div-2-right .top-prediction');
+		var banner = document.querySelector('.home .luongson-div-2-right .luongson-live-banner');
+
+		var leftHeight = leftCol ? leftCol.offsetHeight : 0;
+		var otherHeight = 0;
+
+		if (prediction && !prediction.contains(widget)) {
+			otherHeight += prediction.offsetHeight;
+		}
+		if (banner && !banner.contains(widget)) {
+			otherHeight += banner.offsetHeight;
+		}
+
+		// Fallback: subtract every right-col sibling of the widget (gaps excluded).
+		if (!otherHeight && rightCol) {
+			Array.prototype.forEach.call(rightCol.children, function (child) {
+				if (child === widget || child.contains(widget)) {
+					return;
+				}
+				otherHeight += child.offsetHeight;
+			});
+		}
+
+		var minHeight = leftHeight - otherHeight - 20;
+		widget.style.height = minHeight > 0 ? minHeight + 'px' : '';
 	}
 
-	setAiPredictionMinHeight();
-	$(window).on('load resize', setAiPredictionMinHeight);
-});
+	function bootAiPredictionMinHeight() {
+		setAiPredictionMinHeight();
+		window.addEventListener('load', setAiPredictionMinHeight, { once: true });
+
+		var resizeTimer = 0;
+		window.addEventListener('resize', function () {
+			window.clearTimeout(resizeTimer);
+			resizeTimer = window.setTimeout(setAiPredictionMinHeight, 100);
+		});
+
+		var leftCol = document.querySelector('.home .luongson-div-2-left .col-inner');
+		if (leftCol && typeof ResizeObserver !== 'undefined') {
+			var roTimer = 0;
+			var leftObserver = new ResizeObserver(function () {
+				window.clearTimeout(roTimer);
+				roTimer = window.setTimeout(setAiPredictionMinHeight, 50);
+			});
+			leftObserver.observe(leftCol);
+		}
+	}
+
+	onReady(bootAiPredictionMinHeight);
+})();

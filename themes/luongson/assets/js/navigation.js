@@ -45,7 +45,7 @@
 
     var navClone = sidebar.cloneNode(true);
     var assetBase = (window.luongsonNav && window.luongsonNav.assetBase) || '';
-    var bgUrl = assetBase + 'images/pTd7CCLT508FqMHQ7dFkL9QKk_8ddf363d.png?width=4775&height=7432';
+    var bgUrl = assetBase + 'images/sidebar-bg.webp';
 
     return (
       '<div class="framer-GRble framer-v-4lv5aa mobile-overlay-portal" data-framer-portal-id="mobile-menu" style="top:44px;right:10px;visibility:visible;width:200px;height:auto;position:fixed;z-index:9999;">' +
@@ -55,7 +55,7 @@
             '<div class="framer-QbuP0 framer-1ei7e2m framer-v-1ji60ut ls-s2" data-border="true">' +
               '<div class="framer-1omzemv ls-s3" data-framer-name="Image" style="filter:blur(1px);opacity:0.6;">' +
                 '<div class="ls-s4" data-framer-background-image-wrapper="true">' +
-                  '<img class="ls-s5" alt="" decoding="auto" src="' + bgUrl + '" />' +
+                  '<img class="ls-s5" alt="" decoding="async" width="400" height="622" src="' + bgUrl + '" />' +
                 '</div>' +
               '</div>' +
               navClone.outerHTML +
