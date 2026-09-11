@@ -31,6 +31,8 @@
       : '/api/dv2-streaming-plugin';
   var STREAMS_RANGE_API = PROXY_BASE + '/streams-range';
   // statuses + priorityCompetitions are resolved server-side in streams-range proxy.
+  var COMPETITION_CHANGE_EVENT = 'luongson:competition-change';
+  var DEFAULT_SCHEDULE_TITLE = 'Lịch thi đấu Bóng Đá hôm nay mới nhất 24h';
 
   var FLATPICKR_CSS = 'https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css';
   var FLATPICKR_JS = 'https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js';
@@ -80,6 +82,11 @@
     $label: null,
     $prev: null,
     $next: null,
+    $title: null,
+    leagueFilterEnabled: false,
+    competitionId: '',
+    competitionName: '',
+    defaultTitle: DEFAULT_SCHEDULE_TITLE,
   };
 
   function escapeHtml(value) {
@@ -159,6 +166,85 @@
       return window.DV2MatchSort.isPriorityCompetitionMatch(match);
     }
     return false;
+  }
+
+  function isLeagueFilterEnabled($root) {
+    if (!$root || !$root.length) return false;
+    var flag = $root.attr('data-league-filter');
+    return flag === '1' || flag === 'true';
+  }
+
+  function readCompetitionFromUrl() {
+    try {
+      var params = new URLSearchParams(window.location.search || '');
+      return {
+        id: String(params.get('competition_id') || '').trim(),
+        name: String(params.get('competition_name') || '').trim(),
+      };
+    } catch (err) {
+      return { id: '', name: '' };
+    }
+  }
+
+  function getLeaguePageBaseUrl() {
+    var fromCfg =
+      (cfg && cfg.leaguePageUrl) ||
+      (window.luongsonSchedule && window.luongsonSchedule.leaguePageUrl) ||
+      '';
+    return String(fromCfg || '').trim();
+  }
+
+  function buildLeagueScheduleUrl(league) {
+    var base = getLeaguePageBaseUrl();
+    if (!base) return '';
+    var id = league && (league.id || league.competitionId || league.competition_id);
+    if (!id) return '';
+    var name = (league && (league.name || league.competitionName || league.competition_name)) || '';
+    try {
+      var url;
+      if (/^https?:\/\//i.test(base)) {
+        url = new URL(base);
+      } else {
+        url = new URL(base, window.location.origin);
+      }
+      url.searchParams.set('competition_id', String(id));
+      if (name) url.searchParams.set('competition_name', String(name));
+      return url.pathname + url.search + url.hash;
+    } catch (err) {
+      var sep = base.indexOf('?') >= 0 ? '&' : '?';
+      var q = 'competition_id=' + encodeURIComponent(String(id));
+      if (name) q += '&competition_name=' + encodeURIComponent(String(name));
+      return base + sep + q;
+    }
+  }
+
+  function updateScheduleTitle() {
+    if (!state.$title || !state.$title.length) return;
+    if (!state.leagueFilterEnabled) {
+      state.$title.text(state.defaultTitle || DEFAULT_SCHEDULE_TITLE);
+      return;
+    }
+    if (state.competitionName) {
+      state.$title.text('Lịch thi đấu ' + state.competitionName);
+    } else if (state.competitionId) {
+      state.$title.text('Lịch thi đấu');
+    } else {
+      state.$title.text('Lịch thi đấu');
+    }
+  }
+
+  function setCompetitionFilter(id, name, options) {
+    options = options || {};
+    if (!state.leagueFilterEnabled) return;
+    var nextId = String(id || '').trim();
+    var nextName = String(name || '').trim();
+    var changed = nextId !== state.competitionId || nextName !== state.competitionName;
+    state.competitionId = nextId;
+    state.competitionName = nextName;
+    updateScheduleTitle();
+    if (changed && !options.skipFetch) {
+      reloadForSelectedDate();
+    }
   }
 
   function getPreferredLink(match) {
@@ -508,6 +594,7 @@
     var detailUrl = getDetailUrl(match);
     var matchId = getMatchId(match);
     var hotClass = isPriorityMatch(match) ? ' luongson-hot-match' : '';
+    var leagueUrl = buildLeagueScheduleUrl(league) || detailUrl;
 
     return (
       '<div class="framer-w4nh6l luongson-schedule__match' +
@@ -528,7 +615,7 @@
       '<div class="framer-fo8uj4 ls-ltd-s8" data-framer-component-type="RichTextContainer">' +
       '<p class="framer-text ls-ltd-s52" dir="auto">' +
       '<a class="framer-text framer-styles-preset-1kr0omk" data-styles-preset="aObUTo9X9" href="' +
-      escapeHtml(detailUrl) +
+      escapeHtml(leagueUrl) +
       '">' +
       escapeHtml(league.name || '—') +
       '</a></p></div>' +
@@ -746,6 +833,9 @@
       pageSize: String(PAGE_SIZE),
       page: String(page),
     };
+    if (state.leagueFilterEnabled && state.competitionId) {
+      data.competitions = state.competitionId;
+    }
 
     return $.ajax({
       url: STREAMS_RANGE_API,
@@ -996,6 +1086,24 @@
 
     state.$root = $root;
     state.$list = $list;
+    state.$title = $root.find('.luongson-schedule__title, .ls-ltd-s46').first();
+    if (state.$title.length) {
+      state.defaultTitle = String(state.$title.text() || '').trim() || DEFAULT_SCHEDULE_TITLE;
+    }
+
+    state.leagueFilterEnabled = isLeagueFilterEnabled($root);
+    if (state.leagueFilterEnabled) {
+      var urlState = readCompetitionFromUrl();
+      state.competitionId = urlState.id;
+      state.competitionName = urlState.name;
+      updateScheduleTitle();
+
+      // Native listener — jQuery treats ":" as event namespaces.
+      document.addEventListener(COMPETITION_CHANGE_EVENT, function (e) {
+        var detail = (e && e.detail) || {};
+        setCompetitionFilter(detail.id, detail.name);
+      });
+    }
 
     ensureLoadMore($root);
     initDateControls($root);

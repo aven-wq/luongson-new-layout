@@ -133,6 +133,8 @@ class DV2_Shortcodes {
             'layout' => 'socolive',
             'ads-block-id' => '',
             'banner_zone_id' => '2724',
+            // Opt-in: league schedule page filter (luongson-v2 only). Default off.
+            'league_filter' => '',
         ), $atts);
 
         $atts['banner_zone_id'] = absint($atts['banner_zone_id']) ?: 2724;
@@ -221,6 +223,8 @@ class DV2_Shortcodes {
         $atts = shortcode_atts(array(
             'count'  => 3,
             'layout' => 'socolive',
+            // Opt-in: league schedule page filter (luongson-v2 only). Default off.
+            'league_filter' => '',
         ), $atts);
 
         $layout = sanitize_file_name((string) $atts['layout']);

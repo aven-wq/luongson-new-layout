@@ -10,6 +10,7 @@
  *   to                   YYYY-MM-DD (required)
  *   pageSize             Optional (default upstream)
  *   page                 Optional (default 1)
+ *   competitions         Optional — single competition id (sanitized); forwarded upstream only when valid
  *
  * statuses (1,2 = not started + live) and priorityCompetitions are set server-side.
  * Do not accept statuses or priorityCompetitions from the front-end.
@@ -134,6 +135,18 @@ return array(
         $priority = dv2_streams_range_resolve_priority_competitions();
         if ($priority !== '') {
             $query['priorityCompetitions'] = $priority;
+        }
+
+        // Optional FE filter (league schedule page). Default-off — omit when empty/invalid.
+        if (isset($_GET['competitions'])) {
+            $competitions = dv2_streams_range_sanitize_priority_ids(
+                (string) wp_unslash($_GET['competitions'])
+            );
+            // Forward at most one id (league page selects a single competition).
+            if ($competitions !== '') {
+                $first = explode(',', $competitions);
+                $query['competitions'] = $first[0];
+            }
         }
 
         if (isset($_GET['pageSize'])) {

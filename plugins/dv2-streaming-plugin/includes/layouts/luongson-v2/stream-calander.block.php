@@ -5,18 +5,22 @@
  * Markup from html/luongson-v2/schedule.html;
  * CSS/JS bundled via html/luongson-v2/schedule.{css,js}.
  *
+ * Optional: league_filter="1" syncs with competition URL + featured dropdown.
+ *
  * @package DV2_Streaming
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
+
+$league_filter = !empty($atts['league_filter']) && (string) $atts['league_filter'] !== '0';
 ?>
-<div class="luongson-schedule">
+<div class="luongson-schedule"<?php echo $league_filter ? ' data-league-filter="1"' : ''; ?>>
     <div class="framer-6nzkg">
         <div class="ssr-variant">
             <div class="framer-y7mzqb ls-ltd-s8" data-framer-component-type="RichTextContainer">
-                <p class="framer-text ls-ltd-s46" dir="auto"><?php echo esc_html__('Lịch thi đấu Bóng Đá hôm nay mới nhất 24h', 'dv2-streaming'); ?></p>
+                <p class="framer-text ls-ltd-s46 luongson-schedule__title" dir="auto"><?php echo esc_html__('Lịch thi đấu Bóng Đá hôm nay mới nhất 24h', 'dv2-streaming'); ?></p>
             </div>
         </div>
         <div class="framer-rtjghz">

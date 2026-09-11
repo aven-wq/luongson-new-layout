@@ -17590,6 +17590,8 @@ function showError(message) {
       : '/api/dv2-streaming-plugin';
   var STREAMS_RANGE_API = PROXY_BASE + '/streams-range';
   // statuses + priorityCompetitions are resolved server-side in streams-range proxy.
+  var COMPETITIONS_HOT_API = PROXY_BASE + '/competitions-hot';
+  var COMPETITION_CHANGE_EVENT = 'luongson:competition-change';
 
   var PAGE_SIZE = 33;
   var VN_TIMEZONE = 'Asia/Ho_Chi_Minh';
@@ -17630,6 +17632,14 @@ function showError(message) {
     priorityCompetitionIdsOrdered: [],
     $root: null,
     $grid: null,
+    leagueFilterEnabled: false,
+    competitionId: '',
+    competitionName: '',
+    competitions: [],
+    $leagueFilter: null,
+    $leagueBtn: null,
+    $leagueMenu: null,
+    $leagueLabel: null,
   };
 
   // Same bootstrap as home-match.js (idempotent). Page 1 is fetched once from home-match.
@@ -17832,6 +17842,304 @@ function showError(message) {
       from: formatYmdInVn(shiftVnDays(now, -1)),
       to: formatYmdInVn(shiftVnDays(now, 1)),
     };
+  }
+
+  /* ------------------------------------------------------------------------ */
+  /* League filter (opt-in via data-league-filter)                            */
+  /* ------------------------------------------------------------------------ */
+
+  function isLeagueFilterEnabled($root) {
+    if (!$root || !$root.length) return false;
+    var flag = $root.attr('data-league-filter');
+    return flag === '1' || flag === 'true';
+  }
+
+  function readCompetitionFromUrl() {
+    try {
+      var params = new URLSearchParams(window.location.search || '');
+      return {
+        id: String(params.get('competition_id') || '').trim(),
+        name: String(params.get('competition_name') || '').trim(),
+      };
+    } catch (err) {
+      return { id: '', name: '' };
+    }
+  }
+
+  function writeCompetitionToUrl(id, name, options) {
+    options = options || {};
+    try {
+      var url = new URL(window.location.href);
+      if (id) {
+        url.searchParams.set('competition_id', id);
+      } else {
+        url.searchParams.delete('competition_id');
+      }
+      if (name) {
+        url.searchParams.set('competition_name', name);
+      } else {
+        url.searchParams.delete('competition_name');
+      }
+      var method = options.push ? 'pushState' : 'replaceState';
+      window.history[method]({}, '', url.pathname + url.search + url.hash);
+    } catch (err) {
+      // Ignore URL sync failures (old browsers / file://).
+    }
+  }
+
+  function emitCompetitionChange(id, name) {
+    try {
+      document.dispatchEvent(
+        new CustomEvent(COMPETITION_CHANGE_EVENT, {
+          detail: { id: id || '', name: name || '' },
+        })
+      );
+    } catch (err) {
+      // IE / very old browsers — schedule also hydrates from URL.
+    }
+  }
+
+  function normalizeCompetitionItem(item) {
+    if (!item || typeof item !== 'object') return null;
+    var id = String(item.id || item.competitionId || item.competition_id || '').trim();
+    if (!id) return null;
+    var name = String(
+      item.name || item.competitionName || item.competition_name || item.title || ''
+    ).trim();
+    return { id: id, name: name || id };
+  }
+
+  function parseCompetitionsHotResponse(res) {
+    var raw =
+      (res && Array.isArray(res.result) && res.result) ||
+      (res && Array.isArray(res.data) && res.data) ||
+      (res && res.json && Array.isArray(res.json.result) && res.json.result) ||
+      (Array.isArray(res) && res) ||
+      [];
+    var out = [];
+    var i;
+    var item;
+    for (i = 0; i < raw.length; i++) {
+      item = normalizeCompetitionItem(raw[i]);
+      if (item) out.push(item);
+    }
+    return out;
+  }
+
+  function fetchCompetitionsHot() {
+    return $.ajax({
+      url: COMPETITIONS_HOT_API,
+      method: 'GET',
+      dataType: 'json',
+    });
+  }
+
+  function findCompetitionById(list, id) {
+    var sid = String(id || '').trim();
+    if (!sid || !list || !list.length) return null;
+    var i;
+    for (i = 0; i < list.length; i++) {
+      if (String(list[i].id) === sid) return list[i];
+    }
+    return null;
+  }
+
+  /**
+   * Resolve selected competition.
+   * Choice: keep URL id even if not in hot list (API still accepts it);
+   * if no URL id → first hot item.
+   */
+  function resolveSelectedCompetition(list, urlState) {
+    var urlId = (urlState && urlState.id) || '';
+    var urlName = (urlState && urlState.name) || '';
+    if (urlId) {
+      var matched = findCompetitionById(list, urlId);
+      if (matched) return matched;
+      return { id: urlId, name: urlName || urlId };
+    }
+    if (list && list.length) return list[0];
+    return { id: '', name: '' };
+  }
+
+  function setLeagueButtonLabel(name) {
+    if (state.$leagueLabel && state.$leagueLabel.length) {
+      state.$leagueLabel.text(name || 'Chọn giải');
+    }
+  }
+
+  function closeLeagueMenu() {
+    if (!state.$leagueMenu || !state.$leagueMenu.length) return;
+    state.$leagueMenu.prop('hidden', true);
+    if (state.$leagueBtn && state.$leagueBtn.length) {
+      state.$leagueBtn.attr('aria-expanded', 'false');
+    }
+    if (state.$leagueFilter && state.$leagueFilter.length) {
+      state.$leagueFilter.removeClass('is-open');
+    }
+  }
+
+  function openLeagueMenu() {
+    if (!state.$leagueMenu || !state.$leagueMenu.length) return;
+    state.$leagueMenu.prop('hidden', false);
+    if (state.$leagueBtn && state.$leagueBtn.length) {
+      state.$leagueBtn.attr('aria-expanded', 'true');
+    }
+    if (state.$leagueFilter && state.$leagueFilter.length) {
+      state.$leagueFilter.addClass('is-open');
+    }
+  }
+
+  function toggleLeagueMenu() {
+    if (!state.$leagueMenu || !state.$leagueMenu.length) return;
+    if (state.$leagueMenu.prop('hidden')) openLeagueMenu();
+    else closeLeagueMenu();
+  }
+
+  function renderLeagueMenu(list) {
+    if (!state.$leagueMenu || !state.$leagueMenu.length) return;
+    var html = '';
+    var i;
+    var item;
+    var selected = state.competitionId;
+    for (i = 0; i < list.length; i++) {
+      item = list[i];
+      html +=
+        '<li role="option" class="luongson-list-matches__league-option' +
+        (String(item.id) === String(selected) ? ' is-selected' : '') +
+        '" data-competition-id="' +
+        escapeHtml(item.id) +
+        '" data-competition-name="' +
+        escapeHtml(item.name) +
+        '" aria-selected="' +
+        (String(item.id) === String(selected) ? 'true' : 'false') +
+        '">' +
+        escapeHtml(item.name) +
+        '</li>';
+    }
+    state.$leagueMenu.html(html);
+  }
+
+  function applyCompetitionSelection(id, name, options) {
+    options = options || {};
+    var nextId = String(id || '').trim();
+    var nextName = String(name || '').trim();
+    var changed = nextId !== state.competitionId;
+
+    state.competitionId = nextId;
+    state.competitionName = nextName;
+    setLeagueButtonLabel(nextName || nextId || 'Chọn giải');
+
+    if (!options.skipUrl) {
+      writeCompetitionToUrl(nextId, nextName, { push: !!options.push });
+    }
+    if (!options.skipEvent) {
+      emitCompetitionChange(nextId, nextName);
+    }
+    if (state.competitions.length) {
+      renderLeagueMenu(state.competitions);
+    }
+    closeLeagueMenu();
+
+    if (changed && !options.skipFetch) {
+      reloadMatchesForCompetition();
+    }
+  }
+
+  function reloadMatchesForCompetition() {
+    state.page = 1;
+    state.totalPages = 1;
+    state.renderedCount = 0;
+    // League page must not reuse homepage shared page-1 cache.
+    loadPage(1, true);
+  }
+
+  function bindLeagueFilterUi() {
+    if (!state.$leagueFilter || !state.$leagueFilter.length) return;
+
+    state.$leagueBtn.on('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleLeagueMenu();
+    });
+
+    state.$leagueMenu.on('click', '.luongson-list-matches__league-option', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var $opt = $(this);
+      applyCompetitionSelection(
+        $opt.attr('data-competition-id'),
+        $opt.attr('data-competition-name'),
+        { push: true }
+      );
+    });
+
+    $(document).on('click.luongsonLeagueFilter', function () {
+      closeLeagueMenu();
+    });
+
+    state.$leagueFilter.on('click', function (e) {
+      e.stopPropagation();
+    });
+  }
+
+  function initLeagueFilter($root) {
+    var deferred = $.Deferred();
+    state.leagueFilterEnabled = true;
+    state.$leagueFilter = $root.find('.luongson-list-matches__league-filter').first();
+    state.$leagueBtn = state.$leagueFilter.find('.luongson-list-matches__league-btn').first();
+    state.$leagueMenu = state.$leagueFilter.find('.luongson-list-matches__league-menu').first();
+    state.$leagueLabel = state.$leagueBtn.find('.luongson-list-matches__league-btn-label').first();
+
+    if (!state.$leagueFilter.length) {
+      deferred.resolve();
+      return deferred.promise();
+    }
+
+    bindLeagueFilterUi();
+
+    var urlState = readCompetitionFromUrl();
+    if (urlState.id) {
+      state.competitionId = urlState.id;
+      state.competitionName = urlState.name;
+      setLeagueButtonLabel(urlState.name || urlState.id);
+    }
+
+    fetchCompetitionsHot()
+      .done(function (res) {
+        var list = parseCompetitionsHotResponse(res);
+        state.competitions = list;
+
+        if (!list.length) {
+          state.$leagueFilter.prop('hidden', true);
+          state.$leagueBtn.prop('disabled', true);
+          // Keep URL id if present so schedule/API still filter.
+          if (state.competitionId) {
+            writeCompetitionToUrl(state.competitionId, state.competitionName);
+            emitCompetitionChange(state.competitionId, state.competitionName);
+          }
+          deferred.resolve();
+          return;
+        }
+
+        state.$leagueFilter.prop('hidden', false);
+        var selected = resolveSelectedCompetition(list, urlState);
+        applyCompetitionSelection(selected.id, selected.name, {
+          skipFetch: true,
+          skipEvent: false,
+        });
+        deferred.resolve();
+      })
+      .fail(function (err) {
+        console.error('[LuongSon list-matches] competitions-hot', err);
+        state.$leagueFilter.prop('hidden', true);
+        if (state.competitionId) {
+          writeCompetitionToUrl(state.competitionId, state.competitionName);
+          emitCompetitionChange(state.competitionId, state.competitionName);
+        }
+        deferred.resolve();
+      });
+
+    return deferred.promise();
   }
 
   function formatStatusText(match) {
@@ -18429,6 +18737,9 @@ function showError(message) {
       pageSize: String(PAGE_SIZE),
       page: String(page),
     };
+    if (state.leagueFilterEnabled && state.competitionId) {
+      data.competitions = state.competitionId;
+    }
 
     return $.ajax({
       url: STREAMS_RANGE_API,
@@ -18519,6 +18830,28 @@ function showError(message) {
     updateLoadMoreVisibility();
     showGridMessage('Đang tải trận đấu...');
 
+    // League filter must always fetch its own page-1 (with competitions param).
+    if (state.leagueFilterEnabled) {
+      fetchStreamsPage(1)
+        .done(function (res) {
+          try {
+            applyPageResponse(res, 1, true);
+          } catch (err) {
+            console.error('[LuongSon list-matches]', err);
+            showGridMessage('Không thể tải danh sách trận đấu.');
+          }
+        })
+        .fail(function (err) {
+          console.error('[LuongSon list-matches]', err);
+          showGridMessage('Không thể tải danh sách trận đấu.');
+        })
+        .always(function () {
+          state.loading = false;
+          updateLoadMoreVisibility();
+        });
+      return;
+    }
+
     var hasHomeMatch = $('.luongson-home-match').length > 0;
 
     // After all document.ready handlers (home-match starts the shared fetch first).
@@ -18561,6 +18894,14 @@ function showError(message) {
     state.$grid = $grid;
 
     ensureLoadMore($root);
+
+    if (isLeagueFilterEnabled($root)) {
+      initLeagueFilter($root).always(function () {
+        loadFirstPageFromSharedOrOwn();
+      });
+      return;
+    }
+
     loadFirstPageFromSharedOrOwn();
   }
 
@@ -18604,6 +18945,8 @@ function showError(message) {
       : '/api/dv2-streaming-plugin';
   var STREAMS_RANGE_API = PROXY_BASE + '/streams-range';
   // statuses + priorityCompetitions are resolved server-side in streams-range proxy.
+  var COMPETITION_CHANGE_EVENT = 'luongson:competition-change';
+  var DEFAULT_SCHEDULE_TITLE = 'Lịch thi đấu Bóng Đá hôm nay mới nhất 24h';
 
   var FLATPICKR_CSS = 'https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css';
   var FLATPICKR_JS = 'https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js';
@@ -18653,6 +18996,11 @@ function showError(message) {
     $label: null,
     $prev: null,
     $next: null,
+    $title: null,
+    leagueFilterEnabled: false,
+    competitionId: '',
+    competitionName: '',
+    defaultTitle: DEFAULT_SCHEDULE_TITLE,
   };
 
   function escapeHtml(value) {
@@ -18732,6 +19080,85 @@ function showError(message) {
       return window.DV2MatchSort.isPriorityCompetitionMatch(match);
     }
     return false;
+  }
+
+  function isLeagueFilterEnabled($root) {
+    if (!$root || !$root.length) return false;
+    var flag = $root.attr('data-league-filter');
+    return flag === '1' || flag === 'true';
+  }
+
+  function readCompetitionFromUrl() {
+    try {
+      var params = new URLSearchParams(window.location.search || '');
+      return {
+        id: String(params.get('competition_id') || '').trim(),
+        name: String(params.get('competition_name') || '').trim(),
+      };
+    } catch (err) {
+      return { id: '', name: '' };
+    }
+  }
+
+  function getLeaguePageBaseUrl() {
+    var fromCfg =
+      (cfg && cfg.leaguePageUrl) ||
+      (window.luongsonSchedule && window.luongsonSchedule.leaguePageUrl) ||
+      '';
+    return String(fromCfg || '').trim();
+  }
+
+  function buildLeagueScheduleUrl(league) {
+    var base = getLeaguePageBaseUrl();
+    if (!base) return '';
+    var id = league && (league.id || league.competitionId || league.competition_id);
+    if (!id) return '';
+    var name = (league && (league.name || league.competitionName || league.competition_name)) || '';
+    try {
+      var url;
+      if (/^https?:\/\//i.test(base)) {
+        url = new URL(base);
+      } else {
+        url = new URL(base, window.location.origin);
+      }
+      url.searchParams.set('competition_id', String(id));
+      if (name) url.searchParams.set('competition_name', String(name));
+      return url.pathname + url.search + url.hash;
+    } catch (err) {
+      var sep = base.indexOf('?') >= 0 ? '&' : '?';
+      var q = 'competition_id=' + encodeURIComponent(String(id));
+      if (name) q += '&competition_name=' + encodeURIComponent(String(name));
+      return base + sep + q;
+    }
+  }
+
+  function updateScheduleTitle() {
+    if (!state.$title || !state.$title.length) return;
+    if (!state.leagueFilterEnabled) {
+      state.$title.text(state.defaultTitle || DEFAULT_SCHEDULE_TITLE);
+      return;
+    }
+    if (state.competitionName) {
+      state.$title.text('Lịch thi đấu ' + state.competitionName);
+    } else if (state.competitionId) {
+      state.$title.text('Lịch thi đấu');
+    } else {
+      state.$title.text('Lịch thi đấu');
+    }
+  }
+
+  function setCompetitionFilter(id, name, options) {
+    options = options || {};
+    if (!state.leagueFilterEnabled) return;
+    var nextId = String(id || '').trim();
+    var nextName = String(name || '').trim();
+    var changed = nextId !== state.competitionId || nextName !== state.competitionName;
+    state.competitionId = nextId;
+    state.competitionName = nextName;
+    updateScheduleTitle();
+    if (changed && !options.skipFetch) {
+      reloadForSelectedDate();
+    }
   }
 
   function getPreferredLink(match) {
@@ -19081,6 +19508,7 @@ function showError(message) {
     var detailUrl = getDetailUrl(match);
     var matchId = getMatchId(match);
     var hotClass = isPriorityMatch(match) ? ' luongson-hot-match' : '';
+    var leagueUrl = buildLeagueScheduleUrl(league) || detailUrl;
 
     return (
       '<div class="framer-w4nh6l luongson-schedule__match' +
@@ -19101,7 +19529,7 @@ function showError(message) {
       '<div class="framer-fo8uj4 ls-ltd-s8" data-framer-component-type="RichTextContainer">' +
       '<p class="framer-text ls-ltd-s52" dir="auto">' +
       '<a class="framer-text framer-styles-preset-1kr0omk" data-styles-preset="aObUTo9X9" href="' +
-      escapeHtml(detailUrl) +
+      escapeHtml(leagueUrl) +
       '">' +
       escapeHtml(league.name || '—') +
       '</a></p></div>' +
@@ -19319,6 +19747,9 @@ function showError(message) {
       pageSize: String(PAGE_SIZE),
       page: String(page),
     };
+    if (state.leagueFilterEnabled && state.competitionId) {
+      data.competitions = state.competitionId;
+    }
 
     return $.ajax({
       url: STREAMS_RANGE_API,
@@ -19569,6 +20000,24 @@ function showError(message) {
 
     state.$root = $root;
     state.$list = $list;
+    state.$title = $root.find('.luongson-schedule__title, .ls-ltd-s46').first();
+    if (state.$title.length) {
+      state.defaultTitle = String(state.$title.text() || '').trim() || DEFAULT_SCHEDULE_TITLE;
+    }
+
+    state.leagueFilterEnabled = isLeagueFilterEnabled($root);
+    if (state.leagueFilterEnabled) {
+      var urlState = readCompetitionFromUrl();
+      state.competitionId = urlState.id;
+      state.competitionName = urlState.name;
+      updateScheduleTitle();
+
+      // Native listener — jQuery treats ":" as event namespaces.
+      document.addEventListener(COMPETITION_CHANGE_EVENT, function (e) {
+        var detail = (e && e.detail) || {};
+        setCompetitionFilter(detail.id, detail.name);
+      });
+    }
 
     ensureLoadMore($root);
     initDateControls($root);

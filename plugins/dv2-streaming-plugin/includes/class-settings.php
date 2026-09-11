@@ -101,6 +101,14 @@ class DV2_Settings {
             'dv2_general_settings'
         );
 
+        add_settings_field(
+            'dv2_league_schedule_page_url',
+            __('URL trang lịch theo giải', 'dv2-streaming'),
+            array($this, 'render_field_dv2_league_schedule_page_url'),
+            'dv2-streaming',
+            'dv2_general_settings'
+        );
+
         add_settings_section(
             'dv2_vb2_stream_chrome_settings',
             __('Vebo V2 – Stream Chrome', 'dv2-streaming'),
@@ -1285,6 +1293,24 @@ class DV2_Settings {
         <?php
     }
 
+    public function render_field_dv2_league_schedule_page_url() {
+        $options = get_option($this->option_name);
+        $value = isset($options['dv2_league_schedule_page_url'])
+            ? $options['dv2_league_schedule_page_url']
+            : '';
+        ?>
+        <input type="text"
+            id="dv2_league_schedule_page_url"
+            name="<?php echo esc_attr($this->option_name); ?>[dv2_league_schedule_page_url]"
+            value="<?php echo esc_attr($value); ?>"
+            class="regular-text" style="width: 100%;"
+            placeholder="vd: https://example.com/lich-theo-giai/" />
+        <p class="description">
+            <?php echo esc_html__('URL trang WordPress chứa shortcode league_filter="1". Dùng khi click tên giải trên lịch thi đấu. Có thể dùng path tương đối (vd: /lich-theo-giai/).', 'dv2-streaming'); ?>
+        </p>
+        <?php
+    }
+
     public function render_field_vb2_stream_chrome_header_ad() {
         $this->render_field_vb2_stream_chrome_ad('vb2_stream_chrome_header_ad', 'Header cuộn');
     }
@@ -2127,6 +2153,25 @@ class DV2_Settings {
             $sanitized['dv2_priority_competition_id'] = sanitize_text_field(
                 trim($input['dv2_priority_competition_id'])
             );
+        }
+
+        if (isset($input['dv2_league_schedule_page_url'])) {
+            $league_url = trim((string) wp_unslash($input['dv2_league_schedule_page_url']));
+            if ($league_url === '') {
+                $sanitized['dv2_league_schedule_page_url'] = '';
+            } elseif (strpos($league_url, '/') === 0) {
+                // Relative path like /lich-theo-giai/
+                $sanitized['dv2_league_schedule_page_url'] = esc_url_raw($league_url);
+            } elseif (filter_var($league_url, FILTER_VALIDATE_URL) && preg_match('/^https?:\/\//i', $league_url)) {
+                $sanitized['dv2_league_schedule_page_url'] = esc_url_raw($league_url);
+            } else {
+                add_settings_error(
+                    $this->option_name,
+                    'invalid_dv2_league_schedule_page_url',
+                    __('URL trang lịch theo giải phải là path bắt đầu bằng / hoặc URL http(s).', 'dv2-streaming'),
+                    'error'
+                );
+            }
         }
 
         if (isset($input['tvc_upload_api_url'])) {

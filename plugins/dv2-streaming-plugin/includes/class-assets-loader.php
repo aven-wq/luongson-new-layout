@@ -336,11 +336,13 @@ class DV2_Assets_Loader {
 
         $dv2_link_bet = dv2_get_setting('dv2_link_bet', '');
         $priority_competition_id = trim((string) dv2_get_setting('dv2_priority_competition_id', ''));
+        $league_schedule_page_url = trim((string) dv2_get_setting('dv2_league_schedule_page_url', ''));
         $config       = array(
             'pluginUrl'                => trailingslashit(DV2_STREAMING_PLUGIN_URL),
             'imagePath'                => trailingslashit(DV2_STREAMING_PLUGIN_URL . 'assets/images/'),
             'linkBet'                  => $dv2_link_bet !== '' ? $dv2_link_bet : '/',
             'priorityCompetitionIds'         => $priority_competition_id,
+            'leagueSchedulePageUrl'    => $league_schedule_page_url,
             'hot18CommentatorId'       => DV2_STREAMING_HOT18_COMMENTATOR_ID,
             'hot18PosterUrl'           => DV2_Settings::get_vb2_hot18_poster_url(),
             'homeMatchScorePollMs'     => (int) DV2_HOME_MATCH_SCORE_POLL_INTERVAL * 1000,
@@ -378,6 +380,9 @@ class DV2_Assets_Loader {
         $js .= 'window.DV2_PROXY_API_BASE=' . wp_json_encode(DV2_Proxy_Router::public_url()) . ';';
         $js .= 'window.DV2_LINK_BET=' . wp_json_encode($config['linkBet']) . ';';
         $js .= 'window.DV2_STREAMING_PRIORITY_COMPETITION_IDS=' . wp_json_encode($config['priorityCompetitionIds']) . ';';
+        $js .= 'window.luongsonSchedule=Object.assign(window.luongsonSchedule||{},' . wp_json_encode(array(
+            'leaguePageUrl' => $config['leagueSchedulePageUrl'],
+        )) . ');';
         $js .= 'window.DV2_STREAMING_HOT18_COMMENTATOR_ID=' . wp_json_encode($config['hot18CommentatorId']) . ';';
         $js .= 'window.DV2_STREAMING_HOT18_POSTER_URL=' . wp_json_encode($config['hot18PosterUrl']) . ';';
         $js .= 'window.DV2_HOME_MATCH_SCORE_POLL_INTERVAL_MS=' . (int) $config['homeMatchScorePollMs'] . ';';
