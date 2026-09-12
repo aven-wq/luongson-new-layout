@@ -16537,6 +16537,8 @@ body .ck2-modal-close {
   border-radius: inherit;
   corner-shape: inherit;
   inset: 0;
+  display: flex;
+  justify-content: center;
 }
 
 .luongson-schedule .ls-ltd-s4 {
@@ -16546,7 +16548,7 @@ body .ck2-modal-close {
   border-radius: inherit;
   corner-shape: inherit;
   object-position: center;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .luongson-schedule .ls-ltd-s8 {
