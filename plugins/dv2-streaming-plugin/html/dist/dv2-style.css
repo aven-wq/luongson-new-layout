@@ -15766,6 +15766,7 @@ body .ck2-modal-close {
   gap: 6px;
   width: 100%;
   max-width: 100%;
+  margin: 0 !important;
 }
 
 .luongson-match-modal-tab {
@@ -15789,7 +15790,7 @@ body .ck2-modal-close {
   text-transform: capitalize;
   height: unset;
   min-height: unset;
-  margin-bottom: 0 !important;
+  margin: 0 !important;
 }
 
 .luongson-match-modal-tab.is-active,
