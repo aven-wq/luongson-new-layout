@@ -692,7 +692,7 @@
   object-fit: contain;
 }
 
-.luongson-match-bet-text {
+.luongson-live-grid span.luongson-match-bet-text {
   position: absolute;
   top: 50%;
   left: 8px;

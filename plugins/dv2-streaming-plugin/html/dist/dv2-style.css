@@ -15626,7 +15626,7 @@ body .ck2-modal-close {
   object-fit: contain;
 }
 
-.luongson-match-bet-text {
+.luongson-live-grid span.luongson-match-bet-text {
   position: absolute;
   top: 50%;
   left: 8px;
@@ -15910,7 +15910,7 @@ body .ck2-modal-close {
   align-items: center;
   gap: 8px;
   width: 100%;
-  max-height: min(60vh, 440px);
+  max-height: min(80vh, 550px);
   overflow-x: hidden;
   overflow-y: auto;
   padding-right: 2px;
