@@ -836,10 +836,15 @@
   text-align: left;
   box-sizing: border-box;
   margin: 0 !important;
+  transition: transform 0.1s ease;
+  will-change: transform;
 }
 
 .luongson-commentator-option:hover {
   background: rgb(232, 245, 255);
+  transform: scale(1.05);
+  transition: transform 0.1s ease;
+  will-change: transform;
 }
 
 .luongson-commentator-option__avatar {
