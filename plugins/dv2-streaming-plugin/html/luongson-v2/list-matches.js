@@ -754,11 +754,13 @@
       '<span class="luongson-match-stat-text">' +
       escapeHtml(yellow) +
       '</span></div>' +
-      '<div class="luongson-match-stat-item">' +
-      '<span class="luongson-match-stat-card is-red" aria-hidden="true"></span>' +
-      '<span class="luongson-match-stat-text">' +
-      escapeHtml(red) +
-      '</span></div>' +
+      (red !== '0-0'
+        ? '<div class="luongson-match-stat-item">' +
+          '<span class="luongson-match-stat-card is-red" aria-hidden="true"></span>' +
+          '<span class="luongson-match-stat-text">' +
+          escapeHtml(red) +
+          '</span></div>'
+        : '') +
       '</div></div>' +
       '<div class="luongson-match-team">' +
       '<div class="luongson-match-team-logo">' +

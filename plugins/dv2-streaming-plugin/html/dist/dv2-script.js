@@ -18430,11 +18430,13 @@ function showError(message) {
       '<span class="luongson-match-stat-text">' +
       escapeHtml(yellow) +
       '</span></div>' +
-      '<div class="luongson-match-stat-item">' +
-      '<span class="luongson-match-stat-card is-red" aria-hidden="true"></span>' +
-      '<span class="luongson-match-stat-text">' +
-      escapeHtml(red) +
-      '</span></div>' +
+      (red !== '0-0'
+        ? '<div class="luongson-match-stat-item">' +
+          '<span class="luongson-match-stat-card is-red" aria-hidden="true"></span>' +
+          '<span class="luongson-match-stat-text">' +
+          escapeHtml(red) +
+          '</span></div>'
+        : '') +
       '</div></div>' +
       '<div class="luongson-match-team">' +
       '<div class="luongson-match-team-logo">' +
@@ -19606,7 +19608,7 @@ function showError(message) {
       escapeHtml(yellow) +
       '</p></div></div>';
 
-    if (isHome) {
+    if (isHome && red !== '0' && Number(red) > 0) {
       statsHtml +=
         '<div class="framer-1gv02xo"><div aria-hidden="true" class="framer-1naohdo ls-ltd-s65" data-framer-component-type="SVG"></div>' +
         '<div class="framer-10qz6z5 ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s57" dir="auto">' +
