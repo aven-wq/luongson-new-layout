@@ -19608,7 +19608,7 @@ function showError(message) {
       escapeHtml(yellow) +
       '</p></div></div>';
 
-    if (isHome && red !== '0' && Number(red) > 0) {
+    if (Number(red) > 0) {
       statsHtml +=
         '<div class="framer-1gv02xo"><div aria-hidden="true" class="framer-1naohdo ls-ltd-s65" data-framer-component-type="SVG"></div>' +
         '<div class="framer-10qz6z5 ls-ltd-s8" data-framer-component-type="RichTextContainer"><p class="framer-text ls-ltd-s57" dir="auto">' +
