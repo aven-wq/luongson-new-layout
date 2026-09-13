@@ -47,23 +47,28 @@
     var assetBase = (window.luongsonNav && window.luongsonNav.assetBase) || '';
     var bgUrl = assetBase + 'images/sidebar-bg.webp';
 
+    // Backdrop must be a sibling of the 200px panel (not a child). On iOS, a
+    // fixed backdrop inside a sized/transformed portal paints as a rectangle
+    // and peeks through the panel's rounded corners.
     return (
-      '<div class="framer-GRble framer-v-4lv5aa mobile-overlay-portal" data-framer-portal-id="mobile-menu" style="top:44px;right:10px;visibility:visible;width:200px;height:auto;position:fixed;z-index:9999;">' +
-        '<div class="mobile-overlay-backdrop" aria-hidden="true" style="position:fixed;inset:0;z-index:-1;"></div>' +
-        '<div class="framer-9mqwgf" role="dialog">' +
-          '<div class="framer-1pxqhkz-container">' +
-            '<div class="framer-QbuP0 framer-1ei7e2m framer-v-1ji60ut ls-s2" data-border="true">' +
-              '<div class="framer-1omzemv ls-s3" data-framer-name="Image" style="filter:blur(1px);opacity:0.6;">' +
-                '<div class="ls-s4" data-framer-background-image-wrapper="true">' +
-                  '<img class="ls-s5" alt="" decoding="async" width="400" height="622" src="' + bgUrl + '" />' +
+      '<div class="mobile-menu-overlay-root" data-framer-portal-id="mobile-menu">' +
+        '<div class="mobile-overlay-backdrop" aria-hidden="true"></div>' +
+        '<div class="framer-GRble framer-v-4lv5aa mobile-overlay-portal" style="top:44px;right:10px;visibility:visible;width:200px;height:auto;position:fixed;z-index:10000;">' +
+          '<div class="framer-9mqwgf" role="dialog">' +
+            '<div class="framer-1pxqhkz-container">' +
+              '<div class="framer-QbuP0 framer-1ei7e2m framer-v-1ji60ut ls-s2" data-border="true">' +
+                '<div class="framer-1omzemv ls-s3" data-framer-name="Image">' +
+                  '<div class="ls-s4" data-framer-background-image-wrapper="true">' +
+                    '<img class="ls-s5" alt="" decoding="async" width="400" height="622" src="' + bgUrl + '" />' +
+                  '</div>' +
                 '</div>' +
-              '</div>' +
-              navClone.outerHTML +
-              '<div class="framer-1fs5sty ls-s13"></div>' +
-              '<div class="framer-174nt9o ls-s14 luongson-sidebar-banner">' +
-                '<div class="framer-1u5fm4z ls-s15"><p class="framer-text ls-s16">LIVE FOOTBALL</p></div>' +
-                '<div class="framer-1k52wdm ls-s17"><p class="framer-text ls-s18">BÓNG ĐÁ ĐỈNH CAO</p></div>' +
-                '<div class="framer-arse6 ls-s19"><p class="framer-text ls-s10">Cược thả ga</p></div>' +
+                navClone.outerHTML +
+                '<div class="framer-1fs5sty ls-s13"></div>' +
+                '<div class="framer-174nt9o ls-s14 luongson-sidebar-banner">' +
+                  '<div class="framer-1u5fm4z ls-s15"><p class="framer-text ls-s16">LIVE FOOTBALL</p></div>' +
+                  '<div class="framer-1k52wdm ls-s17"><p class="framer-text ls-s18">BÓNG ĐÁ ĐỈNH CAO</p></div>' +
+                  '<div class="framer-arse6 ls-s19"><p class="framer-text ls-s10">Cược thả ga</p></div>' +
+                '</div>' +
               '</div>' +
             '</div>' +
           '</div>' +
@@ -73,8 +78,8 @@
   }
 
   function closeAllOverlays() {
-    document.querySelectorAll('.mobile-overlay-portal').forEach(function (portal) {
-      portal.remove();
+    document.querySelectorAll('[data-framer-portal-id="mobile-menu"], .mobile-overlay-portal').forEach(function (el) {
+      el.remove();
     });
     document.body.classList.remove('menu-open');
     closeAiPredictionModal();
@@ -149,7 +154,8 @@
     var container = document.getElementById('overlay') || document.body;
     var temp = document.createElement('div');
     temp.innerHTML = html.trim();
-    var portal = temp.firstElementChild;
+    var root = temp.firstElementChild;
+    var portal = root.querySelector('.mobile-overlay-portal') || root;
 
     if (triggerElement) {
       var rect = triggerElement.getBoundingClientRect();
@@ -158,7 +164,7 @@
       portal.style.left = 'auto';
     }
 
-    var backdrop = portal.querySelector('.mobile-overlay-backdrop');
+    var backdrop = root.querySelector('.mobile-overlay-backdrop');
     if (backdrop) {
       backdrop.addEventListener('click', function (e) {
         e.stopPropagation();
@@ -170,7 +176,7 @@
       link.addEventListener('click', closeAllOverlays);
     });
 
-    container.appendChild(portal);
+    container.appendChild(root);
     document.body.classList.add('menu-open');
     setActiveNavLinks();
   }

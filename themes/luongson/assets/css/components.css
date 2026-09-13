@@ -2734,10 +2734,21 @@ html body {
 }
 
 /* Mobile Navigation Drawer & Overlays */
+.mobile-menu-overlay-root {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9999 !important;
+  pointer-events: none !important;
+  background: transparent !important;
+}
+
 .mobile-overlay-portal {
   position: fixed !important;
-  z-index: 9999 !important;
+  z-index: 10000 !important;
   visibility: visible !important;
+  pointer-events: auto !important;
+  background: transparent !important;
+  overflow: visible !important;
   animation: framerDrawerFadeIn 0.22s cubic-bezier(0, 0, 0.2, 1) !important;
 }
 
@@ -2754,30 +2765,52 @@ html body {
 
 .mobile-overlay-backdrop {
   position: fixed !important;
-  inset: 0px !important;
-  z-index: -1 !important;
+  inset: 0 !important;
+  z-index: 9998 !important;
+  pointer-events: auto !important;
   background: rgba(0, 0, 0, 0.15) !important;
   backdrop-filter: blur(2px) !important;
   -webkit-backdrop-filter: blur(2px) !important;
 }
 
-.mobile-overlay-portal .framer-9mqwgf {
+.mobile-overlay-portal .framer-9mqwgf,
+.mobile-overlay-portal .framer-1pxqhkz-container {
   height: min-content !important;
   width: 200px !important;
   position: relative !important;
+  background: transparent !important;
+  border-radius: 20px !important;
+  overflow: hidden !important;
 }
 
 .mobile-overlay-portal .framer-1pxqhkz-container {
-  width: 200px !important;
-  height: auto !important;
-  position: relative !important;
   z-index: 1 !important;
+  height: auto !important;
 }
 
+/*
+ * iOS Safari: border-radius + overflow:clip can leave square corner ears.
+ * Keep multiply blend so sidebar-bg darkens into the blue gradient (not pale).
+ */
 .mobile-overlay-portal .framer-QbuP0 {
+  background: linear-gradient(rgb(8, 0, 166) 0%, rgb(0, 44, 66) 100%) !important;
   border-radius: 20px !important;
-  overflow: clip !important;
+  border-top-left-radius: 20px !important;
+  border-top-right-radius: 20px !important;
+  border-bottom-left-radius: 20px !important;
+  border-bottom-right-radius: 20px !important;
+  overflow: hidden !important;
   box-shadow: unset !important;
+  transform: translateZ(0) !important;
+  -webkit-transform: translateZ(0) !important;
+  -webkit-backface-visibility: hidden !important;
+  backface-visibility: hidden !important;
+  -webkit-mask-image: -webkit-radial-gradient(white, black) !important;
+  mask-image: radial-gradient(white, black) !important;
+}
+
+.mobile-overlay-portal .framer-1omzemv {
+  mix-blend-mode: multiply !important;
 }
 
 .framer-GRble.framer-tcv7bq {
