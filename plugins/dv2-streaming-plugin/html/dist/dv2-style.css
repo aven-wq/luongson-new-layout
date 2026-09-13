@@ -13692,6 +13692,299 @@ body .ck2-modal-close {
 }
 
 
+/* featured-ads-bar.css */
+/**
+ * LuongSon V2 — Featured ads bar (ticker + “Chơi ngay”)
+ * Shared by home-match + stream-match. Canonical look from home-match.
+ */
+
+.luongson-featured-match-bar {
+  --ls-font-momo: "Momo Trust Sans", "Momo Trust Sans Placeholder", sans-serif;
+  --border-bottom-width: 1px;
+  --border-color: #0f30521f;
+  --border-left-width: 1px;
+  --border-right-width: 1px;
+  --border-style: solid;
+  --border-top-width: 1px;
+  cursor: pointer;
+  height: 40px;
+  overflow: clip;
+  background-color: rgba(255, 255, 255, 0.92);
+  border-radius: 20px;
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center flex-start;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 5px 5px 5px 12px;
+  display: flex;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.luongson-featured-match-bar[data-border="true"] {
+  position: relative;
+}
+
+.luongson-featured-match-bar[data-border="true"]::after {
+  content: "";
+  border-width: var(--border-top-width, 0) var(--border-right-width, 0) var(--border-bottom-width, 0)
+    var(--border-left-width, 0);
+  border-color: var(--border-color, none);
+  border-style: var(--border-style, none);
+  box-sizing: border-box;
+  border-radius: inherit;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.luongson-featured-match-bar .framer-text {
+  margin: 0;
+  font-family: var(--framer-font-family, var(--ls-font-momo));
+  font-style: var(--framer-font-style, normal);
+  font-weight: var(--framer-font-weight, 400);
+  color: var(--framer-text-color, #000);
+  font-size: var(--framer-font-size, 16px);
+  letter-spacing: var(--framer-letter-spacing, 0);
+  text-align: var(--framer-text-alignment, start);
+  line-height: var(--framer-line-height, 1.2em);
+}
+
+/* Ads ticker viewport */
+.luongson-featured-match-bar .framer-cfqyq6,
+.luongson-featured-match-bar .luongson-featured-ads-ticker {
+  height: 26px;
+  overflow: hidden !important;
+  border-radius: 8px;
+  flex-flow: row;
+  flex: 1 0 0px;
+  align-content: center;
+  align-items: center;
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0;
+  display: flex;
+  position: relative !important;
+  min-width: 0;
+}
+
+.luongson-featured-match-bar .luongson-featured-ads-ticker > a,
+.luongson-featured-match-bar .framer-cfqyq6 > a {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  height: 100%;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  color: inherit;
+  text-decoration: none;
+}
+
+.luongson-featured-match-bar .luongson-featured-ads-ticker ul,
+.luongson-featured-match-bar .framer-cfqyq6 ul {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 100% !important;
+  width: max-content !important;
+  max-width: none !important;
+  gap: 12px !important;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.luongson-featured-match-bar .luongson-featured-ads-ticker ul:active {
+  cursor: grabbing;
+}
+
+.luongson-featured-match-bar .luongson-featured-ads-ticker :is(.ticker-item, .clone-item) {
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+}
+
+.luongson-featured-match-bar :is(.framer-vvp962, .framer-w3d01o, .framer-lbkh2h, .framer-1y5bl12) {
+  height: 100%;
+  overflow: clip;
+  flex: 0 0 auto;
+  width: 4px;
+  position: relative;
+}
+
+.luongson-featured-match-bar :is(.framer-oterc7, .framer-52b3qw) {
+  aspect-ratio: 292 / 150;
+  flex: 0 0 auto;
+  height: 26px;
+  width: calc(26px * 292 / 150);
+  position: relative;
+  overflow: hidden;
+}
+
+.luongson-featured-match-bar :is(.framer-1m1jatp, .framer-ey18ub, .framer-1emkd9f) {
+  white-space: pre;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  position: relative;
+}
+
+.luongson-featured-match-bar .framer-dhrlif {
+  background-color: rgb(0, 110, 219);
+  border-radius: 15px;
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center flex-start;
+  align-items: center;
+  gap: 7px;
+  width: min-content;
+  height: 30px;
+  padding: 3px 12px 3px 3px;
+  display: flex;
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.luongson-featured-match-bar .framer-1ls5xev {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 100px;
+  flex: 0 0 auto;
+  gap: 0;
+  width: 24px;
+  height: 24px;
+  position: relative;
+}
+
+.luongson-featured-match-bar .framer-1j2wjkg {
+  width: 11px;
+  height: 13px;
+  position: absolute;
+  top: 6px;
+  left: 8px;
+}
+
+.luongson-featured-match-bar .ls-s4 {
+  position: absolute !important;
+  border-radius: inherit !important;
+  inset: 0 !important;
+  margin: 0 !important;
+}
+
+.luongson-featured-match-bar .ls-s5 {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: inherit !important;
+  object-position: center center !important;
+  object-fit: cover !important;
+  margin: 0 !important;
+}
+
+.luongson-featured-match-bar :is(.ls-s25, .ls-s29) {
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  height: fit-content !important;
+  width: fit-content !important;
+  transform: none !important;
+  margin: 0 !important;
+}
+
+.luongson-featured-match-bar .ls-s26 {
+  transform: none !important;
+}
+
+.luongson-featured-match-bar .ls-s33 {
+  overflow-x: clip !important;
+  display: flex !important;
+  position: relative !important;
+}
+
+.luongson-featured-match-bar .ls-s34 {
+  display: flex !important;
+  position: relative !important;
+  list-style-type: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  justify-content: flex-start !important;
+  flex-direction: row !important;
+  gap: 10px !important;
+  opacity: 1 !important;
+  align-items: center !important;
+  width: max-content !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  max-width: none !important;
+  transform: none !important;
+  will-change: transform !important;
+}
+
+.luongson-featured-match-bar :is(.ls-s35, .ls-s37, .ls-s38) {
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  height: 100% !important;
+  width: fit-content !important;
+  transform: none !important;
+  margin: 0 !important;
+}
+
+.luongson-featured-match-bar .ls-s36 {
+  --font-selector: R0Y7TW9tbyBUcnVzdCBTYW5zLTcwMA== !important;
+  --framer-font-family: var(--ls-font-momo) !important;
+  --framer-font-size: 13px !important;
+  --framer-font-weight: 700 !important;
+  --framer-text-color: rgb(56, 63, 77) !important;
+}
+
+.luongson-featured-match-bar .ls-s42 {
+  image-rendering: pixelated !important;
+  flex-shrink: 0 !important;
+  background-size: 100% 100% !important;
+  background-image: url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 xmlns:xlink=%22http://www.w3.org/1999/xlink%22 viewBox=%220 0 11 13%22 overflow=%22visible%22><path d=%22M 11 6.5 L 0 13 L 0 0 Z%22 fill=%22rgb(255, 255, 255)%22></path></svg>") !important;
+}
+
+.luongson-featured-match-bar .ls-s43 {
+  --font-selector: R0Y7TW9tbyBUcnVzdCBTYW5zLTcwMA== !important;
+  --framer-font-family: var(--ls-font-momo) !important;
+  --framer-font-size: 13px !important;
+  --framer-font-weight: 700 !important;
+  --framer-text-color: rgb(255, 255, 255) !important;
+}
+
+@media (max-width: 1023.98px) {
+  .luongson-featured-match-bar {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+
+@media (max-width: 759.98px) {
+  .luongson-featured-match-bar .framer-dhrlif {
+    padding: 3px;
+  }
+
+  .luongson-featured-match-bar .framer-dhrlif .framer-1emkd9f.ls-s26 {
+    display: none !important;
+  }
+}
+
+
 /* home-match.css */
 /**
  * LuongSon Sport — Home Featured Match
@@ -13830,143 +14123,7 @@ body .ck2-modal-close {
   z-index: 1;
 }
 
-.luongson-home-match .framer-vb8tzz {
-  --border-bottom-width: 1px;
-  --border-color: #0f30521f;
-  --border-left-width: 1px;
-  --border-right-width: 1px;
-  --border-style: solid;
-  --border-top-width: 1px;
-  cursor: pointer;
-  height: 40px;
-  overflow: clip;
-  background-color: rgba(255, 255, 255, 0.92);
-  border-radius: 20px;
-  flex-flow: row;
-  flex: 0 0 auto;
-  place-content: center flex-start;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 5px 5px 5px 12px;
-  display: flex;
-  position: relative;
-}
-
-/* Ads ticker viewport (framer-cfqyq6 ≡ luongson-featured-ads-ticker) */
-.luongson-home-match .framer-cfqyq6,
-.luongson-home-match .luongson-featured-ads-ticker {
-  height: 26px;
-  overflow: hidden !important;
-  border-radius: 8px;
-  flex-flow: row;
-  flex: 1 0 0px;
-  align-content: center;
-  align-items: center;
-  width: 100% !important;
-  max-width: 100% !important;
-  padding: 0;
-  display: flex;
-  position: relative !important;
-  min-width: 0;
-}
-
-/* <a> must stretch — otherwise % height on ul/li/img wrappers collapses to 0 */
-.luongson-home-match .luongson-featured-ads-ticker > a,
-.luongson-home-match .framer-cfqyq6 > a {
-  display: flex;
-  align-items: center;
-  align-self: stretch;
-  height: 100%;
-  width: 100%;
-  min-width: 0;
-  overflow: hidden;
-  color: inherit;
-  text-decoration: none;
-}
-
-.luongson-home-match .luongson-featured-ads-ticker ul,
-.luongson-home-match .framer-cfqyq6 ul {
-  display: flex !important;
-  flex-direction: row !important;
-  flex-wrap: nowrap !important;
-  align-items: center !important;
-  list-style: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  height: 100% !important;
-  width: max-content !important;
-  max-width: none !important;
-  gap: 12px !important;
-  will-change: transform;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: pan-y;
-  cursor: grab;
-}
-
-.luongson-home-match .luongson-featured-ads-ticker ul:active {
-  cursor: grabbing;
-}
-
-.luongson-home-match .luongson-featured-ads-ticker :is(.ticker-item, .clone-item) {
-  flex-shrink: 0 !important;
-  flex-grow: 0 !important;
-}
-
-.luongson-home-match :is(.framer-vvp962, .framer-w3d01o, .framer-lbkh2h, .framer-1y5bl12) {
-  height: 100%;
-  overflow: clip;
-  flex: 0 0 auto;
-  width: 4px;
-  position: relative;
-}
-
-/* Definite box — children are position:absolute (.ls-s4), so width:auto collapses to 0 */
-.luongson-home-match :is(.framer-oterc7, .framer-52b3qw) {
-  aspect-ratio: 292 / 150;
-  flex: 0 0 auto;
-  height: 26px;
-  width: calc(26px * 292 / 150);
-  position: relative;
-  overflow: hidden;
-}
-
-.luongson-home-match .framer-dhrlif {
-  background-color: rgb(0, 110, 219);
-  border-radius: 15px;
-  flex-flow: row;
-  flex: 0 0 auto;
-  place-content: center flex-start;
-  align-items: center;
-  gap: 7px;
-  width: min-content;
-  height: 30px;
-  padding: 3px 12px 3px 3px;
-  display: flex;
-  position: relative;
-  color: inherit;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.luongson-home-match .framer-1ls5xev {
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 100px;
-  flex: 0 0 auto;
-  gap: 0;
-  width: 24px;
-  height: 24px;
-  position: relative;
-}
-
-.luongson-home-match .framer-1j2wjkg {
-  width: 11px;
-  height: 13px;
-  position: absolute;
-  top: 6px;
-  left: 8px;
-}
+/* Featured ads bar styles: see featured-ads-bar.css (.luongson-featured-match-bar) */
 
 /* -------------------------------------------------------------------------- */
 /* Match card (teams / VS)                                                    */
@@ -14724,7 +14881,7 @@ body .ck2-modal-close {
 /* -------------------------------------------------------------------------- */
 
 @media (max-width: 1023.98px) {
-  .luongson-home-match :is(.framer-vb8tzz, .framer-17ntzdd) {
+  .luongson-home-match .framer-17ntzdd {
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
@@ -14740,10 +14897,6 @@ body .ck2-modal-close {
     aspect-ratio: unset;
     height: 320px;
     padding: 8px;
-  }
-
-  .luongson-home-match .framer-dhrlif {
-    padding: 3px;
   }
 
   .luongson-home-match .framer-17ntzdd {
@@ -14774,10 +14927,6 @@ body .ck2-modal-close {
 
   .luongson-home-match .framer-woxy63 {
     width: 210px;
-  }
-
-  .luongson-home-match .framer-dhrlif .framer-1emkd9f.ls-s26 {
-    display: none !important;
   }
 }
 
@@ -17492,130 +17641,14 @@ body:has(> .luongson-stream-match:only-child) {
   50% { opacity: 1; transform: scale(1); }
 }
 
-/* Top ticker bar */
-.luongson-stream-top-bar {
-  --border-top-width: 1px;
-  --border-right-width: 1px;
-  --border-bottom-width: 1px;
-  --border-left-width: 1px;
-  --border-color: #0f30521f;
-  --border-style: solid;
+/* Top ads bar — shared look in featured-ads-bar.css; stream only positions it */
+.luongson-stream-match .luongson-featured-match-bar.luongson-stream-top-bar {
   position: absolute;
   top: 10px;
   left: 10px;
   right: 10px;
   z-index: 10;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  height: 40px;
-  padding: 0 5px 0 12px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.92);
-  overflow: clip;
-}
-
-.luongson-stream-top-bar[data-border="true"]::after {
-  content: "";
-  border-width: var(--border-top-width) var(--border-right-width) var(--border-bottom-width) var(--border-left-width);
-  border-color: var(--border-color);
-  border-style: var(--border-style);
-  border-radius: inherit;
-  pointer-events: none;
-  position: absolute;
-  inset: 0;
-}
-
-.luongson-stream-ticker {
-  flex: 1 1 0;
-  min-width: 0;
-  height: 26px;
-  overflow: hidden;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-.luongson-stream-ticker ul {
-  display: flex !important;
-  flex-direction: row !important;
-  flex-wrap: nowrap !important;
-  align-items: center !important;
-  list-style: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  height: 26px;
-  width: max-content !important;
-  gap: 12px !important;
-  will-change: transform;
-  user-select: none;
-  cursor: grab;
-}
-
-.luongson-stream-ticker ul:active {
-  cursor: grabbing;
-}
-
-.luongson-stream-ticker :is(.ticker-item, .clone-item) {
-  flex: 0 0 auto;
-}
-
-.luongson-stream-ticker__dot {
-  display: block;
-  width: 4px;
-  height: 18px;
-  flex-shrink: 0;
-}
-
-.luongson-stream-ticker__text {
-  margin: 0;
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 1;
-  color: rgb(56, 63, 77);
-  white-space: nowrap;
-}
-
-.luongson-stream-ticker img {
-  display: block;
-  height: 26px;
   width: auto;
-}
-
-.luongson-stream-play-cta {
-  --border-top-width: 0;
-  --border-right-width: 0;
-  --border-bottom-width: 0;
-  --border-left-width: 0;
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  flex: 0 0 auto;
-  height: 30px;
-  padding: 3px 12px 3px 3px;
-  border-radius: 15px;
-  background: rgb(0, 110, 219);
-  color: #fff;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.luongson-stream-play-cta__icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 100px;
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.luongson-stream-play-cta__label {
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 1;
 }
 
 /* Bottom bar */
@@ -18129,14 +18162,6 @@ body.luongson-stream-body-fs {
     gap: 6px;
   }
 
-  .luongson-stream-play-cta__label {
-    display: none;
-  }
-
-  .luongson-stream-play-cta {
-    padding: 3px;
-  }
-
   .luongson-match-commentator-trigger {
     width: 120px;
   }
@@ -18264,6 +18289,11 @@ body.luongson-stream-body-fs {
     right: max(6px, env(safe-area-inset-right));
     top: max(6px, env(safe-area-inset-top));
   }
+
+  .luongson-stream-match .luongson-featured-match-bar.luongson-stream-top-bar {
+    left: 10px;
+    width: calc(100% - 20px) !important;
+  }
 }
 
 @media (max-width: 480px) {
@@ -18284,16 +18314,6 @@ body.luongson-stream-body-fs {
     height: 32px;
     padding-left: 6px;
     gap: 4px;
-  }
-
-
-  .luongson-stream-ticker__text {
-    font-size: 10px;
-  }
-
-  .luongson-stream-play-cta__icon {
-    width: 22px;
-    height: 22px;
   }
 
   .luongson-stream-prematch__content {

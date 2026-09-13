@@ -91,36 +91,15 @@ $luongson_ticker_items = DV2_Settings::get_luongson_header_ads_animation_items_f
                 </div>
             </div>
 
-            <div class="luongson-stream-top-bar" data-border="true">
-                <?php if (!empty($luongson_ticker_items)) : ?>
-                <div class="luongson-stream-ticker luongson-featured-ads-ticker">
-                    <a href="<?php echo esc_attr($luongson_header_link); ?>" target="_blank" rel="noopener noreferrer">
-                        <ul>
-                            <?php foreach ($luongson_ticker_items as $luongson_ticker_item) : ?>
-                                <?php if ($luongson_ticker_item['image_url'] !== '') : ?>
-                                    <li class="ticker-item"><span class="luongson-stream-ticker__dot"></span></li>
-                                    <li class="ticker-item">
-                                        <img alt="" decoding="async" height="26" src="<?php echo esc_url($luongson_ticker_item['image_url']); ?>" />
-                                    </li>
-                                <?php endif; ?>
-                                <?php if ($luongson_ticker_item['text'] !== '') : ?>
-                                    <li class="ticker-item"><span class="luongson-stream-ticker__dot"></span></li>
-                                    <li class="ticker-item">
-                                        <p class="luongson-stream-ticker__text"><?php echo esc_html($luongson_ticker_item['text']); ?></p>
-                                    </li>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                        </ul>
-                    </a>
-                </div>
-                <?php endif; ?>
-                <a class="luongson-stream-play-cta" id="luongsonPlayCta" href="<?php echo esc_attr($luongson_header_link); ?>" data-border="true" target="_blank" rel="noopener noreferrer">
-                    <span class="luongson-stream-play-cta__icon" aria-hidden="true">
-                        <img alt="" width="11" height="13" />
-                    </span>
-                    <span class="luongson-stream-play-cta__label">Chơi ngay</span>
-                </a>
-            </div>
+            <?php
+            $luongson_featured_ads_bar = array(
+                'header_link' => $luongson_header_link,
+                'ticker_items' => $luongson_ticker_items,
+                'play_cta_id' => 'luongsonPlayCta',
+                'extra_bar_class' => 'luongson-stream-top-bar',
+            );
+            require DV2_STREAMING_PLUGIN_DIR . 'includes/partials/luongson-featured-ads-bar.block.php';
+            ?>
 
             <div class="luongson-stream-bottom-bar">
                 <div class="luongson-stream-bottom-left">

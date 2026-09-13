@@ -20,13 +20,6 @@ $default_img = trailingslashit(DV2_STREAMING_PLUGIN_URL . 'assets/images') . 'de
 
 $luongson_header_link = DV2_Settings::get_luongson_header_ads_animation_url();
 $luongson_ticker_items = DV2_Settings::get_luongson_header_ads_animation_items_for_render();
-
-$dot_classes = array('framer-vvp962', 'framer-w3d01o', 'framer-lbkh2h', 'framer-1y5bl12');
-$image_classes = array('framer-oterc7', 'framer-52b3qw');
-$text_classes = array('framer-1m1jatp', 'framer-ey18ub');
-$li_spacer = array('ls-s35', 'ls-s35', 'ls-s37', 'ls-s37');
-$li_image = array('ls-s35', 'ls-s37');
-$li_text = array('ls-s25', 'ls-s25');
 ?>
 <div class="luongson-home-match">
     <div class="framer-18emxhy">
@@ -41,77 +34,13 @@ $li_text = array('ls-s25', 'ls-s25');
             />
         </div>
 
-        <div
-            class="framer-vb8tzz luongson-featured-match-bar"
-            data-border="true"
-            data-framer-name="League and Ad Bar"
-        >
-            <?php if (!empty($luongson_ticker_items)) : ?>
-            <div
-                class="framer-cfqyq6 ls-s33 luongson-featured-ads-ticker"
-                data-framer-name="Advertisement Ticker"
-            >
-                <a href="<?php echo esc_url($luongson_header_link); ?>" target="_blank" rel="noopener noreferrer">
-                    <ul class="ls-s34">
-                        <?php
-                        $seg = 0;
-                        foreach ($luongson_ticker_items as $ticker_item) :
-                            if (!empty($ticker_item['image_url'])) :
-                                $dot_class = $dot_classes[$seg % count($dot_classes)];
-                                $li_dot = $li_spacer[$seg % count($li_spacer)];
-                                $img_wrap = $image_classes[$seg % count($image_classes)];
-                                $li_img = $li_image[$seg % count($li_image)];
-                                $seg++;
-                                ?>
-                                <li class="ticker-item <?php echo esc_attr($li_dot); ?>"><div class="<?php echo esc_attr($dot_class); ?>"></div></li>
-                                <li class="ticker-item <?php echo esc_attr($li_img); ?>">
-                                    <div class="<?php echo esc_attr($img_wrap); ?>" data-framer-name="Image">
-                                        <div class="ls-s4" data-framer-background-image-wrapper="true">
-                                            <img class="ls-s5" alt="" decoding="async" height="150" src="<?php echo esc_url($ticker_item['image_url']); ?>" width="292" />
-                                        </div>
-                                    </div>
-                                </li>
-                            <?php endif; ?>
-                            <?php if (!empty($ticker_item['text'])) :
-                                $dot_class = $dot_classes[$seg % count($dot_classes)];
-                                $li_dot = $li_spacer[$seg % count($li_spacer)];
-                                $text_wrap = $text_classes[$seg % count($text_classes)];
-                                $li_txt = $li_text[$seg % count($li_text)];
-                                $seg++;
-                                ?>
-                                <li class="ticker-item <?php echo esc_attr($li_dot); ?>"><div class="<?php echo esc_attr($dot_class); ?>"></div></li>
-                                <li class="ticker-item <?php echo esc_attr($li_txt); ?>">
-                                    <div class="<?php echo esc_attr($text_wrap); ?> ls-s26" data-framer-component-type="RichTextContainer">
-                                        <p class="framer-text ls-s36" dir="auto"><?php echo esc_html($ticker_item['text']); ?></p>
-                                    </div>
-                                </li>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                    </ul>
-                </a>
-            </div>
-            <?php endif; ?>
-
-            <a
-                class="framer-dhrlif"
-                data-framer-name="Premier League Identity"
-                href="<?php echo esc_url($luongson_header_link); ?>"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                <div class="framer-1ls5xev" data-framer-name="Premier League Logo">
-                    <div
-                        aria-hidden="true"
-                        class="framer-1j2wjkg ls-s42"
-                        data-framer-component-type="SVG"
-                    ></div>
-                </div>
-                <div
-                    class="framer-1emkd9f ls-s26"
-                    data-framer-component-type="RichTextContainer"
-                ><p class="framer-text ls-s43" dir="auto"><?php echo esc_html__('Chơi ngay', 'dv2-streaming'); ?></p></div>
-            </a>
-        </div>
+        <?php
+        $luongson_featured_ads_bar = array(
+            'header_link' => $luongson_header_link,
+            'ticker_items' => $luongson_ticker_items,
+        );
+        require DV2_STREAMING_PLUGIN_DIR . 'includes/partials/luongson-featured-ads-bar.block.php';
+        ?>
 
         <div class="framer-17ntzdd" data-border="true">
             <div class="framer-11ivf5z" data-framer-name="Home Team">

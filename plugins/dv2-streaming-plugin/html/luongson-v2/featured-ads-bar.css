@@ -1,0 +1,290 @@
+/**
+ * LuongSon V2 — Featured ads bar (ticker + “Chơi ngay”)
+ * Shared by home-match + stream-match. Canonical look from home-match.
+ */
+
+.luongson-featured-match-bar {
+  --ls-font-momo: "Momo Trust Sans", "Momo Trust Sans Placeholder", sans-serif;
+  --border-bottom-width: 1px;
+  --border-color: #0f30521f;
+  --border-left-width: 1px;
+  --border-right-width: 1px;
+  --border-style: solid;
+  --border-top-width: 1px;
+  cursor: pointer;
+  height: 40px;
+  overflow: clip;
+  background-color: rgba(255, 255, 255, 0.92);
+  border-radius: 20px;
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center flex-start;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 5px 5px 5px 12px;
+  display: flex;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.luongson-featured-match-bar[data-border="true"] {
+  position: relative;
+}
+
+.luongson-featured-match-bar[data-border="true"]::after {
+  content: "";
+  border-width: var(--border-top-width, 0) var(--border-right-width, 0) var(--border-bottom-width, 0)
+    var(--border-left-width, 0);
+  border-color: var(--border-color, none);
+  border-style: var(--border-style, none);
+  box-sizing: border-box;
+  border-radius: inherit;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.luongson-featured-match-bar .framer-text {
+  margin: 0;
+  font-family: var(--framer-font-family, var(--ls-font-momo));
+  font-style: var(--framer-font-style, normal);
+  font-weight: var(--framer-font-weight, 400);
+  color: var(--framer-text-color, #000);
+  font-size: var(--framer-font-size, 16px);
+  letter-spacing: var(--framer-letter-spacing, 0);
+  text-align: var(--framer-text-alignment, start);
+  line-height: var(--framer-line-height, 1.2em);
+}
+
+/* Ads ticker viewport */
+.luongson-featured-match-bar .framer-cfqyq6,
+.luongson-featured-match-bar .luongson-featured-ads-ticker {
+  height: 26px;
+  overflow: hidden !important;
+  border-radius: 8px;
+  flex-flow: row;
+  flex: 1 0 0px;
+  align-content: center;
+  align-items: center;
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0;
+  display: flex;
+  position: relative !important;
+  min-width: 0;
+}
+
+.luongson-featured-match-bar .luongson-featured-ads-ticker > a,
+.luongson-featured-match-bar .framer-cfqyq6 > a {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  height: 100%;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  color: inherit;
+  text-decoration: none;
+}
+
+.luongson-featured-match-bar .luongson-featured-ads-ticker ul,
+.luongson-featured-match-bar .framer-cfqyq6 ul {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 100% !important;
+  width: max-content !important;
+  max-width: none !important;
+  gap: 12px !important;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.luongson-featured-match-bar .luongson-featured-ads-ticker ul:active {
+  cursor: grabbing;
+}
+
+.luongson-featured-match-bar .luongson-featured-ads-ticker :is(.ticker-item, .clone-item) {
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+}
+
+.luongson-featured-match-bar :is(.framer-vvp962, .framer-w3d01o, .framer-lbkh2h, .framer-1y5bl12) {
+  height: 100%;
+  overflow: clip;
+  flex: 0 0 auto;
+  width: 4px;
+  position: relative;
+}
+
+.luongson-featured-match-bar :is(.framer-oterc7, .framer-52b3qw) {
+  aspect-ratio: 292 / 150;
+  flex: 0 0 auto;
+  height: 26px;
+  width: calc(26px * 292 / 150);
+  position: relative;
+  overflow: hidden;
+}
+
+.luongson-featured-match-bar :is(.framer-1m1jatp, .framer-ey18ub, .framer-1emkd9f) {
+  white-space: pre;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  position: relative;
+}
+
+.luongson-featured-match-bar .framer-dhrlif {
+  background-color: rgb(0, 110, 219);
+  border-radius: 15px;
+  flex-flow: row;
+  flex: 0 0 auto;
+  place-content: center flex-start;
+  align-items: center;
+  gap: 7px;
+  width: min-content;
+  height: 30px;
+  padding: 3px 12px 3px 3px;
+  display: flex;
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.luongson-featured-match-bar .framer-1ls5xev {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 100px;
+  flex: 0 0 auto;
+  gap: 0;
+  width: 24px;
+  height: 24px;
+  position: relative;
+}
+
+.luongson-featured-match-bar .framer-1j2wjkg {
+  width: 11px;
+  height: 13px;
+  position: absolute;
+  top: 6px;
+  left: 8px;
+}
+
+.luongson-featured-match-bar .ls-s4 {
+  position: absolute !important;
+  border-radius: inherit !important;
+  inset: 0 !important;
+  margin: 0 !important;
+}
+
+.luongson-featured-match-bar .ls-s5 {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: inherit !important;
+  object-position: center center !important;
+  object-fit: cover !important;
+  margin: 0 !important;
+}
+
+.luongson-featured-match-bar :is(.ls-s25, .ls-s29) {
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  height: fit-content !important;
+  width: fit-content !important;
+  transform: none !important;
+  margin: 0 !important;
+}
+
+.luongson-featured-match-bar .ls-s26 {
+  transform: none !important;
+}
+
+.luongson-featured-match-bar .ls-s33 {
+  overflow-x: clip !important;
+  display: flex !important;
+  position: relative !important;
+}
+
+.luongson-featured-match-bar .ls-s34 {
+  display: flex !important;
+  position: relative !important;
+  list-style-type: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  justify-content: flex-start !important;
+  flex-direction: row !important;
+  gap: 10px !important;
+  opacity: 1 !important;
+  align-items: center !important;
+  width: max-content !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  max-width: none !important;
+  transform: none !important;
+  will-change: transform !important;
+}
+
+.luongson-featured-match-bar :is(.ls-s35, .ls-s37, .ls-s38) {
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  height: 100% !important;
+  width: fit-content !important;
+  transform: none !important;
+  margin: 0 !important;
+}
+
+.luongson-featured-match-bar .ls-s36 {
+  --font-selector: R0Y7TW9tbyBUcnVzdCBTYW5zLTcwMA== !important;
+  --framer-font-family: var(--ls-font-momo) !important;
+  --framer-font-size: 13px !important;
+  --framer-font-weight: 700 !important;
+  --framer-text-color: rgb(56, 63, 77) !important;
+}
+
+.luongson-featured-match-bar .ls-s42 {
+  image-rendering: pixelated !important;
+  flex-shrink: 0 !important;
+  background-size: 100% 100% !important;
+  background-image: url("data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 xmlns:xlink=%22http://www.w3.org/1999/xlink%22 viewBox=%220 0 11 13%22 overflow=%22visible%22><path d=%22M 11 6.5 L 0 13 L 0 0 Z%22 fill=%22rgb(255, 255, 255)%22></path></svg>") !important;
+}
+
+.luongson-featured-match-bar .ls-s43 {
+  --font-selector: R0Y7TW9tbyBUcnVzdCBTYW5zLTcwMA== !important;
+  --framer-font-family: var(--ls-font-momo) !important;
+  --framer-font-size: 13px !important;
+  --framer-font-weight: 700 !important;
+  --framer-text-color: rgb(255, 255, 255) !important;
+}
+
+@media (max-width: 1023.98px) {
+  .luongson-featured-match-bar {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+
+@media (max-width: 759.98px) {
+  .luongson-featured-match-bar .framer-dhrlif {
+    padding: 3px;
+  }
+
+  .luongson-featured-match-bar .framer-dhrlif .framer-1emkd9f.ls-s26 {
+    display: none !important;
+  }
+}

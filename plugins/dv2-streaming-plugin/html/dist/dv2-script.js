@@ -16942,22 +16942,20 @@ function showError(message) {
   });
 })(jQuery);
 
-})(window, window.jQuery || window.$, window.jQuery || window.$, window.Hls, window.Swiper);
-
-/* home-match.js */
-(function(window, $, jQuery, Hls, Swiper) {
 /**
- * LuongSon Sport — Home Featured Match (jQuery)
- * Ads ticker infinite scroll (from themes/html/js/modules/sliders.js)
+ * LuongSon V2 — Featured ads bar (shared ticker + HTML partial mounts)
  */
 (function ($) {
   'use strict';
 
+  var PARTIAL_DEFAULT = 'partials/featured-ads-bar.html';
+  var readyDeferred = $.Deferred();
+
   function createFeaturedAdsTicker(container) {
     var $container = $(container);
     var $track = $container.find('ul').first();
-    if (!$track.length || $track.data('lsHomeMatchTickerInit')) return;
-    $track.data('lsHomeMatchTickerInit', true);
+    if (!$track.length || $track.data('lsFeaturedAdsTickerInit')) return;
+    $track.data('lsFeaturedAdsTickerInit', true);
 
     var $originalChildren = $track.children().filter(function () {
       return !$(this).hasClass('clone-item') && $(this).attr('aria-hidden') !== 'true';
@@ -16987,6 +16985,7 @@ function showError(message) {
     var dragDistance = 0;
     var lastTimestamp = null;
     var rafId = null;
+    var ns = '.lsFeaturedAdsTicker' + String(Math.random()).slice(2, 8);
 
     function buildClones() {
       $track.find('.clone-item').remove();
@@ -17101,10 +17100,9 @@ function showError(message) {
     var trackEl = $track.get(0);
 
     $track.on('mousedown', onPointerDown);
-    $(window).on('mousemove.lsHomeMatchTicker', onPointerMove);
-    $(window).on('mouseup.lsHomeMatchTicker', onPointerUp);
+    $(window).on('mousemove' + ns, onPointerMove);
+    $(window).on('mouseup' + ns, onPointerUp);
 
-    // Native listeners keep passive:false so touch drag can call preventDefault.
     trackEl.addEventListener('touchstart', function (e) {
       onPointerDown($.event.fix(e));
     }, { passive: true });
@@ -17128,7 +17126,7 @@ function showError(message) {
     );
 
     var resizeTimer = null;
-    $(window).on('resize.lsHomeMatchTicker', function () {
+    $(window).on('resize' + ns, function () {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(function () {
         buildClones();
@@ -17136,7 +17134,7 @@ function showError(message) {
       }, 150);
     });
 
-    $(document).on('visibilitychange.lsHomeMatchTicker', function () {
+    $(document).on('visibilitychange' + ns, function () {
       if (document.hidden) {
         lastTimestamp = null;
       }
@@ -17147,8 +17145,81 @@ function showError(message) {
 
     return function destroy() {
       if (rafId) cancelAnimationFrame(rafId);
+      $(window).off(ns);
+      $(document).off(ns);
     };
   }
+
+  function initTickers(root) {
+    var $root = root ? $(root) : $(document);
+    $root
+      .find('.luongson-featured-ads-ticker, .framer-cfqyq6')
+      .addBack()
+      .filter('.luongson-featured-ads-ticker, .framer-cfqyq6')
+      .each(function () {
+        createFeaturedAdsTicker(this);
+      });
+  }
+
+  function fillPartial(html, opts) {
+    opts = opts || {};
+    var extra = opts.extraClass ? String(opts.extraClass) : '';
+    var playId = opts.playCtaId ? String(opts.playCtaId) : '';
+    return String(html || '')
+      .replace(/__EXTRA_CLASS__/g, extra)
+      .replace(/__PLAY_CTA_ID_ATTR__/g, playId ? 'id="' + playId.replace(/"/g, '') + '"' : '');
+  }
+
+  function mountPartials() {
+    var mounts = document.querySelectorAll('[data-luongson-featured-ads-bar]');
+    if (!mounts.length) {
+      return $.Deferred().resolve().promise();
+    }
+
+    var url = mounts[0].getAttribute('data-luongson-featured-ads-bar') || PARTIAL_DEFAULT;
+    return $.get(url)
+      .then(function (html) {
+        Array.prototype.forEach.call(mounts, function (el) {
+          var filled = fillPartial(html, {
+            extraClass: el.getAttribute('data-extra-class') || '',
+            playCtaId: el.getAttribute('data-play-cta-id') || '',
+          });
+          el.outerHTML = filled;
+        });
+      })
+      .fail(function () {
+        console.warn('[LuongSon] Failed to load featured ads bar partial:', url);
+      });
+  }
+
+  function whenReady(cb) {
+    readyDeferred.done(cb);
+  }
+
+  // Resolve after DOM + optional partial mounts (pages wait before ticker/init).
+  $(function () {
+    mountPartials().always(function () {
+      readyDeferred.resolve();
+    });
+  });
+
+  window.LuongsonFeaturedAdsBar = {
+    createTicker: createFeaturedAdsTicker,
+    initTickers: initTickers,
+    whenReady: whenReady,
+    ready: readyDeferred.promise(),
+  };
+})(jQuery);
+
+})(window, window.jQuery || window.$, window.jQuery || window.$, window.Hls, window.Swiper);
+
+/* home-match.js */
+(function(window, $, jQuery, Hls, Swiper) {
+/**
+ * LuongSon Sport — Home Featured Match (jQuery)
+ */
+(function ($) {
+  'use strict';
 
   /* ------------------------------------------------------------------------ */
   /* Streams page-1 fetch (shared with list-matches.js)                       */
@@ -17580,15 +17651,23 @@ function showError(message) {
   }
 
   function initAll() {
-    $(
-      '.luongson-home-match .luongson-featured-ads-ticker, .luongson-home-match .framer-cfqyq6'
-    ).each(function () {
-      createFeaturedAdsTicker(this);
-    });
+    var bar = window.LuongsonFeaturedAdsBar;
+    if (bar && typeof bar.initTickers === 'function') {
+      bar.initTickers('.luongson-home-match');
+    }
     initFeaturedMatchData();
   }
 
-  $(initAll);
+  function boot() {
+    var bar = window.LuongsonFeaturedAdsBar;
+    if (bar && typeof bar.whenReady === 'function') {
+      bar.whenReady(initAll);
+      return;
+    }
+    initAll();
+  }
+
+  $(boot);
 })(jQuery);
 
 })(window, window.jQuery || window.$, window.jQuery || window.$, window.Hls, window.Swiper);
@@ -21374,113 +21453,6 @@ function showError(message) {
     });
   }
 
-  /** Ticker quảng cáo chạy ngang (kéo tay được) */
-  function createFeaturedAdsTicker(container) {
-    var $container = $(container);
-    var $track = $container.find('ul').first();
-
-    if (!$track.length || $track.data('lsStreamTickerInit')) return;
-    $track.data('lsStreamTickerInit', true);
-
-    var $originalChildren = $track.children().not('.clone-item');
-    if (!$originalChildren.length) return;
-
-    var speed = 38;
-    var direction = -1;
-    var singleSetWidth = 0;
-    var currentX = 0;
-    var isHovered = false;
-    var isDragging = false;
-    var startX = 0;
-    var dragStartX = 0;
-    var lastTimestamp = null;
-
-    function buildClones() {
-      $track.find('.clone-item').remove();
-
-      var containerWidth = $container.outerWidth() || $(window).width();
-      var gap = 12;
-      var firstEl = $originalChildren.first().get(0);
-      var lastEl = $originalChildren.last().get(0);
-      var firstRect = firstEl.getBoundingClientRect();
-      var lastRect = lastEl.getBoundingClientRect();
-
-      singleSetWidth =
-        lastRect.right - firstRect.left + gap > 0
-          ? lastRect.right - firstRect.left + gap
-          : $originalChildren.toArray().reduce(function (acc, el) {
-              return acc + ($(el).outerWidth() || 80) + gap;
-            }, 0);
-
-      if (singleSetWidth <= 0) return;
-
-      var neededCopies = Math.max(2, Math.ceil((containerWidth * 2) / singleSetWidth) + 1);
-      var i;
-
-      for (i = 0; i < neededCopies; i++) {
-        $originalChildren.each(function () {
-          var $clone = $(this).clone().addClass('clone-item').attr('aria-hidden', 'true');
-          $track.append($clone);
-        });
-      }
-    }
-
-    function setTransform(x) {
-      $track.css('transform', 'translate3d(' + x + 'px, 0, 0)');
-    }
-
-    function animate(timestamp) {
-      if (!lastTimestamp) lastTimestamp = timestamp;
-      var dt = Math.min((timestamp - lastTimestamp) / 1000, 0.1);
-      lastTimestamp = timestamp;
-
-      if (!isHovered && !isDragging && singleSetWidth > 0) {
-        currentX += direction * speed * dt;
-        while (currentX <= -singleSetWidth) currentX += singleSetWidth;
-        setTransform(currentX);
-      }
-      requestAnimationFrame(animate);
-    }
-
-    $container.on('mouseenter', function () { isHovered = true; });
-    $container.on('mouseleave', function () { isHovered = false; lastTimestamp = null; });
-
-    function onPointerDown(e) {
-      isDragging = true;
-      startX = e.type.indexOf('touch') === 0 ? e.originalEvent.touches[0].clientX : e.clientX;
-      dragStartX = currentX;
-    }
-
-    function onPointerMove(e) {
-      if (!isDragging) return;
-      var clientX = e.type.indexOf('touch') === 0 ? e.originalEvent.touches[0].clientX : e.clientX;
-      var dx = clientX - startX;
-      currentX = dragStartX + dx;
-
-      if (singleSetWidth > 0) {
-        while (currentX <= -singleSetWidth) currentX += singleSetWidth;
-        while (currentX > 0) currentX -= singleSetWidth;
-      }
-      setTransform(currentX);
-    }
-
-    function onPointerUp() {
-      isDragging = false;
-      lastTimestamp = null;
-    }
-
-    $track.on('mousedown', onPointerDown);
-    $(window).on('mousemove.lsStreamTicker', onPointerMove);
-    $(window).on('mouseup.lsStreamTicker', onPointerUp);
-
-    buildClones();
-    requestAnimationFrame(animate);
-
-    $(window).on('resize.lsStreamTicker', function () {
-      setTimeout(buildClones, 150);
-    });
-  }
-
   /** Gọi API lấy dữ liệu trận và bắt đầu phát */
   function loadMatch() {
     var matchId = getMatchId();
@@ -21564,8 +21536,10 @@ function showError(message) {
     var items = headerAds && headerAds.items;
     if (!Array.isArray(items) || !items.length) return;
 
-    var $contentItems = $('.luongson-stream-ticker > a > ul > li.ticker-item').filter(function () {
-      return !$(this).hasClass('clone-item') && $(this).find('img, .luongson-stream-ticker__text').length;
+    var $contentItems = $(
+      '.luongson-stream-match .luongson-featured-ads-ticker > a > ul > li.ticker-item'
+    ).filter(function () {
+      return !$(this).hasClass('clone-item') && $(this).find('img, .ls-s36, .framer-text').length;
     });
 
     var contentIndex = 0;
@@ -21588,7 +21562,7 @@ function showError(message) {
       if (text) {
         var $textRow = $contentItems.eq(contentIndex);
         if ($textRow.length) {
-          $textRow.find('.luongson-stream-ticker__text').text(text);
+          $textRow.find('.ls-s36, .framer-text').first().text(text);
           contentIndex++;
         }
       }
@@ -21615,10 +21589,9 @@ function showError(message) {
     var headerLinkUrl = headerAds.url || cfg.playCtaUrl || betUrl;
 
     $('#liveVideo').attr('poster', POSTER);
-    $('.luongson-stream-ticker > a').attr('href', headerLinkUrl);
+    $('.luongson-stream-match .luongson-featured-ads-ticker > a').attr('href', headerLinkUrl);
     applyHeaderAdsTickerContent(headerAds);
     $('#luongsonPlayCta').attr('href', headerLinkUrl);
-    $('#luongsonPlayCta img').attr('src', ASSETS + 'icon-play.svg');
     $('#luongsonCommentatorTrigger .luongson-match-commentator-avatar img').attr('src', FALLBACK_AVATAR);
     $('#luongsonStreamPlay .luongson-stream-ctrl__icon-play').attr('src', ASSETS + 'icon-play.svg');
     $('#luongsonStreamVolume .luongson-stream-ctrl__icon-vol').attr('src', ASSETS + 'icon-volume.svg');
@@ -21628,15 +21601,25 @@ function showError(message) {
   }
 
   // --- Khởi chạy khi DOM sẵn sàng ---
-  $(function () {
+  function boot() {
     if (!$('.luongson-stream-match').length) return;
 
     initStaticAssets();
     initMatchStatsHover();
-    $('.luongson-stream-ticker').each(function () {
-      createFeaturedAdsTicker(this);
-    });
+    var bar = window.LuongsonFeaturedAdsBar;
+    if (bar && typeof bar.initTickers === 'function') {
+      bar.initTickers('.luongson-stream-match');
+    }
     loadMatch();
+  }
+
+  $(function () {
+    var bar = window.LuongsonFeaturedAdsBar;
+    if (bar && typeof bar.whenReady === 'function') {
+      bar.whenReady(boot);
+      return;
+    }
+    boot();
   });
 })(jQuery.noConflict());
 
