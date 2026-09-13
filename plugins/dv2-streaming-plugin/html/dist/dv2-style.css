@@ -15798,6 +15798,7 @@ body .ck2-modal-close {
   font-weight: 600;
   color: rgb(16, 39, 70);
   white-space: nowrap;
+  text-transform: capitalize;
 }
 
 /* Match modal styles: match-modal.css (shared with schedule / stream-match) */
